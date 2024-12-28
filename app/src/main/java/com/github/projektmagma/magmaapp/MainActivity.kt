@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -21,15 +22,22 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MagmaAppTheme {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        text = "Hello, Magma!",
+                Scaffold { innerPadding ->
+                    Column(
                         modifier = Modifier
-                            .padding(8.dp, 256.dp)
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        fontSize = 32.sp
-                    )
+                            .padding(innerPadding)
+                            .fillMaxSize()
+                    ) {
+                        Text(
+                            text = "Hello, Magma!",
+                            modifier = Modifier
+                                .padding(8.dp, 256.dp)
+                                .fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            fontSize = 32.sp
+                        )
+                    }
+
                 }
             }
         }
