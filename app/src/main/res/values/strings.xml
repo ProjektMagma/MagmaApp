@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">MagmaApp</string>
+    <string name="app_name" translatable="false">MagmaApp</string>
+    <string name="school_in_fingertips">Your school at your fingertips</string>
+    <string name="login">Log in</string>
+    <string name="create_account">Create account</string>
+    <string name="report_bug">Report a bug</string>
 </resources>

@@ -45,10 +45,7 @@ dependencies {
     implementation(libs.bundles.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.material3)
-
-    implementation(libs.androidx.navigation.compose)
-
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.bundles.kotlinx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

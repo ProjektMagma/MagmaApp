@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="school_in_fingertips">Twoja szkoła w zasięgu ręki</string>
+    <string name="login">Zaloguj</string>
+    <string name="create_account">Załóż konto</string>
+    <string name="report_bug">Zgłoś błąd</string>
+</resources>
