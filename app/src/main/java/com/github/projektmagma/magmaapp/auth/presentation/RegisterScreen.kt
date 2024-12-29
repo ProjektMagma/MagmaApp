@@ -23,7 +23,7 @@ fun RegisterScreen(
             Text(text = "Register Screen")
             Button(
                 onClick = {
-                    navHostController.popBackStack()
+                    navHostController.navigateUp()
                 }
             ) {
                 Text(text = "Go back")
