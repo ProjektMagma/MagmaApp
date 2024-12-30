@@ -1,4 +1,4 @@
-package com.github.projektmagma.magmaapp.core.ui.theme
+package com.github.projektmagma.magmaapp.core.presentation.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF904A45)
