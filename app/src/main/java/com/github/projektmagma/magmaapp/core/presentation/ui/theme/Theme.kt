@@ -1,4 +1,4 @@
-package com.github.projektmagma.magmaapp.core.ui.theme
+package com.github.projektmagma.magmaapp.core.presentation.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
