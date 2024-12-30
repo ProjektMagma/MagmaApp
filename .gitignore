@@ -36,3 +36,4 @@ google-services.json
 #-----------------------------------------------------------------------------------
 # Własne ignorowane pliki
 MagmaAppDataGripFiles
+MagmaAppPersonGenerator
