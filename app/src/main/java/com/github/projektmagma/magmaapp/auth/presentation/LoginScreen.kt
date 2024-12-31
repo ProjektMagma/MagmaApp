@@ -11,23 +11,21 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.github.projektmagma.magmaapp.core.encryption.PasswordEncryptor
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-@Preview
 fun LoginScreen() {
-    var currentValue by remember { mutableStateOf("") }
-    var previousValue by remember { mutableStateOf("nothing") }
-    var message by remember { mutableStateOf("Write something") }
+    val viewmodel = koinViewModel<AuthViewModel>()
+
+    var password by viewmodel.password
+    val encryptedPassword by viewmodel.encryptedPassword.collectAsStateWithLifecycle()
 
     Scaffold { innerPadding ->
         val keyboardController = LocalSoftwareKeyboardController.current
@@ -43,24 +41,22 @@ fun LoginScreen() {
                 textAlign = TextAlign.Center,
                 fontSize = 32.sp
             )
-            TextField(modifier = Modifier.fillMaxWidth(),
-                value = currentValue,
-                onValueChange = { currentValue = it },
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = password,
+                onValueChange = { password = it },
                 label = {
                     Text(
                         modifier = Modifier.padding(4.dp), text = "Password to compare hash"
                     )
                 })
-            Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                keyboardController?.hide()
-                val valHash = PasswordEncryptor.encrypt(currentValue)
-                val prevValHash = PasswordEncryptor.encrypt(previousValue)
-                message =
-                    "Current value: $currentValue\n Previous value: $previousValue\n Current hash: $valHash\nPrevious hash: $prevValHash"
-                previousValue = currentValue
-                message += if (valHash == prevValHash) "\nTHEY ARE THE SAME" else "\nTHEY ARE DIFFERENT"
-
-            }) {
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    keyboardController?.hide()
+                    viewmodel.encryptPassword(password)
+                }
+            ) {
                 Text(
                     modifier = Modifier.padding(4.dp), text = "Check password hash"
                 )
@@ -69,7 +65,7 @@ fun LoginScreen() {
                 modifier = Modifier
                     .padding(4.dp)
                     .fillMaxWidth(),
-                text = message,
+                text = "Current value: $encryptedPassword",
                 textAlign = TextAlign.Center,
                 fontSize = 12.sp
             )

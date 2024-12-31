@@ -1,5 +1,8 @@
 [versions]
 agp = "8.7.3"
+koinAndroid = "4.0.1"
+koinAndroidxCompose = "4.0.0"
+koinCore = "4.0.1"
 kotlin = "2.1.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -31,6 +34,9 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
 [plugins]
@@ -49,7 +55,7 @@ compose = [
     "androidx-ui-tooling-preview",
     "androidx-ui",
     "androidx-ui-graphics",
-    "androidx-navigation-compose"
+    "androidx-navigation-compose",
 ]
 
 material3 = [
@@ -60,4 +66,10 @@ material3 = [
 
 kotlinx = [
     "kotlinx-serialization-json"
+]
+
+koin = [
+    "koin-android",
+    "koin-androidx-compose",
+    "koin-core"
 ]
