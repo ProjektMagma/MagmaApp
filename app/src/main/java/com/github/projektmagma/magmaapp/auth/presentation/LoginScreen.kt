@@ -20,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -91,13 +90,12 @@ fun LoginScreen() {
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = user.pesel_id.toString())
-                        Text(text = user.first_name)
-                        Text(text = user.second_name)
-                        Text(text = user.email ?: "Ni ma")
-                        Text(text = user.phone_number ?: "Ni ma")
-                        Text(text = user.role_id.toString())
-                        Text(text = user.group_id?.toString() ?: "Ni ma")
+                        Text(
+                            text = user.group.group_sign
+                        )
+                        Text(
+                            text = user.user.first_name
+                        )
                     }
                     Spacer(modifier = Modifier.padding(8.dp))
                 }
