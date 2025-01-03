@@ -24,6 +24,7 @@ val appModule = module {
             AppDatabase::class.java,
             "MagmaAppDatabase.db"
         )
+            .fallbackToDestructiveMigration()
             .createFromAsset("MagmaAppDatabase.db")
             .build()
     }
