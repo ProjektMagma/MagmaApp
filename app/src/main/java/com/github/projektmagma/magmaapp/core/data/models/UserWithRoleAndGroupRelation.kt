@@ -16,5 +16,5 @@ data class UserWithRoleAndGroup(
         parentColumn = "role_id",
         entityColumn = "role_id"
     )
-    val userRoles: UserRoles
+    val userRoles: UserRoles,
 )
