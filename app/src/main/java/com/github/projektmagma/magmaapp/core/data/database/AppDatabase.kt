@@ -1,7 +1,8 @@
-package com.github.projektmagma.magmaapp.core.data
+package com.github.projektmagma.magmaapp.core.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.github.projektmagma.magmaapp.core.data.dao.GroupDao
 import com.github.projektmagma.magmaapp.core.data.dao.UserDao
 import com.github.projektmagma.magmaapp.core.data.models.ClassesEntity
 import com.github.projektmagma.magmaapp.core.data.models.GroupEntity
@@ -12,4 +13,5 @@ import com.github.projektmagma.magmaapp.core.data.models.UserRolesEntity
 @Database(entities = [UserRolesEntity::class, GroupEntity::class, UserEntity::class, ClassesEntity::class, QualificationEntity::class], version = 1)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun userDao(): UserDao
+    abstract fun groupDao(): GroupDao
 }

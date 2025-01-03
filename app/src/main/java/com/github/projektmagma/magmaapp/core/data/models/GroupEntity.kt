@@ -8,18 +8,18 @@ import androidx.room.PrimaryKey
     tableName = "Groups",
     foreignKeys = [
         ForeignKey(
-            entity = Qualification::class,
+            entity = QualificationEntity::class,
             parentColumns = ["qualification_id"],
             childColumns = ["qualification_id"],
         ),
         ForeignKey(
-            entity = Classes::class,
+            entity = ClassesEntity::class,
             parentColumns = ["class_id"],
             childColumns = ["class_id"],
         )
     ]
 )
-data class Group(
+data class GroupEntity(
     @PrimaryKey val group_id: Int,
     val group_sign: String,
     val class_id: Int,

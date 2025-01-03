@@ -15,7 +15,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -33,11 +32,9 @@ fun LoginScreen() {
 
     var password by viewmodel.password
     val encryptedPassword by viewmodel.encryptedPassword.collectAsStateWithLifecycle()
-    val users by viewmodel.users.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewmodel.getUsers()
-    }
+    val userRelation by viewmodel.userRelation.collectAsStateWithLifecycle()
+    val groupRelation by viewmodel.groupRelation.collectAsStateWithLifecycle()
 
     Scaffold { innerPadding ->
         val keyboardController = LocalSoftwareKeyboardController.current
@@ -83,7 +80,7 @@ fun LoginScreen() {
             )
             Text("CZYSTY TEST")
             LazyColumn {
-                items(users) { user ->
+                items(userRelation) { user ->
                     Column(
                         Modifier
                             .background(MaterialTheme.colorScheme.surfaceContainer)
@@ -91,10 +88,21 @@ fun LoginScreen() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = user.group.group_sign
+                            text = user.pesel
                         )
                         Text(
-                            text = user.user.first_name
+                            text = user.group.groupSign
+                        )
+                        Text(
+                            text = user.roleId
+                        )
+                        Text(
+                            // TODO potrzeba tutaj zrobic polaczenia zeby odczytywac jednak klase a nie id
+                            text = user.group.classId
+                        )
+                        Text(
+                            // to ladnie dziala ale jednak nie ma relacji miedzy class i group
+                            text = groupRelation[7].classes.name
                         )
                     }
                     Spacer(modifier = Modifier.padding(8.dp))

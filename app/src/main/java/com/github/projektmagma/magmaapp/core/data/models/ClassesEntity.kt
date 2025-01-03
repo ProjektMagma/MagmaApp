@@ -8,13 +8,13 @@ import androidx.room.PrimaryKey
     tableName = "Classes",
     foreignKeys = [
         ForeignKey(
-            entity = User::class,
+            entity = UserEntity::class,
             parentColumns = ["user_id"],
             childColumns = ["supervising_teacher_id"],
         )
     ]
 )
-data class Classes (
+data class ClassesEntity (
     @PrimaryKey val class_id: Int,
     val name: String,
     val supervising_teacher_id: Int

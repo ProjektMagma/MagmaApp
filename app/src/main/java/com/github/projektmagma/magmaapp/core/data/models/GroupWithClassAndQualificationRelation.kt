@@ -3,7 +3,7 @@ package com.github.projektmagma.magmaapp.core.data.models
 import androidx.room.Embedded
 import androidx.room.Relation
 
-data class GroupWithClassAndQualificationEntity(
+data class GroupWithClassAndQualificationRelation(
     @Embedded val group: GroupEntity,
 
     @Relation(
