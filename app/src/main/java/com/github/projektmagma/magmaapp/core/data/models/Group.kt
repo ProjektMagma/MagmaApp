@@ -20,8 +20,8 @@ import androidx.room.PrimaryKey
     ]
 )
 data class Group(
-    @PrimaryKey val group_id: Int?,
+    @PrimaryKey val group_id: Int,
     val group_sign: String,
-    val class_id: Int?,
-    val qualification_id: Int?,
+    val class_id: Int,
+    val qualification_id: Int,
 )

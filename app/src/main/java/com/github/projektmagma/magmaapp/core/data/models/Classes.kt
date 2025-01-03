@@ -15,7 +15,7 @@ import androidx.room.PrimaryKey
     ]
 )
 data class Classes (
-    @PrimaryKey val class_id: Int?,
+    @PrimaryKey val class_id: Int,
     val name: String,
-    val supervising_teacher_id: Int?
+    val supervising_teacher_id: Int
 )

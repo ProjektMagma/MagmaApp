@@ -5,6 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "UserRoles")
 data class UserRoles(
-    @PrimaryKey val role_id: Int?,
+    @PrimaryKey val role_id: Int,
     val name: String
 )

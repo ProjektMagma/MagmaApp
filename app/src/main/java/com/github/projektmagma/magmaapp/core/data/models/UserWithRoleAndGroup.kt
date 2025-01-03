@@ -11,10 +11,10 @@ data class UserWithRoleAndGroup(
         entityColumn = "group_id"
     )
     val group: Group,
-//
-//    @Relation(
-//        parentColumn = "role_id",
-//        entityColumn = "role_id"
-//    )
-//    val userRoles: UserRoles
+
+    @Relation(
+        parentColumn = "role_id",
+        entityColumn = "role_id"
+    )
+    val userRoles: UserRoles
 )
