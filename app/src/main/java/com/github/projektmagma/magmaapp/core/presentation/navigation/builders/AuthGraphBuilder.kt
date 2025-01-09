@@ -7,19 +7,21 @@ import androidx.navigation.navigation
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.auth.presentation.LoginScreen
 import com.github.projektmagma.magmaapp.auth.presentation.OnBoardingScreen
+import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen.LoginScreen
+import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen.OnBoardingScreen
 
 fun NavGraphBuilder.authGraph(
     navHostController: NavHostController
 ) {
     navigation<Screen.AuthGraph>(
-        startDestination = Screen.OnBoardingScreen
+        startDestination = OnBoardingScreen
     ) {
-        composable<Screen.OnBoardingScreen> {
+        composable<OnBoardingScreen> {
             OnBoardingScreen(
                 navHostController
             )
         }
-        composable<Screen.LoginScreen> {
+        composable<LoginScreen> {
             LoginScreen()
         }
     }
