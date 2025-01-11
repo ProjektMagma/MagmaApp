@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="school_in_fingertips">Twoja szkoła w zasięgu ręki</string>
-    <string name="login">Zaloguj</string>
+    <string name="login">Zaloguj się</string>
     <string name="create_account">Załóż konto</string>
     <string name="report_bug">Zgłoś błąd</string>
+    <string name="login_banner">Zaloguj się na konto</string>
+    <string name="password">Hasło</string>
+    <string name="register_redirect_button">Nie masz konta? Zarejestruj się</string>
+    <string name="login_success">Logowanie udane</string>
+    <string name="login_failure">Niepoprawny email lub hasło</string>
 </resources>

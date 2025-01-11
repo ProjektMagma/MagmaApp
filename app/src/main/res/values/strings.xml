@@ -1,7 +1,13 @@
 <resources>
     <string name="app_name" translatable="false">MagmaApp</string>
     <string name="school_in_fingertips">Your school at your fingertips</string>
-    <string name="login">Log in</string>
+    <string name="login">Login</string>
     <string name="create_account">Create account</string>
     <string name="report_bug">Report a bug</string>
+    <string name="login_banner">Log in to your account</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="password">Password</string>
+    <string name="register_redirect_button">Don\'t have an account? Register</string>
+    <string name="login_success">Login successful</string>
+    <string name="login_failure">Invalid email or password</string>
 </resources>
