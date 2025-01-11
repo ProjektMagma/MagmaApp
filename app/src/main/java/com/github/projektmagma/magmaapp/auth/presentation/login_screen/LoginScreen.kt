@@ -1,6 +1,5 @@
 package com.github.projektmagma.magmaapp.auth.presentation.login_screen
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,7 +36,6 @@ fun LoginScreen(
 
     Scaffold { innerPadding ->
         val keyboardController = LocalSoftwareKeyboardController.current
-        val context = LocalContext.current
 
         Text(
             text = "USER $state"
@@ -86,12 +84,6 @@ fun LoginScreen(
                     .padding(4.dp),
                 onClick = {
                     keyboardController?.hide()
-                    val isValid = viewModel.isEmailAndPasswordValid()
-                    if (isValid) {
-                        Toast.makeText(context, R.string.login_success, Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(context, R.string.login_failure, Toast.LENGTH_SHORT).show()
-                    }
                 }
             ) {
                 Text(
