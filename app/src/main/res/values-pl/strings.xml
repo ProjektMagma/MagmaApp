@@ -9,4 +9,5 @@
     <string name="register_redirect_button">Nie masz konta? Zarejestruj się</string>
     <string name="login_success">Logowanie udane</string>
     <string name="login_failure">Niepoprawny email lub hasło</string>
+    <string name="register">Zarejestruj się</string>
 </resources>

@@ -71,6 +71,13 @@ fun OnBoardingScreen(
                 ) {
                     Text(text = stringResource(id = R.string.login))
                 }
+                Button(
+                    onClick = {
+                        navHostController.navigate(Screen.RegisterScreen)
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.register))
+                }
             }
 
             Text(
