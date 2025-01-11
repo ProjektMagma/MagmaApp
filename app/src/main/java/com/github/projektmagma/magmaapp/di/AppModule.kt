@@ -1,6 +1,6 @@
 package com.github.projektmagma.magmaapp.di
 
-import com.github.projektmagma.magmaapp.auth.data.LoginValidation
+import com.github.projektmagma.magmaapp.auth.data.EmailValidation
 import com.github.projektmagma.magmaapp.auth.data.repository.UserRepositoryImpl
 import com.github.projektmagma.magmaapp.auth.domain.Validation
 import com.github.projektmagma.magmaapp.auth.domain.repository.UserRepository
@@ -15,7 +15,7 @@ import org.koin.dsl.module
 
 val appModule = module {
 
-    single<Validation> { LoginValidation() }
+    single<Validation> { EmailValidation() }
     single { LoginValidationUseCase(get()) }
 
     single { Firebase.auth }

@@ -35,7 +35,6 @@ fun LoginScreen(
     var password by viewModel.password
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-
     Scaffold { innerPadding ->
         val keyboardController = LocalSoftwareKeyboardController.current
         val context = LocalContext.current
