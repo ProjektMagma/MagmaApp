@@ -1,4 +1,4 @@
-package com.github.projektmagma.magmaapp.auth.presentation
+package com.github.projektmagma.magmaapp.auth.presentation.login_screen
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -20,24 +20,30 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.projektmagma.magmaapp.R
+import com.github.projektmagma.magmaapp.auth.presentation.AuthViewModel
 import org.koin.androidx.compose.koinViewModel
 
-@Preview
 @Composable
-fun LoginScreen() {
-    val viewmodel = koinViewModel<AuthViewModel>()
-
-    var email by viewmodel.email
-    var password by viewmodel.password
+fun LoginScreen(
+    viewModel: AuthViewModel = koinViewModel()
+) {
+    var email by viewModel.email
+    var password by viewModel.password
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
 
     Scaffold { innerPadding ->
         val keyboardController = LocalSoftwareKeyboardController.current
         val context = LocalContext.current
+
+        Text(
+            text = "USER $state"
+        )
+
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -81,7 +87,7 @@ fun LoginScreen() {
                     .padding(4.dp),
                 onClick = {
                     keyboardController?.hide()
-                    val isValid = viewmodel.isEmailAndPasswordValid()
+                    val isValid = viewModel.isEmailAndPasswordValid()
                     if (isValid) {
                         Toast.makeText(context, R.string.login_success, Toast.LENGTH_SHORT).show()
                     } else {
