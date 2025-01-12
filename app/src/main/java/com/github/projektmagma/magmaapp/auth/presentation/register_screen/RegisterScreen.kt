@@ -22,6 +22,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -37,11 +38,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.auth.presentation.AuthViewModel
-import com.github.projektmagma.magmaapp.auth.presentation.model.UiState
+import com.github.projektmagma.magmaapp.auth.presentation.model.RegistrationFormEvent
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -51,15 +51,26 @@ fun RegisterScreen(
     navHostController: NavHostController,
     viewModel: AuthViewModel = koinViewModel()
 ) {
-    var email by viewModel.email
-    var password by viewModel.password
     var passwordVisible by viewModel.passwordVisible
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    var repeatedPasswordVisible by viewModel.repeatedPasswordVisible
+    val state = viewModel.state
     val snackbarState = remember { SnackbarHostState() }
     val snackbarScope = rememberCoroutineScope()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    LaunchedEffect(context) {
+        viewModel.validationEvent.collect { event ->
+            when (event) {
+                is AuthViewModel.ValidationEvent.Success -> {
+                    snackbarScope.launch {
+                        snackbarState.showSnackbar(context.getString(R.string.register_success))
+                        navHostController.navigate(Screen.MainGraph)
+                    }
+                }
+            }
+        }
+    }
 
     Scaffold(bottomBar = {
         Box(
@@ -89,20 +100,30 @@ fun RegisterScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp),
-                value = email,
-                onValueChange = { email = it },
+                value = state.email,
+                onValueChange = {
+                    viewModel.onEvent(RegistrationFormEvent.EmailChanged(it))
+                },
                 label = {
                     Text(
                         modifier = Modifier.padding(4.dp),
                         text = stringResource(id = R.string.email)
                     )
-                })
+                },
+                isError = state.emailError != null,
+            )
+            if (state.emailError != null) {
+                Text(
+                    text = state.emailError.name,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp),
-                value = password,
-                onValueChange = { password = it },
+                value = state.password,
+                onValueChange = { viewModel.onEvent(RegistrationFormEvent.PasswordChanged(it)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 label = {
@@ -125,21 +146,53 @@ fun RegisterScreen(
                         Icon(imageVector = image, description)
                     }
                 })
+            if (state.passwordError != null) {
+                Text(
+                    text = state.passwordError.name,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp),
+                value = state.repeatedPassword,
+                onValueChange = { viewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(it)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                visualTransformation = if (repeatedPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                label = {
+                    Text(
+                        modifier = Modifier.padding(4.dp),
+                        text = stringResource(id = R.string.password)
+                    )
+                },
+                trailingIcon = {
+                    val image = if (repeatedPasswordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    val description =
+                        if (passwordVisible) stringResource(R.string.hide_password) else stringResource(
+                            R.string.show_password
+                        )
+
+                    IconButton(onClick = { repeatedPasswordVisible = !repeatedPasswordVisible }) {
+                        Icon(imageVector = image, description)
+                    }
+                })
+            if (state.repeatedPasswordError != null) {
+                Text(
+                    text = state.repeatedPasswordError.name,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
             Button(
                 modifier = Modifier
                     .width(200.dp)
                     .padding(4.dp),
                 onClick = {
+                    viewModel.onEvent(RegistrationFormEvent.Submit)
                     keyboardController?.hide()
-                    snackbarScope.launch {
-                        viewModel.register()
-                        val snackbarMessage = when (state) {
-                            is UiState.Success -> context.getString(R.string.register_success)
-                            is UiState.Error -> context.getString(R.string.register_failure)
-                            else -> context.getString(R.string.unknown_error)
-                        }
-                        snackbarState.showSnackbar(snackbarMessage)
-                    }
                 }
             ) {
                 Text(
@@ -163,7 +216,7 @@ fun RegisterScreen(
                 )
             }
             Text(
-                text = "USER $state"
+                text = state.toString(),
             )
         }
     }

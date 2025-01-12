@@ -1,10 +1,10 @@
-package com.github.projektmagma.magmaapp.auth.domain
+package com.github.projektmagma.magmaapp.auth.domain.use_case
 
 import com.github.projektmagma.magmaapp.core.util.Error
 import com.github.projektmagma.magmaapp.core.util.Result
 
-class PasswordValidation {
-    fun validatePassword(password: String): Result<Unit, PasswordError> {
+class ValidatePassword {
+    fun execute(password: String): Result<Unit, PasswordError> {
         if (password.isEmpty()) {
             return Result.Error(PasswordError.EMPTY)
         }
@@ -21,6 +21,10 @@ class PasswordValidation {
             return Result.Error(PasswordError.NO_LOWERCASE)
         }
 
+        if (!password.any() { it.isDigit() }) {
+            return Result.Error(PasswordError.NO_DIGIT)
+        }
+
         return Result.Success(Unit)
     }
 
@@ -30,5 +34,6 @@ class PasswordValidation {
         TOO_SHORT,
         NO_UPPERCASE,
         NO_LOWERCASE,
+        NO_DIGIT
     }
 }
