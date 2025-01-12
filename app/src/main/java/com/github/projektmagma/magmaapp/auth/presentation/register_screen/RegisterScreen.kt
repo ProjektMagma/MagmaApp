@@ -28,6 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -56,6 +57,8 @@ fun RegisterScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarState = remember { SnackbarHostState() }
     val snackbarScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
 
     Scaffold(bottomBar = {
@@ -68,7 +71,6 @@ fun RegisterScreen(
             SnackbarHost(hostState = snackbarState)
         }
     }) { innerPadding ->
-        val keyboardController = LocalSoftwareKeyboardController.current
 
         Column(
             modifier = Modifier
@@ -131,11 +133,12 @@ fun RegisterScreen(
                     keyboardController?.hide()
                     snackbarScope.launch {
                         viewModel.register()
-                        when (state) {
-                            is UiState.Success -> snackbarState.showSnackbar(R.string.register_success.toString())
-                            is UiState.Error -> snackbarState.showSnackbar(R.string.register_failure.toString())
-                            else -> snackbarState.showSnackbar(R.string.unknown_error.toString())
+                        val snackbarMessage = when (state) {
+                            is UiState.Success -> context.getString(R.string.register_success)
+                            is UiState.Error -> context.getString(R.string.register_failure)
+                            else -> context.getString(R.string.unknown_error)
                         }
+                        snackbarState.showSnackbar(snackbarMessage)
                     }
                 }
             ) {
