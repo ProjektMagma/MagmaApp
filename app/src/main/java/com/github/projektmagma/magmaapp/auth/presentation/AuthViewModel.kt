@@ -18,6 +18,7 @@ class AuthViewModel(
 ) : ViewModel() {
     val email = mutableStateOf("")
     val password = mutableStateOf("")
+    var passwordVisible = mutableStateOf(false)
 
     private val _state = MutableStateFlow<UiState>(UiState.Loading)
     val state = _state.asStateFlow()
@@ -28,6 +29,7 @@ class AuthViewModel(
                 is Result.Success -> {
                     _state.value = UiState.Success(result.data)
                 }
+
                 is Result.Error -> {
                     _state.value = when (result.error) {
                         EmailValidation.EmailError.EMPTY -> UiState.Error("Email is empty")
@@ -46,6 +48,7 @@ class AuthViewModel(
                 is Result.Success -> {
                     UiState.Success(result.data)
                 }
+
                 is Result.Error -> {
                     when (result.error) {
                         EmailValidation.EmailError.EMPTY -> UiState.Error("Email is empty")

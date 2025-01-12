@@ -1,14 +1,21 @@
 <resources>
     <string name="app_name" translatable="false">MagmaApp</string>
     <string name="school_in_fingertips">Your school at your fingertips</string>
-    <string name="login">Login</string>
+    <string name="login">Log in</string>
     <string name="create_account">Create account</string>
     <string name="report_bug">Report a bug</string>
     <string name="login_banner">Log in to your account</string>
     <string name="email" translatable="false">Email</string>
     <string name="password">Password</string>
     <string name="register_redirect_button">Don\'t have an account? Register</string>
-    <string name="login_success">Login successful</string>
+    <string name="login_success">Log in successful</string>
     <string name="login_failure">Invalid email or password</string>
     <string name="register">Register</string>
+    <string name="register_banner">Register your account</string>
+    <string name="login_redirect_button">Have an account? Log in</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="unknown_error">Unknown error occurred</string>
+    <string name="register_success">Register successful</string>
+    <string name="register_failure">Invalid email or password</string>
 </resources>

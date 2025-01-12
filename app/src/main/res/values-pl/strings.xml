@@ -10,4 +10,11 @@
     <string name="login_success">Logowanie udane</string>
     <string name="login_failure">Niepoprawny email lub hasło</string>
     <string name="register">Zarejestruj się</string>
+    <string name="register_banner">Zarejestruj swoje konto</string>
+    <string name="login_redirect_button">Masz konto? Zaloguj się</string>
+    <string name="hide_password">Ukryj hasło</string>
+    <string name="show_password">Pokaż hasło</string>
+    <string name="unknown_error">Wystąpił nieznany błąd</string>
+    <string name="register_success">Rejestracja udana</string>
+    <string name="register_failure">Invalid email or password</string>
 </resources>
