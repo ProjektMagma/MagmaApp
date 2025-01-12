@@ -1,11 +1,12 @@
 package com.github.projektmagma.magmaapp.di
 
 import com.github.projektmagma.magmaapp.auth.data.repository.UserRepositoryImpl
-import com.github.projektmagma.magmaapp.auth.domain.EmailValidation
-import com.github.projektmagma.magmaapp.auth.domain.PasswordValidation
+import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateEmail
+import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidatePassword
 import com.github.projektmagma.magmaapp.auth.domain.repository.UserRepository
-import com.github.projektmagma.magmaapp.auth.domain.use_cases.LoginUserUseCase
-import com.github.projektmagma.magmaapp.auth.domain.use_cases.RegisterUserUseCase
+import com.github.projektmagma.magmaapp.auth.domain.use_case.LoginUserUseCase
+import com.github.projektmagma.magmaapp.auth.domain.use_case.RegisterUserUseCase
+import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateRepeatedPassword
 import com.github.projektmagma.magmaapp.auth.presentation.AuthViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -18,11 +19,14 @@ val appModule = module {
 
     single<UserRepository> { UserRepositoryImpl(get()) }
 
-    single { EmailValidation() }
-    single { PasswordValidation() }
+    single { ValidateEmail() }
+    single { ValidatePassword() }
 
-    single { RegisterUserUseCase(get(), get(), get())}
-    single { LoginUserUseCase(get(), get()) }
+    single { RegisterUserUseCase(get())}
+    single { LoginUserUseCase(get()) }
+    single { ValidateEmail() }
+    single { ValidatePassword() }
+    single { ValidateRepeatedPassword() }
 
-    viewModel { AuthViewModel(get(), get()) }
+    viewModel { AuthViewModel(get(), get(), get(), get(), get()) }
 }

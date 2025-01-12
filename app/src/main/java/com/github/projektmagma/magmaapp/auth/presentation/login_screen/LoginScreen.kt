@@ -22,6 +22,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -37,11 +38,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.auth.presentation.AuthViewModel
-import com.github.projektmagma.magmaapp.auth.presentation.model.UiState
+import com.github.projektmagma.magmaapp.auth.presentation.model.RegistrationFormEvent
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -51,14 +51,25 @@ fun LoginScreen(
     navHostController: NavHostController,
     viewModel: AuthViewModel = koinViewModel()
 ) {
-    var email by viewModel.email
-    var password by viewModel.password
     var passwordVisible by viewModel.passwordVisible
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state = viewModel.state
     val snackbarState = remember { SnackbarHostState() }
     val snackbarScope = rememberCoroutineScope()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(context) {
+        viewModel.validationEvent.collect { event ->
+            when (event) {
+                is AuthViewModel.ValidationEvent.Success -> {
+                    navHostController.navigate(Screen.HomeScreen)
+                    snackbarScope.launch {
+                        snackbarState.showSnackbar(context.getString(R.string.login_success))
+                    }
+                }
+            }
+        }
+    }
 
     Scaffold(bottomBar = {
         Box(
@@ -88,8 +99,8 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp),
-                value = email,
-                onValueChange = { email = it },
+                value = state.email,
+                onValueChange = { viewModel.onEvent(RegistrationFormEvent.EmailChanged(it)) },
                 label = {
                     Text(
                         modifier = Modifier.padding(4.dp),
@@ -100,8 +111,8 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp),
-                value = password,
-                onValueChange = { password = it },
+                value = state.password,
+                onValueChange = { viewModel.onEvent(RegistrationFormEvent.PasswordChanged(it)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 label = {
@@ -129,17 +140,8 @@ fun LoginScreen(
                     .width(200.dp)
                     .padding(4.dp),
                 onClick = {
+                    viewModel.onEvent(RegistrationFormEvent.Submit)
                     keyboardController?.hide()
-                    snackbarScope.launch {
-                        viewModel.login()
-                        val snackbarMessage =
-                            when (state) {
-                                is UiState.Success -> context.getString(R.string.login_success)
-                                is UiState.Error -> context.getString(R.string.login_failure)
-                                else -> context.getString(R.string.unknown_error)
-                            }
-                        snackbarState.showSnackbar(snackbarMessage)
-                    }
                 }
             ) {
                 Text(
@@ -161,9 +163,6 @@ fun LoginScreen(
                     textAlign = TextAlign.Center
                 )
             }
-            Text(
-                text = "USER $state"
-            )
         }
     }
 }
