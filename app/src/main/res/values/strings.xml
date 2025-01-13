@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">MagmaApp</string>
+    <string name="app_name" translatable="false">Magma App</string>
     <string name="school_in_fingertips">Your school at your fingertips</string>
     <string name="login">Log in</string>
     <string name="create_account">Create account</string>
@@ -7,7 +7,7 @@
     <string name="login_banner">Log in to your account</string>
     <string name="email" translatable="false">Email</string>
     <string name="password">Password</string>
-    <string name="register_redirect_button">Don\'t have an account? Register</string>
+    <string name="register_redirect_button">Do not have an account? Register</string>
     <string name="login_success">Log in successful</string>
     <string name="login_failure">Invalid email or password</string>
     <string name="register">Register</string>
@@ -15,7 +15,18 @@
     <string name="login_redirect_button">Have an account? Log in</string>
     <string name="hide_password">Hide password</string>
     <string name="show_password">Show password</string>
-    <string name="unknown_error">Unknown error occurred</string>
+    <string name="error_unknown">Unknown error occurred</string>
     <string name="register_success">Register successful</string>
     <string name="register_failure">Invalid email or password</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="error_empty_email">Email can not be empty</string>
+    <string name="error_invalid_email">Invalid email</string>
+    <string name="error_empty_password">Password can not be empty</string>
+    <string name="error_password_too_short">Password is too short</string>
+    <string name="error_password_no_uppercase">Password must contain at least one upper case letter</string>
+    <string name="error_password_no_lowercase">Password must contain at least one lower case letter</string>
+    <string name="error_password_no_digit">Password must contain at least one digit</string>
+    <string name="error_passwords_do_not_match">Passwords do not match</string>
+    <string name="error_email_taken">Email is already taken</string>
+    <string name="error_server_error">Server error has occurred</string>
 </resources>

@@ -5,11 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateEmail
 import com.github.projektmagma.magmaapp.auth.domain.use_case.LoginUserUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.RegisterUserUseCase
+import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateEmail
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidatePassword
-import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateRepeatedPassword
 import com.github.projektmagma.magmaapp.auth.presentation.model.RegistrationFormEvent
 import com.github.projektmagma.magmaapp.auth.presentation.model.RegistrationFormState
 import com.github.projektmagma.magmaapp.core.util.Result
@@ -22,13 +21,11 @@ class AuthViewModel(
     private val loginUserUseCase: LoginUserUseCase,
     private val validateEmail: ValidateEmail,
     private val validatePassword: ValidatePassword,
-    private val validateRepeatedPassword: ValidateRepeatedPassword
 ) : ViewModel() {
 
     var state by mutableStateOf(RegistrationFormState())
 
     var passwordVisible = mutableStateOf(false)
-    var repeatedPasswordVisible = mutableStateOf(false)
 
     private val _validationEventChannel = Channel<ValidationEvent>()
     val validationEvent = _validationEventChannel.receiveAsFlow()
@@ -38,12 +35,15 @@ class AuthViewModel(
             is RegistrationFormEvent.EmailChanged -> {
                 state = state.copy(email = event.email)
             }
+
             is RegistrationFormEvent.PasswordChanged -> {
                 state = state.copy(password = event.password)
             }
+
             is RegistrationFormEvent.RepeatedPasswordChanged -> {
                 state = state.copy(repeatedPassword = event.repeatedPassword)
             }
+
             is RegistrationFormEvent.Submit -> {
                 submitData()
             }
@@ -53,20 +53,16 @@ class AuthViewModel(
     private fun submitData() {
         val emailResult = validateEmail.execute(state.email)
         val passwordResult = validatePassword.execute(state.password)
-        val repeatedPasswordResult = validateRepeatedPassword.execute(
-            state.password, state.repeatedPassword)
 
         val hasError = listOf(
             emailResult,
             passwordResult,
-            repeatedPasswordResult
         ).any { it is Result.Error }
 
         if (hasError) {
             state = state.copy(
                 emailError = if (emailResult is Result.Error) emailResult.error else null,
                 passwordError = if (passwordResult is Result.Error) passwordResult.error else null,
-                repeatedPasswordError = if (repeatedPasswordResult is Result.Error) repeatedPasswordResult.error else null
             )
             return
         }
@@ -77,7 +73,7 @@ class AuthViewModel(
     }
 
     sealed class ValidationEvent() {
-        data object Success: ValidationEvent()
+        data object Success : ValidationEvent()
     }
 
 }

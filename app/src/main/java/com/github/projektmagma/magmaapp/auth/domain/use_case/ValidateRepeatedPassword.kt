@@ -1,5 +1,6 @@
 package com.github.projektmagma.magmaapp.auth.domain.use_case
 
+import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.util.Error
 import com.github.projektmagma.magmaapp.core.util.Result
 
@@ -11,7 +12,7 @@ class ValidateRepeatedPassword {
         return Result.Success(Unit)
     }
 
-    enum class RepeatedPasswordError: Error {
-        PASSWORDS_DO_NOT_MATCH
+    enum class RepeatedPasswordError(override val messageId: Int) : Error {
+        PASSWORDS_DO_NOT_MATCH(R.string.error_passwords_do_not_match)
     }
 }

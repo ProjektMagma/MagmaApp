@@ -1,9 +1,10 @@
 package com.github.projektmagma.magmaapp.auth.domain.use_case
 
+import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.util.Error
 import com.github.projektmagma.magmaapp.core.util.Result
 
-class ValidateEmail{
+class ValidateEmail {
 
     fun execute(email: String): Result<Unit, EmailError> {
         if (email.isEmpty()) {
@@ -17,8 +18,8 @@ class ValidateEmail{
         return Result.Success(Unit)
     }
 
-    enum class EmailError: Error {
-        EMPTY,
-        INVALID_EMAIL,
+    enum class EmailError(override val messageId: Int) : Error {
+        EMPTY(R.string.error_empty_email),
+        INVALID_EMAIL(R.string.error_invalid_email)
     }
 }

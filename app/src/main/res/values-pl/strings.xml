@@ -14,7 +14,18 @@
     <string name="login_redirect_button">Masz konto? Zaloguj się</string>
     <string name="hide_password">Ukryj hasło</string>
     <string name="show_password">Pokaż hasło</string>
-    <string name="unknown_error">Wystąpił nieznany błąd</string>
+    <string name="error_unknown">Wystąpił nieznany błąd</string>
     <string name="register_success">Rejestracja udana</string>
-    <string name="register_failure">Invalid email or password</string>
+    <string name="register_failure">Niepoprawny email lub hasło</string>
+    <string name="repeat_password">Powtórz hasło</string>
+    <string name="error_empty_email">Email nie może być pusty</string>
+    <string name="error_invalid_email">Niepoprawny email</string>
+    <string name="error_empty_password">Hasło nie może być puste</string>
+    <string name="error_password_too_short">Hasło jest za krótkie</string>
+    <string name="error_password_no_uppercase">Hasło musi posiadać przynajmniej jedną dużą literę</string>
+    <string name="error_password_no_lowercase">Hasło musi posiadać przynajmniej jedną małą literę</string>
+    <string name="error_password_no_digit">Hasło musi posiadać przynajmniej jedną cyfrę</string>
+    <string name="error_passwords_do_not_match">Hasła nie są takie same</string>
+    <string name="error_email_taken">Email jest już zajęty</string>
+    <string name="error_server_error">Wystąpił błąd serwera</string>
 </resources>

@@ -6,7 +6,7 @@ import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateRepeatedPas
 
 data class RegistrationFormState(
     val email: String = "",
-    val emailError: EmailError? =  null,
+    val emailError: EmailError? = null,
     val password: String = "",
     val passwordError: PasswordError? = null,
     val repeatedPassword: String = "",
