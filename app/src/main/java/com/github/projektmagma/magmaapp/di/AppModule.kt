@@ -25,11 +25,10 @@ val appModule = module {
 
     single { RegisterUserUseCase(get()) }
     single { LoginUserUseCase(get()) }
+
     single { ValidateEmail() }
     single { ValidatePassword() }
     single { ValidateRepeatedPassword() }
 
-    single { AuthModifiers() }
-
-    viewModel { AuthViewModel(get(), get(), get(), get()) }
+    viewModel { AuthViewModel(get(), get(), get(), get(), get()) }
 }

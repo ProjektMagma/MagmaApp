@@ -27,10 +27,12 @@ fun PasswordField(
     onValueChange: (String) -> Unit,
     passwordVisible: MutableState<Boolean>,
     showPasswordVisibilityIcon: Boolean,
+    isError: Boolean = false
 ) {
     TextField(
         modifier = modifier,
         value = passwordStateString,
+        isError = isError,
         onValueChange = { onValueChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),

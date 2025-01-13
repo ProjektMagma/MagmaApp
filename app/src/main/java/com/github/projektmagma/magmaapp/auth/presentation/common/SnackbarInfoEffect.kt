@@ -29,10 +29,14 @@ fun SnackbarInfoEffect(
         viewModel.validationEvent.collect { event ->
             when (event) {
                 is AuthViewModel.ValidationEvent.Success -> {
+                    when (registrationType) {
+                        RegistrationType.LOGIN -> viewModel.login()
+                        RegistrationType.REGISTER -> viewModel.register()
+                    }
                     snackbarScope.launch {
                         snackbarState.showSnackbar(snackbarMessageSuccess)
-                        navHostController.navigate(screen)
                     }
+                    navHostController.navigate(screen)
                 }
             }
         }

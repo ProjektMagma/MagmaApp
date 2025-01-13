@@ -1,5 +1,7 @@
 package com.github.projektmagma.magmaapp.auth.presentation.model
 
+import com.github.projektmagma.magmaapp.auth.presentation.common.RegistrationType
+
 sealed class RegistrationFormEvent {
     data class EmailChanged(val email: String) : RegistrationFormEvent()
     data class PasswordChanged(val password: String) : RegistrationFormEvent()
@@ -7,5 +9,5 @@ sealed class RegistrationFormEvent {
         val repeatedPassword: String
     ) : RegistrationFormEvent()
 
-    data object Submit : RegistrationFormEvent()
+    data class Submit(val registrationType: RegistrationType) : RegistrationFormEvent()
 }

@@ -28,6 +28,7 @@ import androidx.navigation.NavHostController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.auth.presentation.AuthViewModel
 import com.github.projektmagma.magmaapp.auth.presentation.common.AuthModifiers
+import com.github.projektmagma.magmaapp.auth.presentation.common.ErrorText
 import com.github.projektmagma.magmaapp.auth.presentation.common.PasswordField
 import com.github.projektmagma.magmaapp.auth.presentation.common.RegistrationType
 import com.github.projektmagma.magmaapp.auth.presentation.common.SnackbarInfoEffect
@@ -47,7 +48,6 @@ fun LoginScreen(
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val authModifiers = AuthModifiers()
-
 
     SnackbarInfoEffect(
         context = context,
@@ -84,6 +84,7 @@ fun LoginScreen(
             TextField(
                 modifier = authModifiers.textFieldsModifier,
                 value = state.email,
+                isError = state.emailError != null,
                 onValueChange = { viewModel.onEvent(RegistrationFormEvent.EmailChanged(it)) },
                 label = {
                     Text(
@@ -91,6 +92,7 @@ fun LoginScreen(
                         text = stringResource(id = R.string.email)
                     )
                 })
+            ErrorText(state = state)
             PasswordField(
                 modifier = authModifiers.textFieldsModifier,
                 passwordVisible = passwordVisible,
@@ -102,7 +104,7 @@ fun LoginScreen(
             Button(
                 modifier = authModifiers.buttonsModifier,
                 onClick = {
-                    viewModel.onEvent(RegistrationFormEvent.Submit)
+                    viewModel.onEvent(RegistrationFormEvent.Submit(RegistrationType.LOGIN))
                     keyboardController?.hide()
                 }
             ) {
