@@ -28,4 +28,7 @@
     <string name="error_passwords_do_not_match">Hasła nie są takie same</string>
     <string name="error_email_taken">Email jest już zajęty</string>
     <string name="error_server_error">Wystąpił błąd serwera</string>
+    <string name="notebook_selection_info">Wybrano zeszyt:</string>
+    <string name="new_notebook_creation_info">Stworzono nowy zeszyt</string>
+    <string name="notebook_default_name">Zeszyt bez nazwy</string>
 </resources>

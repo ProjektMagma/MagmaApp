@@ -17,6 +17,6 @@ fun NavGraph(
         startDestination = Screen.AuthGraph,
     ) {
         authGraph(navHostController, snackbarState)
-        mainGraph()
+        mainGraph(navHostController, snackbarState)
     }
 }

@@ -29,4 +29,7 @@
     <string name="error_passwords_do_not_match">Passwords do not match</string>
     <string name="error_email_taken">Email is already taken</string>
     <string name="error_server_error">Server error has occurred</string>
+    <string name="notebook_selection_info">Notebook selected:</string>
+    <string name="new_notebook_creation_info">New notebook created</string>
+    <string name="notebook_default_name">Untitled notebook</string>
 </resources>

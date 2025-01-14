@@ -1,5 +1,5 @@
 package com.github.projektmagma.magmaapp.core.util
 
-interface Error {
-    val messageId: Int
+interface Error : Message {
+    override val messageId: Int
 }
