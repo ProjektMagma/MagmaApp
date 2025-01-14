@@ -41,7 +41,6 @@ fun RegisterScreen(
     val snackbarScope = rememberCoroutineScope()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val authModifiers = AuthModifiers()
 
     SnackbarInfoEffect(
         context = context,
@@ -60,22 +59,22 @@ fun RegisterScreen(
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(authModifiers.topSpacerModifier)
+                Spacer(AuthModifiers.topSpacerModifier)
                 Text(
-                    modifier = authModifiers.textPaddingModifier,
+                    modifier = AuthModifiers.textPaddingModifier,
                     text = stringResource(id = R.string.register_banner),
                     textAlign = TextAlign.Center,
                     fontSize = 32.sp
                 )
                 TextField(
-                    modifier = authModifiers.textFieldsModifier,
+                    modifier = AuthModifiers.textFieldsModifier,
                     value = state.email,
                     onValueChange = {
                         viewModel.onEvent(RegistrationFormEvent.EmailChanged(it))
                     },
                     label = {
                         Text(
-                            modifier = authModifiers.textPaddingModifier,
+                            modifier = AuthModifiers.textPaddingModifier,
                             text = stringResource(id = R.string.email)
                         )
                     },
@@ -83,7 +82,7 @@ fun RegisterScreen(
                 )
                 ErrorText(state = state)
                 PasswordField(
-                    modifier = authModifiers.textFieldsModifier,
+                    modifier = AuthModifiers.textFieldsModifier,
                     passwordVisible = passwordVisible,
                     isError = state.passwordError != null,
                     showPasswordVisibilityIcon = true,
@@ -93,42 +92,37 @@ fun RegisterScreen(
                 )
                 ErrorText(state = state)
                 PasswordField(
-                    modifier = authModifiers.textFieldsModifier,
+                    modifier = AuthModifiers.textFieldsModifier,
                     passwordVisible = passwordVisible,
                     isError = state.repeatedPasswordError != null,
                     showPasswordVisibilityIcon = false,
                     labelString = stringResource(id = R.string.repeat_password),
                     passwordStateString = state.repeatedPassword,
                     onValueChange = {
-                        viewModel.onEvent(
-                            RegistrationFormEvent.RepeatedPasswordChanged(
-                                it
-                            )
-                        )
-                    }
+                        viewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(it)) }
                 )
                 ErrorText(state = state)
                 Button(
-                    modifier = authModifiers.buttonsModifier,
+                    modifier = AuthModifiers.buttonsModifier,
                     onClick = {
                         viewModel.onEvent(RegistrationFormEvent.Submit(RegistrationType.REGISTER))
                         keyboardController?.hide()
                     }
                 ) {
                     Text(
-                        modifier = authModifiers.textPaddingModifier,
+                        modifier = AuthModifiers.textPaddingModifier,
                         text = stringResource(id = R.string.register),
                     )
                 }
                 Button(
-                    modifier = authModifiers.buttonsModifier,
+                    modifier = AuthModifiers.buttonsModifier,
                     onClick = {
                         keyboardController?.hide()
                         navHostController.navigate(Screen.LoginScreen)
                     }
                 ) {
                     Text(
-                        modifier = authModifiers.textPaddingModifier,
+                        modifier = AuthModifiers.textPaddingModifier,
                         text = stringResource(id = R.string.login_redirect_button),
                         textAlign = TextAlign.Center
                     )

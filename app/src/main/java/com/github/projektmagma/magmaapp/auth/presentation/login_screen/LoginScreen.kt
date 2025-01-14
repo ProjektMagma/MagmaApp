@@ -42,7 +42,6 @@ fun LoginScreen(
     val snackbarScope = rememberCoroutineScope()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val authModifiers = AuthModifiers()
 
     SnackbarInfoEffect(
         context = context,
@@ -61,15 +60,15 @@ fun LoginScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = authModifiers.topSpacerModifier)
+            Spacer(modifier = AuthModifiers.topSpacerModifier)
             Text(
-                modifier = authModifiers.textPaddingModifier,
+                modifier = AuthModifiers.textPaddingModifier,
                 text = stringResource(id = R.string.login_banner),
                 textAlign = TextAlign.Center,
                 fontSize = 32.sp
             )
             TextField(
-                modifier = authModifiers.textFieldsModifier,
+                modifier = AuthModifiers.textFieldsModifier,
                 value = state.email,
                 isError = state.emailError != null,
                 onValueChange = { viewModel.onEvent(RegistrationFormEvent.EmailChanged(it)) },
@@ -81,7 +80,7 @@ fun LoginScreen(
                 })
             ErrorText(state = state)
             PasswordField(
-                modifier = authModifiers.textFieldsModifier,
+                modifier = AuthModifiers.textFieldsModifier,
                 passwordVisible = passwordVisible,
                 showPasswordVisibilityIcon = true,
                 labelString = stringResource(id = R.string.password),
@@ -89,7 +88,7 @@ fun LoginScreen(
                 onValueChange = { viewModel.onEvent(RegistrationFormEvent.PasswordChanged(it)) }
             )
             Button(
-                modifier = authModifiers.buttonsModifier,
+                modifier = AuthModifiers.buttonsModifier,
                 onClick = {
                     viewModel.onEvent(RegistrationFormEvent.Submit(RegistrationType.LOGIN))
                     keyboardController?.hide()
@@ -100,14 +99,14 @@ fun LoginScreen(
                 )
             }
             Button(
-                modifier = authModifiers.buttonsModifier,
+                modifier = AuthModifiers.buttonsModifier,
                 onClick = {
                     keyboardController?.hide()
                     navHostController.navigate(Screen.RegisterScreen)
                 }
             ) {
                 Text(
-                    modifier = authModifiers.textPaddingModifier,
+                    modifier = AuthModifiers.textPaddingModifier,
                     text = stringResource(id = R.string.register_redirect_button),
                     textAlign = TextAlign.Center
                 )
