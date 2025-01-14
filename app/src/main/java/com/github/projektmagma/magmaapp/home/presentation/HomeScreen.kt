@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
@@ -40,7 +41,7 @@ fun HomeScreen(
     val snackbarScope = rememberCoroutineScope()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val user = viewModel.user!!
+    val user by viewModel.user.collectAsStateWithLifecycle()
     var snackbarMessage by remember { mutableStateOf(context.getString(R.string.login_success)) }
 
     val notebooks = remember {
@@ -63,7 +64,11 @@ fun HomeScreen(
             IconButton(
                 onClick = {
                     viewModel.logout()
-                    navController.navigate(Screen.HomeScreen) { launchSingleTop = true }
+                    navController.navigate(Screen.AuthGraph) {
+                        popUpTo(Screen.AuthGraph) {
+                            inclusive = true
+                        }
+                    }
                 }
             ) {
                 Icon(
@@ -76,7 +81,7 @@ fun HomeScreen(
                     top = innerPadding.calculateTopPadding(),
                     bottom = 16.dp
                 ),
-                text = "Hello, ${user.email}!",
+                text = "Hello, ${user?.email}!",
                 style = MaterialTheme.typography.titleLarge,
             )
             LazyColumn(
