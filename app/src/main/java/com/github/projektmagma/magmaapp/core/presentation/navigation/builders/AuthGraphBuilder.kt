@@ -1,5 +1,6 @@
 package com.github.projektmagma.magmaapp.core.presentation.navigation.builders
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -13,7 +14,8 @@ import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen.OnBo
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen.RegisterScreen
 
 fun NavGraphBuilder.authGraph(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    snackbarState: SnackbarHostState
 ) {
     navigation<Screen.AuthGraph>(
         startDestination = OnBoardingScreen
@@ -22,10 +24,16 @@ fun NavGraphBuilder.authGraph(
             OnBoardingScreen(navHostController)
         }
         composable<LoginScreen> {
-            LoginScreen(navHostController)
+            LoginScreen(
+                navHostController,
+                snackbarState
+            )
         }
         composable<RegisterScreen> {
-            RegisterScreen(navHostController)
+            RegisterScreen(
+                navHostController,
+                snackbarState
+            )
         }
     }
 }

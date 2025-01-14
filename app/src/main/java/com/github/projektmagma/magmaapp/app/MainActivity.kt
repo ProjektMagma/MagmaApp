@@ -4,7 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import com.github.projektmagma.magmaapp.core.presentation.navigation.NavGraph
 import androidx.navigation.compose.rememberNavController
 import com.github.projektmagma.magmaapp.core.presentation.ui.theme.MagmaAppTheme
@@ -16,8 +22,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             MagmaAppTheme {
                 val navController = rememberNavController()
-                Surface {
-                    NavGraph(navController)
+                val snackbarState = remember { SnackbarHostState() }
+                Scaffold (
+                    snackbarHost = {
+                        SnackbarHost(
+                            hostState = snackbarState,
+                        )
+                    }
+                ) { innerPadding ->
+                    Surface(
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+                        NavGraph(
+                            navController,
+                            snackbarState
+                        )
+                    }
                 }
             }
         }

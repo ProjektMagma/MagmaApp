@@ -33,7 +33,8 @@ fun PasswordField(
         modifier = modifier,
         value = passwordStateString,
         isError = isError,
-        onValueChange = { onValueChange(it) },
+        singleLine = true,
+        onValueChange = { onValueChange(it.replace(" ", "")) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
         label = {

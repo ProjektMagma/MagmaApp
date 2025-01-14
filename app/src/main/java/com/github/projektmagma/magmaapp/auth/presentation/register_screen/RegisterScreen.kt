@@ -1,20 +1,15 @@
 package com.github.projektmagma.magmaapp.auth.presentation.register_screen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,11 +33,11 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun RegisterScreen(
     navHostController: NavHostController,
+    snackbarState: SnackbarHostState,
     viewModel: AuthViewModel = koinViewModel()
 ) {
     val passwordVisible = viewModel.passwordVisible
     val state = viewModel.state
-    val snackbarState = remember { SnackbarHostState() }
     val snackbarScope = rememberCoroutineScope()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -58,14 +53,7 @@ fun RegisterScreen(
         screen = Screen.HomeScreen,
     )
 
-        Scaffold(bottomBar = {
-            Box(
-                modifier = authModifiers.snackbarModifier.background(MaterialTheme.colorScheme.background),
-            ) {
-                SnackbarHost(hostState = snackbarState)
-            }
-        }) { innerPadding ->
-
+        Scaffold { innerPadding ->
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
