@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.bundles.koin)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
+    implementation(libs.androidx.datastore.preferences)
     implementation(platform(libs.firebase.bom))
 
     testImplementation(libs.junit)

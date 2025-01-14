@@ -5,12 +5,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -24,7 +27,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
-import com.github.projektmagma.magmaapp.home.HomeViewModel
+import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -34,7 +37,6 @@ fun HomeScreen(
     snackbarHostState: SnackbarHostState,
     viewModel: HomeViewModel = koinViewModel()
 ) {
-
     val snackbarScope = rememberCoroutineScope()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -51,13 +53,6 @@ fun HomeScreen(
         )
     }
 
-
-    LaunchedEffect(snackbarMessage) {
-        snackbarScope.launch {
-            snackbarHostState.showSnackbar(snackbarMessage)
-        }
-    }
-
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -65,6 +60,17 @@ fun HomeScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            IconButton(
+                onClick = {
+                    viewModel.logout()
+                    navController.navigate(Screen.HomeScreen) { launchSingleTop = true }
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.MoreVert,
+                    contentDescription = null
+                )
+            }
             Text(
                 modifier = Modifier.padding(
                     top = innerPadding.calculateTopPadding(),
@@ -82,8 +88,9 @@ fun HomeScreen(
                         title = notebooks[index],
                         notesTitles = listOf("Note 1", "Note 2", "Note 3"),
                         onClick = {
-                            snackbarMessage =
-                                "${context.getString(R.string.notebook_selection_info)} ${notebooks[index]}"
+                            snackbarScope.launch {
+                                snackbarHostState.showSnackbar( "${context.getString(R.string.notebook_selection_info)} ${notebooks[index]}")
+                            }
                         }
                     )
                 }
@@ -98,6 +105,5 @@ fun HomeScreen(
                 }
             }
         }
-
     }
 }

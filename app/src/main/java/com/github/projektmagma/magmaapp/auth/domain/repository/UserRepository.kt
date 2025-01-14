@@ -7,4 +7,5 @@ import com.google.firebase.auth.FirebaseUser
 interface UserRepository {
     suspend fun login(email: String, password: String): Result<FirebaseUser, Error>
     suspend fun register(email: String, password: String): Result<FirebaseUser, Error>
+    suspend fun logout()
 }

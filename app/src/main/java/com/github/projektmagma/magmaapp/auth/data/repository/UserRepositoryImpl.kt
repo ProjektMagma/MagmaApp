@@ -1,5 +1,6 @@
 package com.github.projektmagma.magmaapp.auth.data.repository
 
+import com.github.projektmagma.magmaapp.auth.data.DataError
 import com.github.projektmagma.magmaapp.auth.domain.repository.UserRepository
 import com.github.projektmagma.magmaapp.core.util.Error
 import com.github.projektmagma.magmaapp.core.util.Result
@@ -30,5 +31,9 @@ class UserRepositoryImpl(
         } else {
             Result.Error(DataError.NetworkError.SERVER_ERROR)
         }
+    }
+
+    override suspend fun logout() {
+        auth.signOut()
     }
 }

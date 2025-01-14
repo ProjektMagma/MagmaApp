@@ -32,4 +32,5 @@
     <string name="notebook_selection_info">Notebook selected:</string>
     <string name="new_notebook_creation_info">New notebook created</string>
     <string name="notebook_default_name">Untitled notebook</string>
+    <string name="remember_me">Remember me</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.github.projektmagma.magmaapp.auth.data.repository
+package com.github.projektmagma.magmaapp.auth.data
 
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.util.Error

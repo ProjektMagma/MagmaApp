@@ -13,7 +13,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.github.projektmagma.magmaapp.core.presentation.navigation.NavGraph
 import androidx.navigation.compose.rememberNavController
+import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.core.presentation.ui.theme.MagmaAppTheme
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +37,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         NavGraph(
+                            if (Firebase.auth.currentUser != null) Screen.MainGraph else Screen.AuthGraph,
                             navController,
                             snackbarState
                         )

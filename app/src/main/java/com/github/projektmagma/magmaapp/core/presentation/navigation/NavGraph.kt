@@ -9,12 +9,13 @@ import com.github.projektmagma.magmaapp.core.presentation.navigation.builders.ma
 
 @Composable
 fun NavGraph(
+    startDestination: Screen,
     navHostController: NavHostController,
     snackbarState: SnackbarHostState
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = Screen.AuthGraph,
+        startDestination = startDestination,
     ) {
         authGraph(navHostController, snackbarState)
         mainGraph(navHostController, snackbarState)

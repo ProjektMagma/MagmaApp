@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.0"
+datastorePreferences = "1.1.1"
 firebaseBom = "33.7.0"
 koinAndroid = "4.0.1"
 koinAndroidxCompose = "4.0.0"
@@ -22,6 +23,7 @@ firebaseDatabase = "21.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
