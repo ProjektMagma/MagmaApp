@@ -9,7 +9,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,9 +29,9 @@ import com.github.projektmagma.magmaapp.auth.presentation.common.EmailField
 import com.github.projektmagma.magmaapp.auth.presentation.common.ErrorText
 import com.github.projektmagma.magmaapp.auth.presentation.common.PasswordField
 import com.github.projektmagma.magmaapp.auth.presentation.common.RegistrationType
-import com.github.projektmagma.magmaapp.auth.presentation.common.SnackbarInfoEffect
 import com.github.projektmagma.magmaapp.auth.presentation.model.RegistrationFormEvent
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -42,15 +46,25 @@ fun RegisterScreen(
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    SnackbarInfoEffect(
-        context = context,
-        snackbarState = snackbarState,
-        snackbarScope = snackbarScope,
-        registrationType = RegistrationType.REGISTER,
-        viewModel = viewModel,
-        navHostController = navHostController,
-        screen = Screen.HomeScreen,
-    )
+    LaunchedEffect(viewModel.validationEvent) {
+        var message by mutableStateOf(context.getString(R.string.error_unknown))
+        viewModel.validationEvent.collect { event ->
+            when (event) {
+                is AuthViewModel.ValidationEvent.Success -> {
+                    message = context.getString(R.string.register_success)
+                    viewModel.register()
+                    navHostController.navigate(Screen.MainGraph)
+                }
+
+                AuthViewModel.ValidationEvent.Failure -> {
+                    message = context.getString(R.string.register_failure)
+                }
+            }
+            snackbarScope.launch {
+                snackbarState.showSnackbar(message)
+            }
+        }
+    }
 
         Scaffold { innerPadding ->
             Column(

@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,9 +33,9 @@ import com.github.projektmagma.magmaapp.auth.presentation.common.EmailField
 import com.github.projektmagma.magmaapp.auth.presentation.common.ErrorText
 import com.github.projektmagma.magmaapp.auth.presentation.common.PasswordField
 import com.github.projektmagma.magmaapp.auth.presentation.common.RegistrationType
-import com.github.projektmagma.magmaapp.auth.presentation.common.SnackbarInfoEffect
 import com.github.projektmagma.magmaapp.auth.presentation.model.RegistrationFormEvent
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -50,17 +51,27 @@ fun LoginScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     var clicked by remember { mutableStateOf(false) }
 
-    SnackbarInfoEffect(
-        context = context,
-        snackbarState = snackbarState,
-        snackbarScope = snackbarScope,
-        registrationType = RegistrationType.LOGIN,
-        viewModel = viewModel,
-        navHostController = navHostController,
-        screen = Screen.HomeScreen,
-    )
+    LaunchedEffect(viewModel.validationEvent) {
+        var message by mutableStateOf(context.getString(R.string.error_unknown))
+        viewModel.validationEvent.collect { event ->
+            when (event) {
+                is AuthViewModel.ValidationEvent.Success -> {
+                    message = context.getString(R.string.login_success)
+                    viewModel.login()
+                    navHostController.navigate(Screen.MainGraph)
+                }
 
-    Scaffold{ innerPadding ->
+                AuthViewModel.ValidationEvent.Failure -> {
+                    message = context.getString(R.string.login_failure)
+                }
+            }
+            snackbarScope.launch {
+                snackbarState.showSnackbar(message)
+            }
+        }
+    }
+
+    Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
