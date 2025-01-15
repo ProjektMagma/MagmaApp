@@ -1,10 +1,17 @@
 package com.github.projektmagma.magmaapp.di
 
+import android.app.Application
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import com.github.projektmagma.magmaapp.app.MainViewModel
+import com.github.projektmagma.magmaapp.auth.data.repository.LoginPreferencesRepositoryImpl
 import com.github.projektmagma.magmaapp.auth.data.repository.UserRepositoryImpl
+import com.github.projektmagma.magmaapp.auth.domain.repository.LoginPreferencesRepository
 import com.github.projektmagma.magmaapp.auth.domain.repository.UserRepository
+import com.github.projektmagma.magmaapp.auth.domain.use_case.GetUserPreferencesUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.LoginUserUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.LogoutUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.RegisterUserUseCase
+import com.github.projektmagma.magmaapp.auth.domain.use_case.SaveUserPreferencesUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateEmail
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidatePassword
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateRepeatedPassword
@@ -32,6 +39,20 @@ val appModule = module {
     single { ValidatePassword() }
     single { ValidateRepeatedPassword() }
 
-    viewModel { AuthViewModel(get(), get(), get(), get(), get()) }
+    single {
+        PreferenceDataStoreFactory.create(
+            corruptionHandler = null,
+            migrations = emptyList(),
+            produceFile = { get<Application>().applicationContext.filesDir.resolve("user_prefs.preferences_pb") }
+        )
+    }
+
+    single<LoginPreferencesRepository> { LoginPreferencesRepositoryImpl(get()) }
+
+    single { GetUserPreferencesUseCase(get()) }
+    single { SaveUserPreferencesUseCase(get()) }
+
+    viewModel { AuthViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { HomeViewModel(get(), get()) }
+    viewModel { MainViewModel(get()) }
 }

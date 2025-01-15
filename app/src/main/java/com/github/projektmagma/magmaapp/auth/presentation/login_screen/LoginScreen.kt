@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -45,17 +44,18 @@ fun LoginScreen(
     viewModel: AuthViewModel = koinViewModel()
 ) {
     val passwordVisible = viewModel.passwordVisible
+    var clicked by viewModel.clicked
     val state = viewModel.state
     val snackbarScope = rememberCoroutineScope()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    var clicked by remember { mutableStateOf(false) }
 
     LaunchedEffect(viewModel.validationEvent) {
         var message by mutableStateOf(context.getString(R.string.error_unknown))
         viewModel.validationEvent.collect { event ->
             when (event) {
                 is AuthViewModel.AuthEvent.Success -> {
+                    viewModel.saveUserPreferences(clicked)
                     message = context.getString(R.string.login_success)
                     navHostController.navigate(Screen.MainGraph)
                 }

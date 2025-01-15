@@ -2,11 +2,14 @@ package com.github.projektmagma.magmaapp.auth.presentation
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.projektmagma.magmaapp.auth.domain.use_case.GetUserPreferencesUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.LoginUserUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.RegisterUserUseCase
+import com.github.projektmagma.magmaapp.auth.domain.use_case.SaveUserPreferencesUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateEmail
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidatePassword
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateRepeatedPassword
@@ -14,8 +17,14 @@ import com.github.projektmagma.magmaapp.auth.presentation.common.RegistrationTyp
 import com.github.projektmagma.magmaapp.auth.presentation.model.RegistrationFormEvent
 import com.github.projektmagma.magmaapp.auth.presentation.model.RegistrationFormState
 import com.github.projektmagma.magmaapp.core.util.Result
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
@@ -23,15 +32,21 @@ class AuthViewModel(
     private val loginUserUseCase: LoginUserUseCase,
     private val validateEmail: ValidateEmail,
     private val validatePassword: ValidatePassword,
-    private val validateRepeatedPassword: ValidateRepeatedPassword
+    private val validateRepeatedPassword: ValidateRepeatedPassword,
+    private val saveUserPreferencesUseCase: SaveUserPreferencesUseCase,
+    private val getUserPreferencesUseCase: GetUserPreferencesUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(RegistrationFormState())
 
     var passwordVisible = mutableStateOf(false)
+    var clicked = mutableStateOf(false)
 
     private val _authEventChannel = Channel<AuthEvent>()
     val validationEvent = _authEventChannel.receiveAsFlow()
+
+    private val _userId = MutableStateFlow("asd")
+    val userId = getUserPreferencesUseCase.execute()
 
     fun onEvent(event: RegistrationFormEvent) {
         when (event) {
@@ -79,7 +94,11 @@ class AuthViewModel(
 
         viewModelScope.launch {
             val result = when (registrationType) {
-                RegistrationType.REGISTER -> registerUserUseCase.execute(state.email, state.password)
+                RegistrationType.REGISTER -> registerUserUseCase.execute(
+                    state.email,
+                    state.password
+                )
+
                 RegistrationType.LOGIN -> loginUserUseCase.execute(state.email, state.password)
             }
 
@@ -90,8 +109,21 @@ class AuthViewModel(
             }
         }
     }
-        sealed class AuthEvent {
-            data object Success : AuthEvent()
-            data class Failure(val messageId: Int) : AuthEvent()
+
+    fun saveUserPreferences(stayLogin: Boolean) {
+        viewModelScope.launch {
+            saveUserPreferencesUseCase.execute(stayLogin)
         }
     }
+
+    fun logout() {
+        viewModelScope.launch {
+            FirebaseAuth.getInstance().signOut()
+        }
+    }
+
+    sealed class AuthEvent {
+        data object Success : AuthEvent()
+        data class Failure(val messageId: Int) : AuthEvent()
+    }
+}

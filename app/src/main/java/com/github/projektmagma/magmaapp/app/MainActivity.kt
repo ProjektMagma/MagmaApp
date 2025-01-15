@@ -9,23 +9,31 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.projektmagma.magmaapp.core.presentation.navigation.NavGraph
 import androidx.navigation.compose.rememberNavController
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.core.presentation.ui.theme.MagmaAppTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
+    lateinit var mainViewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MagmaAppTheme {
+                mainViewModel = koinViewModel<MainViewModel>()
                 val navController = rememberNavController()
                 val snackbarState = remember { SnackbarHostState() }
+
                 Scaffold (
                     snackbarHost = {
                         SnackbarHost(
@@ -44,6 +52,14 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (mainViewModel.userId){
+            Firebase.auth.signOut()
         }
     }
 }

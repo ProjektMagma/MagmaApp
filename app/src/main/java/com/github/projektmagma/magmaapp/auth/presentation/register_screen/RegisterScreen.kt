@@ -52,7 +52,8 @@ fun RegisterScreen(
             when (event) {
                 is AuthViewModel.AuthEvent.Success -> {
                     message = context.getString(R.string.register_success)
-                    navHostController.navigate(Screen.MainGraph)
+                    viewModel.logout()
+                    navHostController.navigate(Screen.OnBoardingScreen)
                 }
 
                 is AuthViewModel.AuthEvent.Failure -> {
