@@ -32,4 +32,6 @@
     <string name="new_notebook_creation_info">Stworzono nowy zeszyt</string>
     <string name="notebook_default_name">Zeszyt bez nazwy</string>
     <string name="remember_me">Zapamiętaj mnie</string>
+    <string name="error_unknown_error">Nieznany błąd</string>
+    <string name="error_invalid_credentials">Nieprawidłowe dane</string>
 </resources>

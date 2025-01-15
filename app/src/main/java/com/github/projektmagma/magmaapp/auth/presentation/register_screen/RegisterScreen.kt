@@ -50,14 +50,13 @@ fun RegisterScreen(
         var message by mutableStateOf(context.getString(R.string.error_unknown))
         viewModel.validationEvent.collect { event ->
             when (event) {
-                is AuthViewModel.ValidationEvent.Success -> {
+                is AuthViewModel.AuthEvent.Success -> {
                     message = context.getString(R.string.register_success)
-                    viewModel.register()
                     navHostController.navigate(Screen.MainGraph)
                 }
 
-                AuthViewModel.ValidationEvent.Failure -> {
-                    message = context.getString(R.string.register_failure)
+                is AuthViewModel.AuthEvent.Failure -> {
+                    message = context.getString(event.messageId)
                 }
             }
             snackbarScope.launch {

@@ -33,4 +33,6 @@
     <string name="new_notebook_creation_info">New notebook created</string>
     <string name="notebook_default_name">Untitled notebook</string>
     <string name="remember_me">Remember me</string>
+    <string name="error_unknown_error">Unknown error</string>
+    <string name="error_invalid_credentials">Invalid credentials</string>
 </resources>

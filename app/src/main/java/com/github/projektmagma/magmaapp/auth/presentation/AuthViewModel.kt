@@ -30,8 +30,8 @@ class AuthViewModel(
 
     var passwordVisible = mutableStateOf(false)
 
-    private val _validationEventChannel = Channel<ValidationEvent>()
-    val validationEvent = _validationEventChannel.receiveAsFlow()
+    private val _authEventChannel = Channel<AuthEvent>()
+    val validationEvent = _authEventChannel.receiveAsFlow()
 
     fun onEvent(event: RegistrationFormEvent) {
         when (event) {
@@ -78,25 +78,20 @@ class AuthViewModel(
         }
 
         viewModelScope.launch {
-            _validationEventChannel.send(ValidationEvent.Success)
+            val result = when (registrationType) {
+                RegistrationType.REGISTER -> registerUserUseCase.execute(state.email, state.password)
+                RegistrationType.LOGIN -> loginUserUseCase.execute(state.email, state.password)
+            }
+
+            if (result is Result.Success) {
+                _authEventChannel.send(AuthEvent.Success)
+            } else {
+                _authEventChannel.send(AuthEvent.Failure((result as Result.Error).error.messageId))
+            }
         }
     }
-
-    fun login() {
-        viewModelScope.launch {
-            loginUserUseCase.execute(state.email, state.password)
+        sealed class AuthEvent {
+            data object Success : AuthEvent()
+            data class Failure(val messageId: Int) : AuthEvent()
         }
     }
-
-    fun register() {
-        viewModelScope.launch {
-            registerUserUseCase.execute(state.email, state.password)
-        }
-    }
-
-    sealed class ValidationEvent() {
-        data object Success : ValidationEvent()
-        data object Failure : ValidationEvent()
-    }
-
-}
