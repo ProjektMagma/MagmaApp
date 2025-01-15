@@ -8,7 +8,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -22,6 +21,7 @@ import androidx.navigation.NavHostController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.auth.presentation.AuthViewModel
 import com.github.projektmagma.magmaapp.auth.presentation.common.AuthModifiers
+import com.github.projektmagma.magmaapp.auth.presentation.common.EmailField
 import com.github.projektmagma.magmaapp.auth.presentation.common.ErrorText
 import com.github.projektmagma.magmaapp.auth.presentation.common.PasswordField
 import com.github.projektmagma.magmaapp.auth.presentation.common.RegistrationType
@@ -66,19 +66,10 @@ fun RegisterScreen(
                     textAlign = TextAlign.Center,
                     fontSize = 32.sp
                 )
-                TextField(
-                    modifier = AuthModifiers.textFieldsModifier,
-                    value = state.email,
-                    onValueChange = {
-                        viewModel.onEvent(RegistrationFormEvent.EmailChanged(it))
-                    },
-                    label = {
-                        Text(
-                            modifier = AuthModifiers.textPaddingModifier,
-                            text = stringResource(id = R.string.email)
-                        )
-                    },
-                    isError = state.emailError != null,
+                EmailField(
+                    email = state.email,
+                    onValueChange = { viewModel.onEvent(RegistrationFormEvent.EmailChanged(it)) },
+                    isError = state.emailError != null
                 )
                 ErrorText(state = state)
                 PasswordField(
