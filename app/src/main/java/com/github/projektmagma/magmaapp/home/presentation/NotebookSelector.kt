@@ -15,12 +15,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.github.projektmagma.magmaapp.core.domain.model.Notebook
 
 @Composable
 fun NotebookSelector(
     modifier: Modifier = Modifier,
-    title: String,
-    notesTitles: List<String>,
+    notebook: Notebook,
     onClick: () -> Unit
 ) {
     Box(
@@ -33,20 +33,25 @@ fun NotebookSelector(
                 shape = MaterialTheme.shapes.large,
             )
             .clip(MaterialTheme.shapes.large)
-            .background(MaterialTheme.colorScheme.surface)
+            .background(MaterialTheme.colorScheme.secondary)
             .clickable { onClick() },
     ) {
-        Column {
+        Column(modifier = Modifier
+            .padding(0.dp, 32.dp),
+        ) {
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = title,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = notebook.title,
                 style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSecondary
             )
-            notesTitles.forEach { noteTitle ->
+            notebook.notes.forEach { note ->
                 Text(
-                    modifier = Modifier.padding(4.dp),
-                    text = "- $noteTitle"
+                    modifier = Modifier.padding(32.dp, 0.dp),
+                    text = "- ${note.title}",
+                    color = MaterialTheme.colorScheme.onSecondary
                 )
             }
         }
