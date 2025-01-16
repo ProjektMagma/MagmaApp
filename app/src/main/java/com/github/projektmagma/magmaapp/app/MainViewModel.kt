@@ -13,5 +13,7 @@ import kotlinx.coroutines.launch
 class MainViewModel(
     private val getUserPreferencesUseCase: GetUserPreferencesUseCase,
 ): ViewModel() {
-    val userId = getUserPreferencesUseCase.execute().collect()
+    suspend fun getUserId(): Boolean{
+        return getUserPreferencesUseCase.execute().last()
+    }
 }

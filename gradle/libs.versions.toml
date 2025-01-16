@@ -1,4 +1,5 @@
 [versions]
+accompanistLifecycleVersion = "0.30.1"
 agp = "8.8.0"
 datastorePreferences = "1.1.1"
 firebaseBom = "33.7.0"
@@ -27,6 +28,7 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+google-accompanist-lifecycle = { module = "com.google.accompanist:accompanist-lifecycle", version.ref = "accompanistLifecycleVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
