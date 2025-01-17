@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,6 +18,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -45,7 +47,7 @@ fun HomeScreen(
     val user by viewModel.user.collectAsStateWithLifecycle()
 
     val notebooks = remember {
-        viewModel.sampleData
+        viewModel.notebooks
     }
 
     Scaffold { innerPadding ->
@@ -57,8 +59,27 @@ fun HomeScreen(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.Absolute.SpaceEvenly
             ) {
+                IconButton(
+                    onClick = {
+                        snackbarScope.launch { snackbarHostState.showSnackbar("NOT YET IMPLEMENTED") }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.AccountCircle,
+                        contentDescription = null
+                    )
+                }
+                Text(
+                    modifier = Modifier.padding(
+                        top = innerPadding.calculateTopPadding(),
+                        bottom = 16.dp
+                    ),
+                    text = "Hello, ${user?.email}!",
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
                 IconButton(
                     onClick = {
                         viewModel.logout()
@@ -74,15 +95,6 @@ fun HomeScreen(
                         contentDescription = null
                     )
                 }
-                Text(
-                    modifier = Modifier.padding(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = 16.dp
-                    ),
-                    text = "Hello, ${user?.email}!",
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center
-                )
             }
 
             LazyColumn(
@@ -90,12 +102,13 @@ fun HomeScreen(
                     .width(300.dp)
             ) {
                 items(notebooks.size) { index ->
+                    val notebook = notebooks[index]
                     NotebookSelector(
-                        notebook = notebooks[index],
+                        notebook = notebook,
                         onClick = {
                             snackbarHostState.currentSnackbarData?.dismiss()
                             snackbarScope.launch {
-                                snackbarHostState.showSnackbar("${context.getString(R.string.notebook_selection_info)} ${notebooks[index].title}")
+                                snackbarHostState.showSnackbar("${context.getString(R.string.notebook_selection_info)} ${notebook.title}")
                             }
                         }
                     )
@@ -107,7 +120,7 @@ fun HomeScreen(
                             snackbarScope.launch {
                                 snackbarHostState.showSnackbar(context.getString(R.string.new_notebook_creation_info))
                             }
-                            notebooks.add(
+                            viewModel.addNotebook(
                                 Notebook(
                                     notebooks.size + 1,
                                     context.getString(R.string.notebook_default_name),

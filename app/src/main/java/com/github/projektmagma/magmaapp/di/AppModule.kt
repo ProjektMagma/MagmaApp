@@ -16,6 +16,9 @@ import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateEmail
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidatePassword
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateRepeatedPassword
 import com.github.projektmagma.magmaapp.auth.presentation.AuthViewModel
+import com.github.projektmagma.magmaapp.core.domain.repository.NotebookRepository
+import com.github.projektmagma.magmaapp.core.domain.use_case.AddNotebookUseCase
+import com.github.projektmagma.magmaapp.core.domain.use_case.GetNotebookUseCase
 import com.github.projektmagma.magmaapp.home.presentation.HomeViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -39,6 +42,10 @@ val appModule = module {
     single { ValidatePassword() }
     single { ValidateRepeatedPassword() }
 
+    single { NotebookRepository() }
+    single { AddNotebookUseCase(get()) }
+    single { GetNotebookUseCase(get()) }
+
     single {
         PreferenceDataStoreFactory.create(
             corruptionHandler = null,
@@ -53,6 +60,6 @@ val appModule = module {
     single { SaveUserPreferencesUseCase(get()) }
 
     viewModel { AuthViewModel(get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { HomeViewModel(get(), get()) }
+    viewModel { HomeViewModel(get(), get(), get(), get()) }
     viewModel { MainViewModel(get()) }
 }

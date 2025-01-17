@@ -1,7 +1,7 @@
 package com.github.projektmagma.magmaapp.core.data.repository
 
 import com.github.projektmagma.magmaapp.core.domain.model.Note
-import com.github.projektmagma.magmaapp.core.domain.repositories.NoteRepository
+import com.github.projektmagma.magmaapp.core.domain.repository.NoteRepository
 
 class NoteRepositoryImpl: NoteRepository {
     override suspend fun getNotes(): List<Note> {

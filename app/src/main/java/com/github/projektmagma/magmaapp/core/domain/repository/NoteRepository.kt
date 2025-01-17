@@ -1,4 +1,4 @@
-package com.github.projektmagma.magmaapp.core.domain.repositories
+package com.github.projektmagma.magmaapp.core.domain.repository
 
 import com.github.projektmagma.magmaapp.core.domain.model.Note
 
