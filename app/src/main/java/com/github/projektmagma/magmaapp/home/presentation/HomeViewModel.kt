@@ -1,6 +1,8 @@
 package com.github.projektmagma.magmaapp.home.presentation
 
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.projektmagma.magmaapp.auth.domain.use_case.LogoutUseCase
@@ -24,6 +26,8 @@ class HomeViewModel(
     val user = _user.asStateFlow()
     var notebooks = getAllNotebooks()
         private set
+
+    var notebookId by mutableIntStateOf(0)
 
     init {
         getUser()

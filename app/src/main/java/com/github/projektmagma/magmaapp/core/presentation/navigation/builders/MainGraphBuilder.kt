@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.home.presentation.HomeScreen
+import com.github.projektmagma.magmaapp.home.presentation.NotebookEditScreen
 
 fun NavGraphBuilder.mainGraph(
     navHostController: NavHostController,
@@ -17,6 +18,10 @@ fun NavGraphBuilder.mainGraph(
     ) {
         composable<Screen.HomeScreen> {
             HomeScreen(navHostController, snackbarState)
+        }
+        
+        composable<Screen.NotebookEditScreen> {
+            NotebookEditScreen(navHostController, snackbarState)
         }
     }
 }
