@@ -1,6 +1,6 @@
 package com.github.projektmagma.magmaapp.auth.data.repository
 
-import com.github.projektmagma.magmaapp.auth.data.DataError
+import com.github.projektmagma.magmaapp.core.data.DataError
 import com.github.projektmagma.magmaapp.auth.domain.repository.UserRepository
 import com.github.projektmagma.magmaapp.core.util.Error
 import com.github.projektmagma.magmaapp.core.util.Result
@@ -50,5 +50,9 @@ class UserRepositoryImpl(
 
     override suspend fun logout() {
         auth.signOut()
+    }
+
+    override suspend fun getCurrentUser(): FirebaseUser? {
+        return auth.currentUser
     }
 }

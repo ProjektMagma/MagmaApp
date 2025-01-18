@@ -35,4 +35,6 @@
     <string name="error_unknown_error">Nieznany błąd</string>
     <string name="error_invalid_credentials">Nieprawidłowe dane</string>
     <string name="new_notebook_create_button">STWÓRZ NOWY ZESZYT</string>
+    <string name="error_too_many_requests">Zbyt dużo zapytań</string>
+    <string name="error_network_error">Błąd sieci</string>
 </resources>

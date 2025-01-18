@@ -18,7 +18,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,8 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
-import com.github.projektmagma.magmaapp.core.domain.model.Notebook
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
+import com.github.projektmagma.magmaapp.home.data.model.NoteDto
+import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -44,10 +44,7 @@ fun HomeScreen(
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val user by viewModel.user.collectAsStateWithLifecycle()
-
-    val notebooks = remember {
-        viewModel.notebooks
-    }
+    val notebooks by viewModel.notebooks.collectAsStateWithLifecycle()
 
     Scaffold { innerPadding ->
         Column(
@@ -62,7 +59,6 @@ fun HomeScreen(
             ) {
                 IconButton(
                     onClick = {
-                        // todo bardzo tymczasowe rozwiazanie
                         snackbarScope.launch { snackbarHostState.showSnackbar("NOT YET IMPLEMENTED") }
                         viewModel.logout()
                         navController.navigate(Screen.AuthGraph) {
@@ -125,10 +121,14 @@ fun HomeScreen(
                                 snackbarHostState.showSnackbar(context.getString(R.string.new_notebook_creation_info))
                             }
                             viewModel.addNotebook(
-                                Notebook(
-                                    notebooks.size + 1,
-                                    context.getString(R.string.notebook_default_name),
-                                    mutableListOf()
+                                NotebookDto(
+                                    id = 1,
+                                    title = "New notebook",
+                                    notes = listOf(
+                                        NoteDto(1, "New note", "New note content"),
+                                        NoteDto(2, "New note 2", "New note 2 content")
+                                    )
+                                        .toMutableList()
                                 )
                             )
                             keyboardController?.hide()

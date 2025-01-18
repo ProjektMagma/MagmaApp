@@ -15,7 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.github.projektmagma.magmaapp.core.domain.model.Notebook
+import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 
 @Composable
 fun NotebookSelector(
