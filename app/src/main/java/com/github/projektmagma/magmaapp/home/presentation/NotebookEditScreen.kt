@@ -27,7 +27,7 @@ fun NotebookEditScreen(
     snackbarHostState: SnackbarHostState,
     viewModel: HomeViewModel = koinViewModel()
 ) {
-    val notebook = viewModel.getNotebook(viewModel.notebookId)
+    val notebook = viewModel.getNotebook(viewModel.getCurrentNotebookIndex())
     var title by remember { notebook.title }
     val notes = remember { notebook.notes }
 

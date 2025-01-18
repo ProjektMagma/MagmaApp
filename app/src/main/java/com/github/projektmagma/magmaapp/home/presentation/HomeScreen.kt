@@ -1,6 +1,5 @@
 package com.github.projektmagma.magmaapp.home.presentation
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -112,16 +111,15 @@ fun HomeScreen(
                     .width(300.dp)
             ) {
                 items(notebooks.size) { index ->
-                    val notebook = notebooks[index]
-                    viewModel.notebookId = index
+                    val notebook = viewModel.getNotebook(index)
                     NotebookSelector(
                         notebook = notebook,
                         onClick = {
-                            Log.d("Note", "${viewModel.notebookId}")
                             snackbarHostState.currentSnackbarData?.dismiss()
                             snackbarScope.launch {
                                 snackbarHostState.showSnackbar("${context.getString(R.string.notebook_selection_info)} ${notebook.title}")
                             }
+                            viewModel.setCurrentNotebookIndex(index)
                             navController.navigate(Screen.NotebookEditScreen)
                         }
                     )

@@ -1,8 +1,5 @@
 package com.github.projektmagma.magmaapp.home.presentation
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
@@ -33,7 +30,6 @@ class HomeViewModel(
     private val _notebooks = MutableStateFlow<SnapshotStateList<Notebook>>(mutableStateListOf())
     val notebooks = _notebooks.asStateFlow()
 
-    var notebookId by mutableIntStateOf(0)
 
     init {
         viewModelScope.launch {
@@ -56,6 +52,12 @@ class HomeViewModel(
     }
 
     fun getNotebook(index: Int) = getNotebookByIdUseCase.execute(index)
+    
+    fun setCurrentNotebookIndex(index: Int) {
+        getNotebookByIdUseCase.lastNotebookIndex = index
+    }
 
+    fun getCurrentNotebookIndex() = getNotebookByIdUseCase.execute()
+    
     fun getAllNotebooks() = getNotebooksUseCase.execute(_user.value!!.uid)
 }
