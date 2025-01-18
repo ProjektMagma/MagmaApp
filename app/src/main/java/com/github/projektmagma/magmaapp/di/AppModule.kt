@@ -48,8 +48,6 @@ val appModule = module {
 
     single {
         PreferenceDataStoreFactory.create(
-            corruptionHandler = null,
-            migrations = emptyList(),
             produceFile = { get<Application>().applicationContext.filesDir.resolve("user_prefs.preferences_pb") }
         )
     }
@@ -61,5 +59,5 @@ val appModule = module {
 
     viewModel { AuthViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { HomeViewModel(get(), get(), get(), get()) }
-    viewModel { MainViewModel(get()) }
+    viewModel { MainViewModel(get(), get()) }
 }

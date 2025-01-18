@@ -1,8 +1,7 @@
 [versions]
-accompanistLifecycleVersion = "0.30.1"
 agp = "8.8.0"
-datastorePreferences = "1.1.1"
-firebaseBom = "33.7.0"
+datastorePreferences = "1.1.2"
+firebaseBom = "33.8.0"
 koinAndroid = "4.0.1"
 koinAndroidxCompose = "4.0.0"
 koinCore = "4.0.1"
@@ -13,8 +12,8 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 kotlinxSerializationJson = "1.7.3"
 lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.9.3"
-composeBom = "2024.12.01"
+activityCompose = "1.10.0"
+composeBom = "2025.01.00"
 material3Android = "1.3.1"
 materialIconsExtended = "1.7.6"
 navigationCompose = "2.8.5"
@@ -28,7 +27,6 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-google-accompanist-lifecycle = { module = "com.google.accompanist:accompanist-lifecycle", version.ref = "accompanistLifecycleVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -84,4 +82,9 @@ koin = [
     "koin-android",
     "koin-androidx-compose",
     "koin-core"
+]
+
+firebase = [
+    "firebase-auth",
+    "firebase-database"
 ]

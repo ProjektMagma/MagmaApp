@@ -55,7 +55,6 @@ fun LoginScreen(
         viewModel.validationEvent.collect { event ->
             when (event) {
                 is AuthViewModel.AuthEvent.Success -> {
-                    viewModel.saveUserPreferences(clicked)
                     message = context.getString(R.string.login_success)
                     navHostController.navigate(Screen.MainGraph)
                 }

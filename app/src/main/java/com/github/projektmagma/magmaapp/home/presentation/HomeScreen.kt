@@ -18,7 +18,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -63,7 +62,12 @@ fun HomeScreen(
             ) {
                 IconButton(
                     onClick = {
+                        // todo bardzo tymczasowe rozwiazanie
                         snackbarScope.launch { snackbarHostState.showSnackbar("NOT YET IMPLEMENTED") }
+                        viewModel.logout()
+                        navController.navigate(Screen.AuthGraph) {
+                            popUpTo(Screen.AuthGraph) { inclusive = true }
+                        }
                     }
                 ) {
                     Icon(

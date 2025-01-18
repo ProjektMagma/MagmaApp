@@ -2,7 +2,6 @@ package com.github.projektmagma.magmaapp.auth.presentation
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,13 +17,8 @@ import com.github.projektmagma.magmaapp.auth.presentation.model.RegistrationForm
 import com.github.projektmagma.magmaapp.auth.presentation.model.RegistrationFormState
 import com.github.projektmagma.magmaapp.core.util.Result
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
@@ -44,9 +38,6 @@ class AuthViewModel(
 
     private val _authEventChannel = Channel<AuthEvent>()
     val validationEvent = _authEventChannel.receiveAsFlow()
-
-    private val _userId = MutableStateFlow("asd")
-    val userId = getUserPreferencesUseCase.execute()
 
     fun onEvent(event: RegistrationFormEvent) {
         when (event) {
@@ -103,16 +94,11 @@ class AuthViewModel(
             }
 
             if (result is Result.Success) {
+                saveUserPreferencesUseCase.execute(clicked.value)
                 _authEventChannel.send(AuthEvent.Success)
             } else {
                 _authEventChannel.send(AuthEvent.Failure((result as Result.Error).error.messageId))
             }
-        }
-    }
-
-    fun saveUserPreferences(stayLogin: Boolean) {
-        viewModelScope.launch {
-            saveUserPreferencesUseCase.execute(stayLogin)
         }
     }
 

@@ -5,8 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import com.github.projektmagma.magmaapp.auth.domain.repository.LoginPreferencesRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
 
 class LoginPreferencesRepositoryImpl(
     private val dataStore: DataStore<Preferences>
@@ -22,9 +21,7 @@ class LoginPreferencesRepositoryImpl(
         }
     }
 
-    override fun getUserLogin(): Flow<Boolean> {
-        return dataStore.data.map { preferences ->
-            preferences[STAY_LOGIN] ?: false
-        }
+    override suspend fun getUserLogin(): Boolean {
+        return dataStore.data.first()[STAY_LOGIN] == true
     }
 }

@@ -48,10 +48,9 @@ dependencies {
     implementation(libs.bundles.material3)
     implementation(libs.bundles.kotlinx)
     implementation(libs.bundles.koin)
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.database)
-    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.bundles.firebase)
     implementation(platform(libs.firebase.bom))
+    implementation(libs.androidx.datastore.preferences)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
