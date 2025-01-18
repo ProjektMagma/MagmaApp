@@ -40,9 +40,9 @@ class NotebookRepositoryImpl(
     }
 
     override fun getAllNotebooks(userId: String): SnapshotStateList<Notebook> {
-        notebooks.clear()
+//        notebooks.clear() idk
         database.child("notebooks").child(userId)
-            .addValueEventListener(object : ValueEventListener {
+            .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (notebookSnapshot in snapshot.children) {
                         val notebook = notebookSnapshot.getValue(NotebookDto::class.java)
@@ -59,7 +59,7 @@ class NotebookRepositoryImpl(
         return notebooks
     }
 
-    override fun getNotebook(index: Int): Notebook {
+    override fun getNotebookById(index: Int): Notebook {
         return notebooks[index]
     }
 }

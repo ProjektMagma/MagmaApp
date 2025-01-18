@@ -23,6 +23,8 @@ fun NotebookSelector(
     notebook: Notebook,
     onClick: () -> Unit
 ) {
+    val notebookTitle = notebook.title.value
+    val notes = notebook.notes
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -36,21 +38,23 @@ fun NotebookSelector(
             .background(MaterialTheme.colorScheme.secondary)
             .clickable { onClick() },
     ) {
-        Column(modifier = Modifier
-            .padding(0.dp, 32.dp),
+        Column(
+            modifier = Modifier
+                .padding(0.dp, 32.dp),
         ) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth(),
-                text = notebook.title,
+                text = notebookTitle,
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSecondary
             )
-            notebook.notes.forEach { note ->
+            notes.forEach { note ->
+                val noteTitle = note.title.value
                 Text(
                     modifier = Modifier.padding(32.dp, 0.dp),
-                    text = "- ${note.title}",
+                    text = "- $noteTitle",
                     color = MaterialTheme.colorScheme.onSecondary
                 )
             }

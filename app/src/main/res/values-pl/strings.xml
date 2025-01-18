@@ -37,4 +37,5 @@
     <string name="new_notebook_create_button">STWÓRZ NOWY ZESZYT</string>
     <string name="error_too_many_requests">Zbyt dużo zapytań</string>
     <string name="error_network_error">Błąd sieci</string>
+    <string name="logout_button">Wyloguj się</string>
 </resources>

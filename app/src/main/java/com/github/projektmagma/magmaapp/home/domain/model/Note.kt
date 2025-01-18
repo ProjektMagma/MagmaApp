@@ -1,5 +1,7 @@
 package com.github.projektmagma.magmaapp.home.domain.model
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import com.github.projektmagma.magmaapp.home.data.model.NoteDto
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -7,16 +9,16 @@ import java.util.Locale
 
 data class Note(
     val id: Int,
-    val title: String,
-    val content: String,
+    val title: MutableState<String>,
+    val content: MutableState<String>,
     val date: String
 )
 
 fun NoteDto.toDomain(): Note {
     return Note(
         id = id,
-        title = title,
-        content = content,
+        title = mutableStateOf(title),
+        content = mutableStateOf(content),
         date = timestamp.toUiDate()
     )
 }

@@ -9,5 +9,5 @@ import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 interface NotebookRepository {
     suspend fun addNotebook(notebook: NotebookDto, userId: String): Result<Unit, Error>
     fun getAllNotebooks(userId: String): SnapshotStateList<Notebook>
-    fun getNotebook(index: Int): Notebook
+    fun getNotebookById(index: Int): Notebook
 }

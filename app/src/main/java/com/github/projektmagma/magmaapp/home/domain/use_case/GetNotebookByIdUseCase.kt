@@ -5,5 +5,5 @@ import com.github.projektmagma.magmaapp.home.domain.repository.NotebookRepositor
 class GetNotebookByIdUseCase(
     private val notebookRepository: NotebookRepository
 ) {
-    fun execute(index: Int) = notebookRepository.getNotebook(index)
+    fun execute(index: Int) = notebookRepository.getNotebookById(index)
 }

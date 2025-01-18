@@ -1,10 +1,13 @@
 package com.github.projektmagma.magmaapp.home.presentation
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -19,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,7 +33,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
-import com.github.projektmagma.magmaapp.home.data.model.NoteDto
 import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -54,19 +57,17 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Absolute.SpaceEvenly
+                horizontalArrangement = Arrangement.Absolute.SpaceBetween
             ) {
                 IconButton(
                     onClick = {
                         snackbarScope.launch { snackbarHostState.showSnackbar("NOT YET IMPLEMENTED") }
-                        viewModel.logout()
-                        navController.navigate(Screen.AuthGraph) {
-                            popUpTo(Screen.AuthGraph) { inclusive = true }
-                        }
                     }
                 ) {
                     Icon(
+                        modifier = Modifier.size(128.dp),
                         imageVector = Icons.Filled.AccountCircle,
                         contentDescription = null
                     )
@@ -80,20 +81,29 @@ fun HomeScreen(
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Center
                 )
-                IconButton(
-                    onClick = {
-                        viewModel.logout()
-                        navController.navigate(Screen.AuthGraph) {
-                            popUpTo(Screen.AuthGraph) {
-                                inclusive = true
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = context.getString(R.string.logout_button),
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.Center
+                    )
+                    IconButton(
+                        onClick = {
+                            viewModel.logout()
+                            navController.navigate(Screen.AuthGraph) {
+                                popUpTo(Screen.AuthGraph) {
+                                    inclusive = true
+                                }
                             }
                         }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert,
+                            contentDescription = null
+                        )
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.MoreVert,
-                        contentDescription = null
-                    )
                 }
             }
 
@@ -103,13 +113,16 @@ fun HomeScreen(
             ) {
                 items(notebooks.size) { index ->
                     val notebook = notebooks[index]
+                    viewModel.notebookId = index
                     NotebookSelector(
                         notebook = notebook,
                         onClick = {
+                            Log.d("Note", "${viewModel.notebookId}")
                             snackbarHostState.currentSnackbarData?.dismiss()
                             snackbarScope.launch {
                                 snackbarHostState.showSnackbar("${context.getString(R.string.notebook_selection_info)} ${notebook.title}")
                             }
+                            navController.navigate(Screen.NotebookEditScreen)
                         }
                     )
                 }
@@ -122,13 +135,9 @@ fun HomeScreen(
                             }
                             viewModel.addNotebook(
                                 NotebookDto(
-                                    id = 1,
-                                    title = "New notebook",
-                                    notes = listOf(
-                                        NoteDto(1, "New note", "New note content"),
-                                        NoteDto(2, "New note 2", "New note 2 content")
-                                    )
-                                        .toMutableList()
+                                    notebooks.size + 1,
+                                    context.getString(R.string.notebook_default_name),
+                                    SnapshotStateList()
                                 )
                             )
                             keyboardController?.hide()

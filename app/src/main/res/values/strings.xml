@@ -38,4 +38,5 @@
     <string name="new_notebook_create_button">CREATE NEW NOTEBOOK</string>
     <string name="error_too_many_requests">Too many requests</string>
     <string name="error_network_error">Network error</string>
+    <string name="logout_button">Log out</string>
 </resources>
