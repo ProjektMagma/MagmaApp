@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -62,7 +61,7 @@ fun HomeScreen(
             ) {
                 IconButton(
                     onClick = {
-                        snackbarScope.launch { snackbarHostState.showSnackbar("NOT YET IMPLEMENTED") }
+                        snackbarScope.launch { snackbarHostState.showSnackbar(context.getString(R.string.not_implemented_error)) }
                     }
                 ) {
                     Icon(
@@ -71,15 +70,6 @@ fun HomeScreen(
                         contentDescription = null
                     )
                 }
-                Text(
-                    modifier = Modifier.padding(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = 16.dp
-                    ),
-                    text = "Hello, ${user?.email}!",
-                    style = MaterialTheme.typography.titleMedium,
-                    textAlign = TextAlign.Center
-                )
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -105,10 +95,19 @@ fun HomeScreen(
                     }
                 }
             }
-
+            Text(
+                modifier = Modifier.padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = 16.dp
+                ),
+                text = "Hello, ${user?.email}!",
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center
+            )
             LazyColumn(
                 modifier = Modifier
-                    .width(300.dp)
+                    .padding(64.dp, 0.dp)
+                    .fillMaxSize()
             ) {
                 items(notebooks.size) { index ->
                     val notebook = viewModel.getNotebook(index)
@@ -117,7 +116,7 @@ fun HomeScreen(
                         onClick = {
                             snackbarHostState.currentSnackbarData?.dismiss()
                             snackbarScope.launch {
-                                snackbarHostState.showSnackbar("${context.getString(R.string.notebook_selection_info)} ${notebook.title}")
+                                snackbarHostState.showSnackbar("${context.getString(R.string.notebook_selection_info)} ${notebook.title.value}")
                             }
                             viewModel.setCurrentNotebookIndex(index)
                             navController.navigate(Screen.NotebookEditScreen)
@@ -135,8 +134,9 @@ fun HomeScreen(
                                 NotebookDto(
                                     notebooks.size + 1,
                                     context.getString(R.string.notebook_default_name),
-                                    SnapshotStateList()
-                                )
+                                    SnapshotStateList(),
+
+                                    )
                             )
                             keyboardController?.hide()
                         }

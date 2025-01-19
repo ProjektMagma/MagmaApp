@@ -39,4 +39,10 @@
     <string name="error_too_many_requests">Too many requests</string>
     <string name="error_network_error">Network error</string>
     <string name="logout_button">Log out</string>
+    <string name="not_implemented_error">NOT YET IMPLEMENTED FEATURE</string>
+    <string name="note_default_name">New note</string>
+    <string name="note_default_content">New content</string>
+    <string name="add_note_button">ADD NOTE</string>
+    <string name="exit_notebook_button">GO BACK</string>
+    <string name="notebook_creation_date">Created at:</string>
 </resources>

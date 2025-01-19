@@ -38,4 +38,10 @@
     <string name="error_too_many_requests">Zbyt dużo zapytań</string>
     <string name="error_network_error">Błąd sieci</string>
     <string name="logout_button">Wyloguj się</string>
+    <string name="not_implemented_error">FUNKCJA NIE ZOSTAŁA ZAIMPLEMENTOWANA</string>
+    <string name="note_default_name">" Nowa notatka"</string>
+    <string name="note_default_content">Nowa zawartość</string>
+    <string name="add_note_button">DODAJ NOTATKĘ</string>
+    <string name="exit_notebook_button">WRÓĆ</string>
+    <string name="notebook_creation_date">Stworzono:</string>
 </resources>

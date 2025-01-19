@@ -34,7 +34,8 @@ class HomeViewModel(
     init {
         viewModelScope.launch {
             _user.value = getCurrentUserUseCase.execute()
-            _notebooks.value = getAllNotebooks()
+            if (_user.value == null) logout()
+            else _notebooks.value = getAllNotebooks()
         }
     }
 
@@ -52,12 +53,12 @@ class HomeViewModel(
     }
 
     fun getNotebook(index: Int) = getNotebookByIdUseCase.execute(index)
-    
+
     fun setCurrentNotebookIndex(index: Int) {
         getNotebookByIdUseCase.lastNotebookIndex = index
     }
 
     fun getCurrentNotebookIndex() = getNotebookByIdUseCase.execute()
-    
+
     fun getAllNotebooks() = getNotebooksUseCase.execute(_user.value!!.uid)
 }
