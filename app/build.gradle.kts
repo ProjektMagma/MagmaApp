@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.bundles.firebase)
     implementation(platform(libs.firebase.bom))
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.core.splashscreen)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

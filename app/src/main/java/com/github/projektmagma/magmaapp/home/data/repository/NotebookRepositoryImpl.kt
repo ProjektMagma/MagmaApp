@@ -40,7 +40,7 @@ class NotebookRepositoryImpl(
     }
 
     override fun getAllNotebooks(userId: String): SnapshotStateList<Notebook> {
-//        notebooks.clear() idk
+        notebooks.clear()
         database.child("notebooks").child(userId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {

@@ -135,7 +135,6 @@ fun HomeScreen(
                                     notebooks.size + 1,
                                     context.getString(R.string.notebook_default_name),
                                     SnapshotStateList(),
-
                                     )
                             )
                             keyboardController?.hide()

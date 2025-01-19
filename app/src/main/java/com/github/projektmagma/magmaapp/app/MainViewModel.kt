@@ -14,14 +14,16 @@ class MainViewModel(
     private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
-    private val _startDestination = MutableStateFlow<Screen>(Screen.MainGraph)
+    private val _startDestination = MutableStateFlow<Screen?>(null)
     val startDestination = _startDestination.asStateFlow()
 
-    fun initializeApp() {
+    init {
         viewModelScope.launch {
             if (!getUserPreferencesUseCase.execute()) {
                 _startDestination.value = Screen.AuthGraph
                 logoutUseCase.execute()
+            } else {
+                _startDestination.value = Screen.MainGraph
             }
         }
     }

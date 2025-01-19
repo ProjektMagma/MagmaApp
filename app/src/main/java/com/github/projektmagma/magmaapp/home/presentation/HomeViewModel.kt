@@ -34,8 +34,6 @@ class HomeViewModel(
     init {
         viewModelScope.launch {
             _user.value = getCurrentUserUseCase.execute()
-            if (_user.value == null) logout()
-            else _notebooks.value = getAllNotebooks()
         }
     }
 
