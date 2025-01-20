@@ -8,7 +8,7 @@ import java.util.Date
 import java.util.Locale
 
 data class Note(
-    val id: Int,
+    val id: String = "",
     val title: MutableState<String>,
     val content: MutableState<String>,
     val date: String
@@ -29,4 +29,3 @@ fun Long.toUiDate(): String {
 
     return formatter.format(date)
 }
-

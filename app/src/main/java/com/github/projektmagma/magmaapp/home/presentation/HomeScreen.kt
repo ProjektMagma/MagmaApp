@@ -21,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -131,9 +130,7 @@ fun HomeScreen(
                             }
                             viewModel.addNotebook(
                                 NotebookDto(
-                                    notebooks.size + 1,
-                                    context.getString(R.string.notebook_default_name),
-                                    SnapshotStateList(),
+                                    title = context.getString(R.string.notebook_default_name),
                                 )
                             )
                             keyboardController?.hide()

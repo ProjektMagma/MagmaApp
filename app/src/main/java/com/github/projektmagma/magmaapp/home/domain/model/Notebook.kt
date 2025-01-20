@@ -8,7 +8,7 @@ import androidx.compose.runtime.toMutableStateList
 import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
 
 data class Notebook(
-    val id: Int = 0,
+    val id: String = "",
     var title: MutableState<String> = mutableStateOf(""),
     val notes: SnapshotStateList<Note> = mutableStateListOf()
 )

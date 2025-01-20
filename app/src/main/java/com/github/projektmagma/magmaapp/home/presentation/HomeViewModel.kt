@@ -7,12 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.github.projektmagma.magmaapp.core.domain.use_case.GetCurrentUserUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.LogoutUseCase
 import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
-import com.github.projektmagma.magmaapp.home.domain.model.Note
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 import com.github.projektmagma.magmaapp.home.domain.model.toDomain
 import com.github.projektmagma.magmaapp.home.domain.use_case.AddNotebookUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.GetNotebookByIdUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.GetNotebooksUseCase
+import com.github.projektmagma.magmaapp.home.domain.use_case.UpdateNotebookUseCase
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +23,8 @@ class HomeViewModel(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getNotebooksUseCase: GetNotebooksUseCase,
     private val getNotebookByIdUseCase: GetNotebookByIdUseCase,
-    private val addNotebookUseCase: AddNotebookUseCase
+    private val addNotebookUseCase: AddNotebookUseCase,
+    private val updateNotebookUseCase: UpdateNotebookUseCase
 ) : ViewModel() {
 
     private val _user = MutableStateFlow<FirebaseUser?>(null)
@@ -50,20 +51,30 @@ class HomeViewModel(
 
     fun addNotebook(notebook: NotebookDto) {
         viewModelScope.launch {
-            addNotebookUseCase.execute(notebook, _user.value!!.uid)
+            addNotebookUseCase.execute(notebook)
         }
         _notebooks.value.add(notebook.toDomain())
     }
 
-    fun getNotebook(index: Int){
+    fun getNotebook(index: Int) {
         viewModelScope.launch {
             _notebook.value = getNotebookByIdUseCase.execute(index)
         }
     }
 
-    private fun getAllNotebooks(){
+    fun updateNotebook(
+        notebook: NotebookDto,
+        index: Int
+    ) {
         viewModelScope.launch {
-            _notebooks.value = getNotebooksUseCase.execute(_user.value!!.uid)
+            updateNotebookUseCase.execute(notebook)
+        }
+        _notebooks.value[index] = notebook.toDomain()
+    }
+
+    private fun getAllNotebooks() {
+        viewModelScope.launch {
+            _notebooks.value = getNotebooksUseCase.execute()
         }
     }
 }

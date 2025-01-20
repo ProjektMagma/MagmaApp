@@ -29,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
+import com.github.projektmagma.magmaapp.home.data.model.toDto
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -77,9 +78,10 @@ fun NotebookEditScreen(
                 Button(
                     modifier = Modifier.width(128.dp),
                     onClick = {
-//                        viewModel.addNotebook(
-//                            // TODO logike firebase do update tytulu
-//                        )
+                        viewModel.updateNotebook(
+                            notebook.toDto(),
+                            index
+                        )
                         navController.navigate(Screen.HomeScreen) {
                             popUpTo<Screen.HomeScreen>() {
                                 inclusive = true

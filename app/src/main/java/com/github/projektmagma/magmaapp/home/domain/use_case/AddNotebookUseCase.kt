@@ -6,6 +6,6 @@ import com.github.projektmagma.magmaapp.home.domain.repository.NotebookRepositor
 class AddNotebookUseCase(
     private val notebookRepository: NotebookRepository
 ) {
-    suspend fun execute(notebook: NotebookDto, userId: String) =
-        notebookRepository.addNotebook(notebook, userId)
+    suspend fun execute(notebook: NotebookDto) =
+        notebookRepository.addNotebook(notebook)
 }
