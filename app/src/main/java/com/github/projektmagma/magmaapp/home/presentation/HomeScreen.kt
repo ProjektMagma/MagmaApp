@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.MoreVert
@@ -109,8 +110,7 @@ fun HomeScreen(
                     .padding(64.dp, 0.dp)
                     .fillMaxSize()
             ) {
-                items(notebooks.size) { index ->
-                    val notebook = viewModel.getNotebook(index)
+                itemsIndexed(notebooks) { index, notebook ->
                     NotebookSelector(
                         notebook = notebook,
                         onClick = {
@@ -118,8 +118,7 @@ fun HomeScreen(
                             snackbarScope.launch {
                                 snackbarHostState.showSnackbar("${context.getString(R.string.notebook_selection_info)} ${notebook.title.value}")
                             }
-                            viewModel.setCurrentNotebookIndex(index)
-                            navController.navigate(Screen.NotebookEditScreen)
+                            navController.navigate(Screen.NotebookEditScreen(index))
                         }
                     )
                 }
@@ -135,7 +134,7 @@ fun HomeScreen(
                                     notebooks.size + 1,
                                     context.getString(R.string.notebook_default_name),
                                     SnapshotStateList(),
-                                    )
+                                )
                             )
                             keyboardController?.hide()
                         }

@@ -17,6 +17,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.tasks.await
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class NotebookRepositoryImpl(
     private val database: DatabaseReference,
@@ -39,24 +41,29 @@ class NotebookRepositoryImpl(
         }
     }
 
-    override fun getAllNotebooks(userId: String): SnapshotStateList<Notebook> {
-        notebooks.clear()
-        database.child("notebooks").child(userId)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for (notebookSnapshot in snapshot.children) {
-                        val notebook = notebookSnapshot.getValue(NotebookDto::class.java)
-                        if (notebook != null) {
-                            notebooks.add(notebook.toDomain())
+    override suspend fun getAllNotebooks(userId: String): SnapshotStateList<Notebook> {
+        return suspendCoroutine { continuation ->
+            val tempNotebooks = mutableStateListOf<Notebook>()
+            database.child("notebooks").child(userId)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (notebookSnapshot in snapshot.children) {
+                            val notebook = notebookSnapshot.getValue(NotebookDto::class.java)
+                            if (notebook != null) {
+                                tempNotebooks.add(notebook.toDomain())
+                            }
+                            if (tempNotebooks.size == snapshot.children.count()) {
+                                notebooks.addAll(tempNotebooks)
+                                continuation.resume(tempNotebooks)
+                            }
                         }
                     }
-                }
 
-                override fun onCancelled(error: DatabaseError) {
-                    // Handle error
-                }
-            })
-        return notebooks
+                    override fun onCancelled(error: DatabaseError) {
+                        // Handle error
+                    }
+                })
+        }
     }
 
     override fun getNotebookById(index: Int): Notebook {

@@ -5,5 +5,5 @@ import com.github.projektmagma.magmaapp.home.domain.repository.NotebookRepositor
 class GetNotebooksUseCase(
     private val notebookRepository: NotebookRepository
 ) {
-    fun execute(userId: String) = notebookRepository.getAllNotebooks(userId)
+    suspend fun execute(userId: String) = notebookRepository.getAllNotebooks(userId)
 }

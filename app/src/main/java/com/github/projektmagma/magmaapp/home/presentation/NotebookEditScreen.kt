@@ -10,38 +10,41 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
-import com.github.projektmagma.magmaapp.home.domain.model.Note
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NotebookEditScreen(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
+    index: Int,
     viewModel: HomeViewModel = koinViewModel()
 ) {
-    val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val notebook = viewModel.getNotebook(viewModel.getCurrentNotebookIndex())
-    var title by remember { notebook.title }
-    val notes = remember { notebook.notes }
+
+    val notebook by viewModel.notebook.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.getNotebook(index)
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -58,14 +61,15 @@ fun NotebookEditScreen(
                 Button(
                     modifier = Modifier.width(128.dp),
                     onClick = {
-                        notes.add(
-                            Note(
-                                id = 0,
-                                title = mutableStateOf(context.getString(R.string.note_default_name)),
-                                content = mutableStateOf(context.getString(R.string.note_default_content)),
-                                date = "Today"
-                            )
-                        )
+                        // TODO logika firebase do dodawania notatki
+//                        notes.add(
+//                            Note(
+//                                id = 0,
+//                                title = mutableStateOf(context.getString(R.string.note_default_name)),
+//                                content = mutableStateOf(context.getString(R.string.note_default_content)),
+//                                date = "Today"
+//                            )
+//                        )
                     }
                 ) {
                     Text(stringResource(id = R.string.add_note_button))
@@ -73,24 +77,33 @@ fun NotebookEditScreen(
                 Button(
                     modifier = Modifier.width(128.dp),
                     onClick = {
-                        navController.navigate(Screen.HomeScreen)
+//                        viewModel.addNotebook(
+//                            // TODO logike firebase do update tytulu
+//                        )
+                        navController.navigate(Screen.HomeScreen) {
+                            popUpTo<Screen.HomeScreen>() {
+                                inclusive = true
+                            }
+                        }
                     }
                 ) {
                     Text(stringResource(id = R.string.exit_notebook_button))
                 }
             }
+
             TextField(
                 modifier = Modifier
                     .fillMaxWidth(),
-                value = title,
-                onValueChange = { title = it })
+                value = notebook.title.value,
+                onValueChange = { notebook.title.value = it }
+            )
 
             LazyColumn(modifier = Modifier.clickable {
                 keyboardController?.hide()
             }) {
-                items(notes.size) { index ->
-                    var noteTitle by remember { notes[index].title }
-                    var noteContent by remember { notes[index].content }
+                items(notebook.notes) { note ->
+                    var noteTitle by remember { note.title }
+                    var noteContent by remember { note.content }
                     TextField(
                         modifier = Modifier
                             .fillMaxWidth(),

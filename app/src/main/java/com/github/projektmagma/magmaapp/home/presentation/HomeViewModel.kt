@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.github.projektmagma.magmaapp.core.domain.use_case.GetCurrentUserUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.LogoutUseCase
 import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
+import com.github.projektmagma.magmaapp.home.domain.model.Note
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
+import com.github.projektmagma.magmaapp.home.domain.model.toDomain
 import com.github.projektmagma.magmaapp.home.domain.use_case.AddNotebookUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.GetNotebookByIdUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.GetNotebooksUseCase
@@ -30,10 +32,13 @@ class HomeViewModel(
     private val _notebooks = MutableStateFlow<SnapshotStateList<Notebook>>(mutableStateListOf())
     val notebooks = _notebooks.asStateFlow()
 
+    private val _notebook = MutableStateFlow(Notebook())
+    val notebook = _notebook.asStateFlow()
 
     init {
         viewModelScope.launch {
             _user.value = getCurrentUserUseCase.execute()
+            getAllNotebooks()
         }
     }
 
@@ -47,16 +52,18 @@ class HomeViewModel(
         viewModelScope.launch {
             addNotebookUseCase.execute(notebook, _user.value!!.uid)
         }
-//        _notebooks.value = getAllNotebooks()
+        _notebooks.value.add(notebook.toDomain())
     }
 
-    fun getNotebook(index: Int) = getNotebookByIdUseCase.execute(index)
-
-    fun setCurrentNotebookIndex(index: Int) {
-        getNotebookByIdUseCase.lastNotebookIndex = index
+    fun getNotebook(index: Int){
+        viewModelScope.launch {
+            _notebook.value = getNotebookByIdUseCase.execute(index)
+        }
     }
 
-    fun getCurrentNotebookIndex() = getNotebookByIdUseCase.execute()
-
-    fun getAllNotebooks() = getNotebooksUseCase.execute(_user.value!!.uid)
+    private fun getAllNotebooks(){
+        viewModelScope.launch {
+            _notebooks.value = getNotebooksUseCase.execute(_user.value!!.uid)
+        }
+    }
 }

@@ -24,5 +24,7 @@ sealed class Screen {
     data object HomeScreen: Screen()
     
     @Serializable
-    data object NotebookEditScreen: Screen()
+    data class NotebookEditScreen(
+        val index: Int
+    ): Screen()
 }
