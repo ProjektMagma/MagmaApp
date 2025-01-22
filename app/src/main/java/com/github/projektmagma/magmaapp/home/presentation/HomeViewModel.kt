@@ -63,13 +63,13 @@ class HomeViewModel(
     }
 
     fun updateNotebook(
-        notebook: NotebookDto,
+        notebook: Notebook,
         index: Int
     ) {
         viewModelScope.launch {
             updateNotebookUseCase.execute(notebook)
         }
-        _notebooks.value[index] = notebook.toDomain()
+        _notebooks.value[index] = notebook
     }
 
     private fun getAllNotebooks() {

@@ -29,7 +29,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
-import com.github.projektmagma.magmaapp.home.data.model.toDto
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -79,7 +78,7 @@ fun NotebookEditScreen(
                     modifier = Modifier.width(128.dp),
                     onClick = {
                         viewModel.updateNotebook(
-                            notebook.toDto(),
+                            notebook,
                             index
                         )
                         navController.navigate(Screen.HomeScreen) {

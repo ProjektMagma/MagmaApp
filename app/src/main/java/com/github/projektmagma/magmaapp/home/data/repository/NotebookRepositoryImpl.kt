@@ -5,6 +5,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.github.projektmagma.magmaapp.core.util.Error
 import com.github.projektmagma.magmaapp.core.util.Result
 import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
+import com.github.projektmagma.magmaapp.home.data.model.toDto
 import com.github.projektmagma.magmaapp.home.data.safeFirebaseCall
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 import com.github.projektmagma.magmaapp.home.domain.model.toDomain
@@ -25,8 +26,9 @@ class NotebookRepositoryImpl(
     override suspend fun addNotebook(notebook: NotebookDto): Result<Unit, Error> {
         return safeFirebaseCall {
             val key = database.push().key ?: ""
-            database.child(key).setValue(notebook.copy(id = key)).await()
-            notebooks.add(notebook.toDomain())
+            val notebookWithId = notebook.copy(id = key)
+            database.child(key).setValue(notebookWithId).await()
+            notebooks.add(notebookWithId.toDomain())
         }
     }
 
@@ -55,10 +57,10 @@ class NotebookRepositoryImpl(
     }
 
     override suspend fun updateNotebook(
-        notebook: NotebookDto,
+        notebook: Notebook,
     ): Result<Unit, Error> {
         return safeFirebaseCall {
-            database.child(notebook.id).setValue(notebook).await()
+            database.child(notebook.id).setValue(notebook.toDto()).await()
         }
     }
 
