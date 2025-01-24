@@ -35,8 +35,8 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             MagmaAppTheme {
-                val navController = rememberNavController()
-                val snackbarState = remember { SnackbarHostState() }
+                val navHostController = rememberNavController()
+                val snackbarHostState = remember { SnackbarHostState() }
 
                 val mainViewModel = koinViewModel<MainViewModel>()
                 val startDestination by mainViewModel.startDestination.collectAsStateWithLifecycle()
@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     snackbarHost = {
                         SnackbarHost(
-                            hostState = snackbarState,
+                            hostState = snackbarHostState,
                         )
                     }
                 ) { innerPadding ->
@@ -55,8 +55,8 @@ class MainActivity : ComponentActivity() {
                         startDestination?.let {
                             NavGraph(
                                 startDestination!!,
-                                navController,
-                                snackbarState
+                                navHostController,
+                                snackbarHostState
                             )
                         }
                     }

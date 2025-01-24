@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -24,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
@@ -59,7 +57,7 @@ fun NotebookEditScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
-                    modifier = Modifier.width(128.dp),
+                    modifier = HomeModifiers.notebookEditScreenButtonWidth,
                     onClick = {
                         // TODO logika firebase do dodawania notatki
 //                        notes.add(
@@ -75,7 +73,7 @@ fun NotebookEditScreen(
                     Text(stringResource(id = R.string.add_note_button))
                 }
                 Button(
-                    modifier = Modifier.width(128.dp),
+                    modifier = HomeModifiers.notebookEditScreenButtonWidth,
                     onClick = {
                         viewModel.updateNotebook(
                             notebook,
@@ -99,9 +97,11 @@ fun NotebookEditScreen(
                 onValueChange = { notebook.title.value = it }
             )
 
-            LazyColumn(modifier = Modifier.clickable {
-                keyboardController?.hide()
-            }) {
+            LazyColumn(modifier = Modifier
+                .fillMaxSize()
+                .clickable {
+                    keyboardController?.hide()
+                }) {
                 items(notebook.notes) { note ->
                     var noteTitle by remember { note.title }
                     var noteContent by remember { note.content }

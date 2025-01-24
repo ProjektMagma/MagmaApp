@@ -40,7 +40,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun LoginScreen(
     navHostController: NavHostController,
-    snackbarState: SnackbarHostState,
+    snackbarHostState: SnackbarHostState,
     viewModel: AuthViewModel = koinViewModel()
 ) {
     val passwordVisible = viewModel.passwordVisible
@@ -64,7 +64,7 @@ fun LoginScreen(
                 }
             }
             snackbarScope.launch {
-                snackbarState.showSnackbar(message)
+                snackbarHostState.showSnackbar(message)
             }
         }
     }

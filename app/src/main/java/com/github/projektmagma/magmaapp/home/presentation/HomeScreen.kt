@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -39,14 +38,14 @@ import org.koin.androidx.compose.koinViewModel
 fun HomeScreen(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
-    viewModel: HomeViewModel = koinViewModel()
+    homeViewModel: HomeViewModel = koinViewModel()
 ) {
     val snackbarScope = rememberCoroutineScope()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val user by viewModel.user.collectAsStateWithLifecycle()
-    val notebooks by viewModel.notebooks.collectAsStateWithLifecycle()
-
+    val user by homeViewModel.user.collectAsStateWithLifecycle()
+    val notebooks by homeViewModel.notebooks.collectAsStateWithLifecycle()
+    
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -65,7 +64,7 @@ fun HomeScreen(
                     }
                 ) {
                     Icon(
-                        modifier = Modifier.size(128.dp),
+                        modifier = HomeModifiers.iconBigSize,
                         imageVector = Icons.Filled.AccountCircle,
                         contentDescription = null
                     )
@@ -80,7 +79,7 @@ fun HomeScreen(
                     )
                     IconButton(
                         onClick = {
-                            viewModel.logout()
+                            homeViewModel.logout()
                             navController.navigate(Screen.AuthGraph) {
                                 popUpTo(Screen.AuthGraph) {
                                     inclusive = true
@@ -128,7 +127,7 @@ fun HomeScreen(
                             snackbarScope.launch {
                                 snackbarHostState.showSnackbar(context.getString(R.string.new_notebook_creation_info))
                             }
-                            viewModel.addNotebook(
+                            homeViewModel.addNotebook(
                                 NotebookDto(
                                     title = context.getString(R.string.notebook_default_name),
                                 )

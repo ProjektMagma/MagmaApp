@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Icon
@@ -37,10 +35,7 @@ fun NotebookSelector(
     val notes = notebook.notes
 
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(0.dp, 16.dp)
+        modifier = HomeModifiers.notebookButtonBox
             .shadow(
                 elevation = 4.dp,
                 shape = MaterialTheme.shapes.large,
@@ -51,7 +46,7 @@ fun NotebookSelector(
     ) {
         Column(
             modifier = Modifier
-                .padding(16.dp, 16.dp),
+                .padding(16.dp),
         ) {
 
             Row(
@@ -66,7 +61,7 @@ fun NotebookSelector(
                     color = MaterialTheme.colorScheme.onSecondary
                 )
                 Icon(
-                    modifier = Modifier.size(32.dp),
+                    modifier = HomeModifiers.iconSmallSize,
                     imageVector = Icons.Filled.AccountCircle,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSecondary
@@ -76,13 +71,13 @@ fun NotebookSelector(
             notes.forEach { note ->
                 val noteTitle by note.title
                 Text(
-                    modifier = Modifier.padding(32.dp, 0.dp),
+                    modifier = HomeModifiers.notebookSelectorTextPadding,
                     text = "- $noteTitle",
                     color = MaterialTheme.colorScheme.onSecondary
                 )
             }
             Text(
-                modifier = Modifier.padding(32.dp, 0.dp),
+                modifier = HomeModifiers.notebookSelectorTextPadding,
                 text = "${stringResource(id = R.string.notebook_creation_date)} " +
                         "TempString",
                 style = MaterialTheme.typography.bodySmall,

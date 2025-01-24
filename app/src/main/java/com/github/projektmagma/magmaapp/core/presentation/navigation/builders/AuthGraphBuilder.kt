@@ -15,7 +15,7 @@ import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen.Regi
 
 fun NavGraphBuilder.authGraph(
     navHostController: NavHostController,
-    snackbarState: SnackbarHostState
+    snackbarHostState: SnackbarHostState
 ) {
     navigation<Screen.AuthGraph>(
         startDestination = OnBoardingScreen
@@ -26,13 +26,13 @@ fun NavGraphBuilder.authGraph(
         composable<LoginScreen> {
             LoginScreen(
                 navHostController,
-                snackbarState
+                snackbarHostState
             )
         }
         composable<RegisterScreen> {
             RegisterScreen(
                 navHostController,
-                snackbarState
+                snackbarHostState
             )
         }
     }

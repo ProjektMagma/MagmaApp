@@ -12,18 +12,18 @@ import com.github.projektmagma.magmaapp.home.presentation.NotebookEditScreen
 
 fun NavGraphBuilder.mainGraph(
     navHostController: NavHostController,
-    snackbarState: SnackbarHostState
+    snackbarHostState: SnackbarHostState
 ) {
     navigation<Screen.MainGraph>(
         startDestination = Screen.HomeScreen
     ) {
         composable<Screen.HomeScreen> {
-            HomeScreen(navHostController, snackbarState)
+            HomeScreen(navHostController, snackbarHostState)
         }
         
         composable<Screen.NotebookEditScreen> { backStackEntry ->
             val notebookIndex = backStackEntry.toRoute<Screen.NotebookEditScreen>().index
-            NotebookEditScreen(navHostController, snackbarState, notebookIndex)
+            NotebookEditScreen(navHostController, snackbarHostState, notebookIndex)
         }
     }
 }

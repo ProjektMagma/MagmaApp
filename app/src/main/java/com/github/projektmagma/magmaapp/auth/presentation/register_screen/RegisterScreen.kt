@@ -37,22 +37,22 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun RegisterScreen(
     navHostController: NavHostController,
-    snackbarState: SnackbarHostState,
-    viewModel: AuthViewModel = koinViewModel()
+    snackbarHostState: SnackbarHostState,
+    authViewModel: AuthViewModel = koinViewModel()
 ) {
-    val passwordVisible = viewModel.passwordVisible
-    val state = viewModel.state
+    val passwordVisible = authViewModel.passwordVisible
+    val state = authViewModel.state
     val snackbarScope = rememberCoroutineScope()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    LaunchedEffect(viewModel.validationEvent) {
+    LaunchedEffect(authViewModel.validationEvent) {
         var message by mutableStateOf(context.getString(R.string.error_unknown))
-        viewModel.validationEvent.collect { event ->
+        authViewModel.validationEvent.collect { event ->
             when (event) {
                 is AuthViewModel.AuthEvent.Success -> {
                     message = context.getString(R.string.register_success)
-                    viewModel.logout()
+                    authViewModel.logout()
                     navHostController.navigate(Screen.OnBoardingScreen)
                 }
 
@@ -61,7 +61,7 @@ fun RegisterScreen(
                 }
             }
             snackbarScope.launch {
-                snackbarState.showSnackbar(message)
+                snackbarHostState.showSnackbar(message)
             }
         }
     }
@@ -82,7 +82,7 @@ fun RegisterScreen(
                 )
                 EmailField(
                     email = state.email,
-                    onValueChange = { viewModel.onEvent(RegistrationFormEvent.EmailChanged(it)) },
+                    onValueChange = { authViewModel.onEvent(RegistrationFormEvent.EmailChanged(it)) },
                     isError = state.emailError != null
                 )
                 ErrorText(state = state)
@@ -93,7 +93,7 @@ fun RegisterScreen(
                     showPasswordVisibilityIcon = true,
                     labelString = stringResource(id = R.string.password),
                     passwordStateString = state.password,
-                    onValueChange = { viewModel.onEvent(RegistrationFormEvent.PasswordChanged(it)) }
+                    onValueChange = { authViewModel.onEvent(RegistrationFormEvent.PasswordChanged(it)) }
                 )
                 ErrorText(state = state)
                 PasswordField(
@@ -104,13 +104,13 @@ fun RegisterScreen(
                     labelString = stringResource(id = R.string.repeat_password),
                     passwordStateString = state.repeatedPassword,
                     onValueChange = {
-                        viewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(it)) }
+                        authViewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(it)) }
                 )
                 ErrorText(state = state)
                 Button(
                     modifier = AuthModifiers.buttonsModifier,
                     onClick = {
-                        viewModel.onEvent(RegistrationFormEvent.Submit(RegistrationType.REGISTER))
+                        authViewModel.onEvent(RegistrationFormEvent.Submit(RegistrationType.REGISTER))
                         keyboardController?.hide()
                     }
                 ) {
