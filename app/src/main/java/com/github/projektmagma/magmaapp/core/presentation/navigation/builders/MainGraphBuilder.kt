@@ -7,8 +7,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
-import com.github.projektmagma.magmaapp.home.presentation.HomeScreen
-import com.github.projektmagma.magmaapp.home.presentation.NotebookEditScreen
+import com.github.projektmagma.magmaapp.home.presentation.home_screen.HomeScreen
+import com.github.projektmagma.magmaapp.home.presentation.edit_screen.NotebookEditScreen
 
 fun NavGraphBuilder.mainGraph(
     navHostController: NavHostController,
@@ -22,8 +22,8 @@ fun NavGraphBuilder.mainGraph(
         }
         
         composable<Screen.NotebookEditScreen> { backStackEntry ->
-            val notebookIndex = backStackEntry.toRoute<Screen.NotebookEditScreen>().index
-            NotebookEditScreen(navHostController, snackbarHostState, notebookIndex)
+            val notebookId = backStackEntry.toRoute<Screen.NotebookEditScreen>().id
+            NotebookEditScreen(navHostController, snackbarHostState, notebookId)
         }
     }
 }

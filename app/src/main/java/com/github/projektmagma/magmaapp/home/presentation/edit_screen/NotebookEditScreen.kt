@@ -1,4 +1,4 @@
-package com.github.projektmagma.magmaapp.home.presentation
+package com.github.projektmagma.magmaapp.home.presentation.edit_screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,21 +27,22 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
+import com.github.projektmagma.magmaapp.home.presentation.HomeModifiers
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NotebookEditScreen(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
-    index: Int,
-    viewModel: HomeViewModel = koinViewModel()
+    id: String,
+    viewModel: EditNoteViewModel = koinViewModel()
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val notebook by viewModel.notebook.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.getNotebook(index)
+        viewModel.getNotebookById(id)
     }
 
     Scaffold(
@@ -76,13 +77,10 @@ fun NotebookEditScreen(
                     modifier = HomeModifiers.notebookEditScreenButtonWidth,
                     onClick = {
                         viewModel.updateNotebook(
-                            notebook,
-                            index
+                            notebook
                         )
                         navController.navigate(Screen.HomeScreen) {
-                            popUpTo<Screen.HomeScreen>() {
-                                inclusive = true
-                            }
+                            popUpTo<Screen.HomeScreen> { inclusive = true }
                         }
                     }
                 ) {
@@ -97,11 +95,12 @@ fun NotebookEditScreen(
                 onValueChange = { notebook.title.value = it }
             )
 
-            LazyColumn(modifier = Modifier
-                .fillMaxSize()
-                .clickable {
-                    keyboardController?.hide()
-                }) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable {
+                        keyboardController?.hide()
+                    }) {
                 items(notebook.notes) { note ->
                     var noteTitle by remember { note.title }
                     var noteContent by remember { note.content }

@@ -1,4 +1,4 @@
-package com.github.projektmagma.magmaapp.home.presentation
+package com.github.projektmagma.magmaapp.home.presentation.home_screen.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.github.projektmagma.magmaapp.R
+import com.github.projektmagma.magmaapp.home.presentation.HomeModifiers
 
 @Composable
 fun NewNotebookSelector(

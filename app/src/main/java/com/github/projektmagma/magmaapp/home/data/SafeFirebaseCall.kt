@@ -6,10 +6,9 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.FirebaseTooManyRequestsException
 
-inline fun safeFirebaseCall(tryAdd: () -> Unit): Result<Unit, DataError> {
+inline fun <Notebook> safeFirebaseCall(tryAdd: () -> Notebook): Result<Notebook, DataError> {
     return try {
-        tryAdd()
-        Result.Success(Unit)
+        Result.Success(tryAdd())
     } catch (e: FirebaseNetworkException) {
         Result.Error(DataError.NetworkError.NETWORK_ERROR)
     } catch (e: FirebaseTooManyRequestsException) {

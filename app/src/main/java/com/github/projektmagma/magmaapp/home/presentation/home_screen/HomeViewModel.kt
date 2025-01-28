@@ -1,11 +1,13 @@
-package com.github.projektmagma.magmaapp.home.presentation
+package com.github.projektmagma.magmaapp.home.presentation.home_screen
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.projektmagma.magmaapp.core.domain.use_case.GetCurrentUserUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.LogoutUseCase
+import com.github.projektmagma.magmaapp.core.util.Result
 import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 import com.github.projektmagma.magmaapp.home.domain.model.toDomain
@@ -16,15 +18,14 @@ import com.github.projektmagma.magmaapp.home.domain.use_case.UpdateNotebookUseCa
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val logoutUseCase: LogoutUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getNotebooksUseCase: GetNotebooksUseCase,
-    private val getNotebookByIdUseCase: GetNotebookByIdUseCase,
     private val addNotebookUseCase: AddNotebookUseCase,
-    private val updateNotebookUseCase: UpdateNotebookUseCase
 ) : ViewModel() {
 
     private val _user = MutableStateFlow<FirebaseUser?>(null)
@@ -33,48 +34,29 @@ class HomeViewModel(
     private val _notebooks = MutableStateFlow<SnapshotStateList<Notebook>>(mutableStateListOf())
     val notebooks = _notebooks.asStateFlow()
 
-    private val _notebook = MutableStateFlow(Notebook())
-    val notebook = _notebook.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            _user.value = getCurrentUserUseCase.execute()
-            getAllNotebooks()
-        }
-    }
-
     fun logout() {
         viewModelScope.launch {
             logoutUseCase.execute()
         }
     }
 
+    init {
+        viewModelScope.launch {
+            _user.value = getCurrentUserUseCase.execute()
+            _notebooks.value = getNotebooksUseCase.execute()
+        }
+    }
+
     fun addNotebook(notebook: NotebookDto) {
         viewModelScope.launch {
-            addNotebookUseCase.execute(notebook)
-        }
-        _notebooks.value.add(notebook.toDomain())
-    }
-
-    fun getNotebook(index: Int) {
-        viewModelScope.launch {
-            _notebook.value = getNotebookByIdUseCase.execute(index)
-        }
-    }
-
-    fun updateNotebook(
-        notebook: Notebook,
-        index: Int
-    ) {
-        viewModelScope.launch {
-            updateNotebookUseCase.execute(notebook)
-        }
-        _notebooks.value[index] = notebook
-    }
-
-    private fun getAllNotebooks() {
-        viewModelScope.launch {
-            _notebooks.value = getNotebooksUseCase.execute()
+            when (val result = addNotebookUseCase.execute(notebook)) {
+                is Result.Success -> {
+                    _notebooks.value.add(result.data)
+                }
+                is Result.Error -> {
+                    // TODO przyjdzie jeszcze to handlowac
+                }
+            }
         }
     }
 }

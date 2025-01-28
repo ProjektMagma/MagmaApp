@@ -1,5 +1,6 @@
-package com.github.projektmagma.magmaapp.home.presentation
+package com.github.projektmagma.magmaapp.home.presentation.home_screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +32,9 @@ import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
+import com.github.projektmagma.magmaapp.home.presentation.HomeModifiers
+import com.github.projektmagma.magmaapp.home.presentation.home_screen.components.NewNotebookSelector
+import com.github.projektmagma.magmaapp.home.presentation.home_screen.components.NotebookSelector
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -116,7 +120,7 @@ fun HomeScreen(
                             snackbarScope.launch {
                                 snackbarHostState.showSnackbar("${context.getString(R.string.notebook_selection_info)} ${notebook.title.value}")
                             }
-                            navController.navigate(Screen.NotebookEditScreen(index))
+                            navController.navigate(Screen.NotebookEditScreen(notebooks[index].id))
                         }
                     )
                 }

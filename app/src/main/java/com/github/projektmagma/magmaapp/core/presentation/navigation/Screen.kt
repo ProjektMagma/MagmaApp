@@ -25,6 +25,6 @@ sealed class Screen {
     
     @Serializable
     data class NotebookEditScreen(
-        val index: Int
+        val id: String
     ): Screen()
 }

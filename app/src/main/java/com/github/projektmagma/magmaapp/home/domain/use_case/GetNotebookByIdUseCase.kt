@@ -6,7 +6,7 @@ import com.github.projektmagma.magmaapp.home.domain.repository.NotebookRepositor
 class GetNotebookByIdUseCase(
     private val notebookRepository: NotebookRepository
 ) {
-    fun execute(index: Int): Notebook {
-        return notebookRepository.getNotebookById(index)
+    fun execute(id: String): Notebook {
+        return notebookRepository.getNotebookById(id)
     }
 }
