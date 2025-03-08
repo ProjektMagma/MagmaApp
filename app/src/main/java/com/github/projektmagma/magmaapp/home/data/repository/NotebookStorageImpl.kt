@@ -1,10 +1,9 @@
 package com.github.projektmagma.magmaapp.home.data.repository
 
-import android.util.Log
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 import com.github.projektmagma.magmaapp.home.domain.repository.NotebookStorage
 
-class NoteStorageImpl : NotebookStorage {
+class NotebookStorageImpl : NotebookStorage {
 
     private val notesStorage = mutableListOf<Notebook>()
 
