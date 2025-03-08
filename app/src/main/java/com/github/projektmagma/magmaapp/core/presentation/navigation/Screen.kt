@@ -5,26 +5,29 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class Screen {
     @Serializable
-    data object AuthGraph: Screen()
+    data object AuthGraph : Screen()
 
     @Serializable
-    data object MainGraph: Screen()
+    data object MainGraph : Screen()
 
 
     @Serializable
     data object OnBoardingScreen : Screen()
 
     @Serializable
-    data object LoginScreen: Screen()
+    data object LoginScreen : Screen()
 
     @Serializable
-    data object RegisterScreen: Screen()
+    data object RegisterScreen : Screen()
 
     @Serializable
-    data object HomeScreen: Screen()
-    
+    data object HomeScreen : Screen()
+
+    @Serializable
+    data object SettingsScreen : Screen()
+
     @Serializable
     data class NotebookEditScreen(
         val id: String
-    ): Screen()
+    ) : Screen()
 }

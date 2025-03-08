@@ -1,8 +1,8 @@
-package com.github.projektmagma.magmaapp.auth.domain.use_case
+package com.github.projektmagma.magmaapp.core.domain.use_case
 
 import com.github.projektmagma.magmaapp.auth.domain.repository.LoginPreferencesRepository
 
-class SaveUserPreferencesUseCase(
+class SetAutoLogInUserUseCase(
     private val loginPreferencesRepository: LoginPreferencesRepository
 ) {
     suspend fun execute(stayLogin: Boolean) = loginPreferencesRepository.saveUserLogin(stayLogin)

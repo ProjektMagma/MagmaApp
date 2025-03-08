@@ -6,10 +6,10 @@ import com.github.projektmagma.magmaapp.auth.data.repository.LoginPreferencesRep
 import com.github.projektmagma.magmaapp.auth.data.repository.UserRepositoryImpl
 import com.github.projektmagma.magmaapp.auth.domain.repository.LoginPreferencesRepository
 import com.github.projektmagma.magmaapp.auth.domain.repository.UserRepository
-import com.github.projektmagma.magmaapp.auth.domain.use_case.GetUserPreferencesUseCase
+import com.github.projektmagma.magmaapp.core.domain.use_case.GetAutoLogInUserUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.LoginUserUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.RegisterUserUseCase
-import com.github.projektmagma.magmaapp.auth.domain.use_case.SaveUserPreferencesUseCase
+import com.github.projektmagma.magmaapp.core.domain.use_case.SetAutoLogInUserUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.GetCurrentUserUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.LogoutUseCase
 import com.google.firebase.auth.ktx.auth
@@ -28,8 +28,8 @@ val authModule = module {
 
     single<LoginPreferencesRepository> { LoginPreferencesRepositoryImpl(get()) }
 
-    single { GetUserPreferencesUseCase(get()) }
-    single { SaveUserPreferencesUseCase(get()) }
+    single { GetAutoLogInUserUseCase(get()) }
+    single { SetAutoLogInUserUseCase(get()) }
 
     single {
         PreferenceDataStoreFactory.create(

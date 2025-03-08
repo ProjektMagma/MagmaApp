@@ -5,10 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.projektmagma.magmaapp.auth.domain.use_case.GetUserPreferencesUseCase
+import com.github.projektmagma.magmaapp.core.domain.use_case.GetAutoLogInUserUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.LoginUserUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.RegisterUserUseCase
-import com.github.projektmagma.magmaapp.auth.domain.use_case.SaveUserPreferencesUseCase
+import com.github.projektmagma.magmaapp.core.domain.use_case.SetAutoLogInUserUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateEmail
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidatePassword
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateRepeatedPassword
@@ -27,8 +27,8 @@ class AuthViewModel(
     private val validateEmail: ValidateEmail,
     private val validatePassword: ValidatePassword,
     private val validateRepeatedPassword: ValidateRepeatedPassword,
-    private val saveUserPreferencesUseCase: SaveUserPreferencesUseCase,
-    private val getUserPreferencesUseCase: GetUserPreferencesUseCase
+    private val setAutoLogInUserUseCase: SetAutoLogInUserUseCase,
+    private val getAutoLogInUserUseCase: GetAutoLogInUserUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(RegistrationFormState())
@@ -94,7 +94,7 @@ class AuthViewModel(
             }
 
             if (result is Result.Success) {
-                saveUserPreferencesUseCase.execute(clicked.value)
+                setAutoLogInUserUseCase.execute(clicked.value)
                 _authEventChannel.send(AuthEvent.Success)
             } else {
                 _authEventChannel.send(AuthEvent.Failure((result as Result.Error).error.messageId))
