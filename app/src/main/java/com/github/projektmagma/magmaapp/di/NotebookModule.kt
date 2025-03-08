@@ -1,6 +1,8 @@
 package com.github.projektmagma.magmaapp.di
 
-import com.github.projektmagma.magmaapp.home.data.repository.NoteStorageImpl
+import androidx.room.Room
+import com.github.projektmagma.magmaapp.home.data.NotebooksDatabase
+import com.github.projektmagma.magmaapp.home.data.repository.NotebookStorageImpl
 import com.github.projektmagma.magmaapp.home.data.repository.NotebookRepositoryImpl
 import com.github.projektmagma.magmaapp.home.domain.repository.NotebookRepository
 import com.github.projektmagma.magmaapp.home.domain.repository.NotebookStorage
@@ -15,14 +17,27 @@ import org.koin.dsl.module
 
 val notebookModule = module {
 
-    single<NotebookStorage> { NoteStorageImpl() }
+    single<NotebookStorage> { NotebookStorageImpl(get<NotebooksDatabase>().notebookDao()) }
     single<NotebookRepository> { NotebookRepositoryImpl(get(), get()) }
     single { AddNotebookUseCase(get()) }
     single { GetNotebooksUseCase(get()) }
     single { GetNotebookByIdUseCase(get()) }
     single { UpdateNotebookUseCase(get()) }
 
-    factory { Firebase.database("https://magmaapp-a5c52-default-rtdb.europe-west1.firebasedatabase.app").reference
-        .child("notebooks")
-        .child(get<FirebaseAuth>().currentUser?.uid ?: "") }
+    factory {
+        Firebase.database("https://magmaapp-a5c52-default-rtdb.europe-west1.firebasedatabase.app").reference
+            .child("notebooks")
+            .child(get<FirebaseAuth>().currentUser?.uid ?: "")
+    }
+
+    single<NotebooksDatabase> {
+        Room.databaseBuilder(
+            get(),
+            NotebooksDatabase::class.java,
+            "notebooks.db"
+        )
+            .fallbackToDestructiveMigration()
+            .createFromAsset("notebooks.db")
+            .build()
+    }
 }

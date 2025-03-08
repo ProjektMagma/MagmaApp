@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.bundles.koin)
     implementation(libs.bundles.firebase)
     implementation(platform(libs.firebase.bom))
+    implementation(libs.bundles.room)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.core.splashscreen)
 

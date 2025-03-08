@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
+import com.github.projektmagma.magmaapp.home.data.model.NotebookEntity
 
 data class Notebook(
     val id: String = "",
@@ -18,5 +19,12 @@ fun NotebookDto.toDomain(): Notebook {
         id = id,
         title = mutableStateOf(title),
         notes = notes.map { it.toDomain() }.toMutableStateList()
+    )
+}
+
+fun Notebook.toEntity(): NotebookEntity {
+    return NotebookEntity(
+        id = id,
+        title = title.value,
     )
 }
