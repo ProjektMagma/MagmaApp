@@ -1,6 +1,5 @@
 package com.github.projektmagma.magmaapp.home.data.repository
 
-import android.util.Log
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 import com.github.projektmagma.magmaapp.home.domain.repository.NotebookStorage
 
@@ -26,5 +25,9 @@ class NoteStorageImpl : NotebookStorage {
     override fun getNotebookById(id: String): Notebook {
         val index = notesStorage.indexOfFirst { it.id == id }
         return notesStorage[index]
+    }
+
+    override fun removeNotebook(notebook: Notebook) {
+        notesStorage.remove(notebook)
     }
 }

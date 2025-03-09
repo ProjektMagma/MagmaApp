@@ -8,4 +8,5 @@ interface NotebookStorage {
     fun getNotebooks(): List<Notebook>
     fun updateNotebook(notebook: Notebook)
     fun getNotebookById(id: String): Notebook
+    fun removeNotebook(notebook: Notebook)
 }

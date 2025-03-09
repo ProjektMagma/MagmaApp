@@ -91,6 +91,13 @@ fun HomeScreen(
                             snackbarHostState.showSnackbar("${context.getString(R.string.notebook_selection_info)} ${notebook.title.value}")
                         }
                         navController.navigate(Screen.NotebookEditScreen(notebooks[index].id))
+                    },
+                    onLongClick = {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarScope.launch {
+                            snackbarHostState.showSnackbar("Note was removed")
+                        }
+                        homeViewModel.removeNotebook(notebook)
                     }
                 )
             }

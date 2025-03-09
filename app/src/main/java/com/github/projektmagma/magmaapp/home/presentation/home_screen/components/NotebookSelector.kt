@@ -1,7 +1,8 @@
 package com.github.projektmagma.magmaapp.home.presentation.home_screen.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,11 +27,12 @@ import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 import com.github.projektmagma.magmaapp.home.presentation.HomeModifiers
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NotebookSelector(
-    modifier: Modifier = Modifier,
     notebook: Notebook,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
 ) {
     val notebookTitle by notebook.title
     val notes = notebook.notes
@@ -43,7 +45,7 @@ fun NotebookSelector(
             )
             .clip(MaterialTheme.shapes.large)
             .background(MaterialTheme.colorScheme.secondary)
-            .clickable { onClick() },
+            .combinedClickable(onClick = { onClick() }, onLongClick = { onLongClick() })
     ) {
         Column(
             modifier = Modifier

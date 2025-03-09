@@ -71,4 +71,11 @@ class NotebookRepositoryImpl(
     override fun getNotebookById(id: String): Notebook {
         return notebookStorage.getNotebookById(id)
     }
+
+    override suspend fun removeNotebook(notebook: Notebook): Result<Unit, Error> {
+        return safeFirebaseCall {
+            database.child(notebook.id).removeValue().await()
+            notebookStorage.removeNotebook(notebook)
+        }
+    }
 }
