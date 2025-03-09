@@ -6,11 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.projektmagma.magmaapp.core.domain.use_case.GetCurrentUserUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.LogoutUseCase
+import com.github.projektmagma.magmaapp.core.domain.use_case.SetAutoLogInUserUseCase
 import com.github.projektmagma.magmaapp.core.util.Result
 import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
-import com.github.projektmagma.magmaapp.home.data.model.toDto
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
-import com.github.projektmagma.magmaapp.home.domain.model.toDomain
 import com.github.projektmagma.magmaapp.home.domain.use_case.AddNotebookUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.GetNotebooksUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.RemoveNotebookUseCase
@@ -24,7 +23,8 @@ class HomeViewModel(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getNotebooksUseCase: GetNotebooksUseCase,
     private val addNotebookUseCase: AddNotebookUseCase,
-    private val removeNotebookUseCase: RemoveNotebookUseCase
+    private val removeNotebookUseCase: RemoveNotebookUseCase,
+    private val setAutoLogInUserUseCase: SetAutoLogInUserUseCase
 ) : ViewModel() {
 
     private val _user = MutableStateFlow<FirebaseUser?>(null)
@@ -36,6 +36,7 @@ class HomeViewModel(
     fun logout() {
         viewModelScope.launch {
             logoutUseCase.execute()
+            setAutoLogInUserUseCase.execute(false)
         }
     }
 

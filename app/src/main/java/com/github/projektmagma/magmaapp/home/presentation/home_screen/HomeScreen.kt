@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -45,6 +46,17 @@ fun HomeScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val user by homeViewModel.user.collectAsStateWithLifecycle()
     val notebooks by homeViewModel.notebooks.collectAsStateWithLifecycle()
+
+    LaunchedEffect(true) {
+        if (user == null) {
+            homeViewModel.logout()
+            navController.navigate(Screen.AuthGraph) {
+                popUpTo(Screen.AuthGraph) {
+                    inclusive = true
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
