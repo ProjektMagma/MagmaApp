@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.1.0"
     alias(libs.plugins.google.gms.google.services)
+    kotlin("kapt")
 }
 
 android {
@@ -51,6 +52,7 @@ dependencies {
     implementation(libs.bundles.firebase)
     implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.room)
+    kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.core.splashscreen)
 

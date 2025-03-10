@@ -1,5 +1,5 @@
 [versions]
-agp = "8.8.2"
+agp = "8.9.0"
 datastorePreferences = "1.1.2"
 firebaseBom = "33.9.0"
 koinAndroid = "4.0.1"
@@ -24,6 +24,7 @@ core-splashscreen="1.0.1"
 roomRuntime = "2.6.1"
 
 [libraries]
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 core-splashscreen={group= "androidx.core",name="core-splashscreen",version.ref="core-splashscreen"}

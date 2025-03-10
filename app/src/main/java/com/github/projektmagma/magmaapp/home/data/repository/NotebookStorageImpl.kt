@@ -1,6 +1,7 @@
 package com.github.projektmagma.magmaapp.home.data.repository
 
 import com.github.projektmagma.magmaapp.home.data.NotebookDao
+import com.github.projektmagma.magmaapp.home.data.model.toDomain
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 import com.github.projektmagma.magmaapp.home.domain.model.toEntity
 import com.github.projektmagma.magmaapp.home.domain.repository.NotebookStorage
@@ -30,7 +31,7 @@ class NotebookStorageImpl(
     }
 
     override fun getNotebooks(): Flow<List<Notebook>> = flow {
-        emit(notesStorage)
+        emit(notebookDao.getNotebooks().map { it.toDomain() })
     }
 
     override fun getNotebookById(id: String): Notebook {

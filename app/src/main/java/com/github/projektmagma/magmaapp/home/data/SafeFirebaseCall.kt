@@ -1,5 +1,6 @@
 package com.github.projektmagma.magmaapp.home.data
 
+import android.util.Log
 import com.github.projektmagma.magmaapp.core.data.DataError
 import com.github.projektmagma.magmaapp.core.util.Result
 import com.google.firebase.FirebaseException

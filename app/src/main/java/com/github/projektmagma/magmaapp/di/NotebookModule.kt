@@ -34,7 +34,7 @@ val notebookModule = module {
         Room.databaseBuilder(
             get(),
             NotebooksDatabase::class.java,
-            "notebooks.db"
+            "notebooks"
         )
             .fallbackToDestructiveMigration()
             .createFromAsset("notebooks.db")
