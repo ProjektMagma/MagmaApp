@@ -12,10 +12,12 @@ import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen.LoginScreen
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen.OnBoardingScreen
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen.RegisterScreen
+import kotlinx.coroutines.CoroutineScope
 
 fun NavGraphBuilder.authGraph(
     navHostController: NavHostController,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    snackbarCoroutine: CoroutineScope
 ) {
     navigation<Screen.AuthGraph>(
         startDestination = OnBoardingScreen
@@ -26,13 +28,15 @@ fun NavGraphBuilder.authGraph(
         composable<LoginScreen> {
             LoginScreen(
                 navHostController,
-                snackbarHostState
+                snackbarHostState,
+                snackbarCoroutine
             )
         }
         composable<RegisterScreen> {
             RegisterScreen(
                 navHostController,
-                snackbarHostState
+                snackbarHostState,
+                snackbarCoroutine
             )
         }
     }

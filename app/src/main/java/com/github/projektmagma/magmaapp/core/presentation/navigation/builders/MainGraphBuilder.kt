@@ -10,25 +10,27 @@ import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.home.presentation.edit_screen.NotebookEditScreen
 import com.github.projektmagma.magmaapp.home.presentation.home_screen.HomeScreen
 import com.github.projektmagma.magmaapp.home.presentation.settings_screen.SettingsScreen
+import kotlinx.coroutines.CoroutineScope
 
 fun NavGraphBuilder.mainGraph(
     navHostController: NavHostController,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    snackbarCoroutine: CoroutineScope
 ) {
     navigation<Screen.MainGraph>(
         startDestination = Screen.HomeScreen
     ) {
         composable<Screen.HomeScreen> {
-            HomeScreen(navHostController, snackbarHostState)
+            HomeScreen(navHostController, snackbarHostState, snackbarCoroutine)
         }
 
         composable<Screen.SettingsScreen> {
-            SettingsScreen(navHostController, snackbarHostState)
+            SettingsScreen(navHostController, snackbarHostState, snackbarCoroutine)
         }
 
         composable<Screen.NotebookEditScreen> { backStackEntry ->
             val notebookId = backStackEntry.toRoute<Screen.NotebookEditScreen>().id
-            NotebookEditScreen(navHostController, snackbarHostState, notebookId)
+            NotebookEditScreen(navHostController, snackbarHostState,snackbarCoroutine, notebookId)
         }
     }
 }

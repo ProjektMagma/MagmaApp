@@ -31,6 +31,7 @@ import com.github.projektmagma.magmaapp.auth.presentation.common.PasswordField
 import com.github.projektmagma.magmaapp.auth.presentation.common.RegistrationType
 import com.github.projektmagma.magmaapp.auth.presentation.model.RegistrationFormEvent
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -38,11 +39,11 @@ import org.koin.androidx.compose.koinViewModel
 fun RegisterScreen(
     navHostController: NavHostController,
     snackbarHostState: SnackbarHostState,
+    snackbarCoroutine: CoroutineScope,
     authViewModel: AuthViewModel = koinViewModel()
 ) {
     val passwordVisible = authViewModel.passwordVisible
     val state = authViewModel.state
-    val snackbarScope = rememberCoroutineScope()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -60,7 +61,7 @@ fun RegisterScreen(
                     message = context.getString(event.messageId)
                 }
             }
-            snackbarScope.launch {
+            snackbarCoroutine.launch {
                 snackbarHostState.showSnackbar(message)
             }
         }

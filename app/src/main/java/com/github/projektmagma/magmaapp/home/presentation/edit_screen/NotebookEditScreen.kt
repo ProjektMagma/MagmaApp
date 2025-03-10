@@ -28,12 +28,14 @@ import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.home.presentation.HomeModifiers
+import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NotebookEditScreen(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
+    snackbarCoroutine: CoroutineScope,
     id: String,
     viewModel: EditNoteViewModel = koinViewModel()
 ) {

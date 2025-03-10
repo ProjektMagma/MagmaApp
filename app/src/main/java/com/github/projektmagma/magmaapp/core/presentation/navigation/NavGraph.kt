@@ -6,19 +6,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.github.projektmagma.magmaapp.core.presentation.navigation.builders.authGraph
 import com.github.projektmagma.magmaapp.core.presentation.navigation.builders.mainGraph
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun NavGraph(
     screen: Screen,
     navHostController: NavHostController,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    snackbarCoroutine : CoroutineScope
 ) {
 
     NavHost(
         navController = navHostController,
         startDestination = screen,
     ) {
-        authGraph(navHostController, snackbarHostState)
-        mainGraph(navHostController, snackbarHostState)
+        authGraph(navHostController, snackbarHostState, snackbarCoroutine)
+        mainGraph(navHostController, snackbarHostState, snackbarCoroutine)
     }
 }

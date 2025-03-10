@@ -1,9 +1,9 @@
 package com.github.projektmagma.magmaapp.core.domain.use_case
 
-import com.github.projektmagma.magmaapp.auth.domain.repository.LoginPreferencesRepository
+import com.github.projektmagma.magmaapp.core.domain.repository.SettingsRepository
 
 class GetAutoLogInUserUseCase(
-    private val loginPreferencesRepository: LoginPreferencesRepository
+    private val settingsRepository: SettingsRepository
 ) {
-    suspend fun execute() = loginPreferencesRepository.getUserLogin()
+    suspend fun execute() = settingsRepository.getUserLogin()
 }

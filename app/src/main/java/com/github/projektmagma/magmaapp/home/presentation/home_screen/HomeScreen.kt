@@ -18,7 +18,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -32,6 +33,7 @@ import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
 import com.github.projektmagma.magmaapp.home.presentation.HomeModifiers
 import com.github.projektmagma.magmaapp.home.presentation.home_screen.components.NewNotebookSelector
 import com.github.projektmagma.magmaapp.home.presentation.home_screen.components.NotebookSelector
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -39,13 +41,14 @@ import org.koin.androidx.compose.koinViewModel
 fun HomeScreen(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
+    snackbarCoroutine: CoroutineScope,
     homeViewModel: HomeViewModel = koinViewModel()
 ) {
-    val snackbarScope = rememberCoroutineScope()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val user by homeViewModel.user.collectAsStateWithLifecycle()
     val notebooks by homeViewModel.notebooks.collectAsStateWithLifecycle()
+    val deleteMode = remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
         if (user == null) {
@@ -99,14 +102,15 @@ fun HomeScreen(
                     notebook = notebook,
                     onClick = {
                         snackbarHostState.currentSnackbarData?.dismiss()
-                        snackbarScope.launch {
+                        snackbarCoroutine.launch {
                             snackbarHostState.showSnackbar("${context.getString(R.string.notebook_selection_info)} ${notebook.title.value}")
                         }
                         navController.navigate(Screen.NotebookEditScreen(notebooks[index].id))
                     },
-                    onLongClick = {
+                    deleteMode = deleteMode,
+                    onNotebookDelete = {
                         snackbarHostState.currentSnackbarData?.dismiss()
-                        snackbarScope.launch {
+                        snackbarCoroutine.launch {
                             snackbarHostState.showSnackbar("Note was removed")
                         }
                         homeViewModel.removeNotebook(notebook)
@@ -117,7 +121,7 @@ fun HomeScreen(
                 NewNotebookSelector(
                     onClick = {
                         snackbarHostState.currentSnackbarData?.dismiss()
-                        snackbarScope.launch {
+                        snackbarCoroutine.launch {
                             snackbarHostState.showSnackbar(context.getString(R.string.new_notebook_creation_info))
                         }
                         homeViewModel.addNotebook(

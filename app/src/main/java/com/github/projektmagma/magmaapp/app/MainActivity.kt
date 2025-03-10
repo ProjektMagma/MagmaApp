@@ -10,8 +10,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,14 +35,14 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
+            val navHostController = rememberNavController()
+            val snackbarHostState = remember { SnackbarHostState() }
+            val snackbarCoroutine = rememberCoroutineScope()
+            val mainViewModel = koinViewModel<MainViewModel>()
+            val startDestination by mainViewModel.startDestination.collectAsStateWithLifecycle()
+            val isAppInDarkMode by mainViewModel.isAppInDarkMode.collectAsStateWithLifecycle()
 
-            MagmaAppTheme {
-                val navHostController = rememberNavController()
-                val snackbarHostState = remember { SnackbarHostState() }
-
-                val mainViewModel = koinViewModel<MainViewModel>()
-                val startDestination by mainViewModel.startDestination.collectAsStateWithLifecycle()
-
+            MagmaAppTheme(isAppInDarkMode) {
 
                 Scaffold(
                     snackbarHost = {
@@ -56,7 +58,8 @@ class MainActivity : ComponentActivity() {
                             NavGraph(
                                 startDestination!!,
                                 navHostController,
-                                snackbarHostState
+                                snackbarHostState,
+                                snackbarCoroutine
                             )
                         }
                     }

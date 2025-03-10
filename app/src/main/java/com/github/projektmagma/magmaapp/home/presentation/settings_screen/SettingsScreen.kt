@@ -32,6 +32,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.home.presentation.settings_screen.components.SettingRow
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -40,6 +41,7 @@ import org.koin.androidx.compose.koinViewModel
 fun SettingsScreen(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
+    snackbarCoroutine: CoroutineScope,
     viewModel: SettingsViewModel = koinViewModel()
 ) {
 
@@ -83,7 +85,7 @@ fun SettingsScreen(
                     onClick = {
                         viewModel.saveSettings()
                         navController.popBackStack()
-                        viewModel.viewModelScope.launch {
+                        snackbarCoroutine.launch {
                             snackbarHostState.showSnackbar("Settings saved!")
                         }
                     }
@@ -107,8 +109,10 @@ fun SettingsScreen(
                     onCheckedChange = { viewModel.darkModeSwitch = it }
                 )
             }
-            Row(modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Button(
                     onClick = {
                         snackbarHostState.currentSnackbarData?.dismiss()
@@ -120,7 +124,7 @@ fun SettingsScreen(
                                 }
                             }
                         } else {
-                            viewModel.viewModelScope.launch {
+                            snackbarCoroutine.launch {
                                 snackbarHostState.showSnackbar("Click ${clicksToLogout - logoutTimesClicked} more times to logout")
                             }
                             logoutTimesClicked++
