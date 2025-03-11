@@ -40,9 +40,9 @@ class MainActivity : ComponentActivity() {
             val snackbarCoroutine = rememberCoroutineScope()
             val mainViewModel = koinViewModel<MainViewModel>()
             val startDestination by mainViewModel.startDestination.collectAsStateWithLifecycle()
-            val isAppInDarkMode by mainViewModel.isAppInDarkMode.collectAsStateWithLifecycle()
+            val isAppInDarkMode = remember { mainViewModel.isAppInDarkMode }
 
-            MagmaAppTheme(isAppInDarkMode) {
+            MagmaAppTheme(isAppInDarkMode.value) {
 
                 Scaffold(
                     snackbarHost = {
@@ -59,7 +59,8 @@ class MainActivity : ComponentActivity() {
                                 startDestination!!,
                                 navHostController,
                                 snackbarHostState,
-                                snackbarCoroutine
+                                snackbarCoroutine,
+                                isAppInDarkMode
                             )
                         }
                     }

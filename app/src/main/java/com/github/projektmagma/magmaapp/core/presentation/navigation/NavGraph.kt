@@ -2,6 +2,8 @@ package com.github.projektmagma.magmaapp.core.presentation.navigation
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.github.projektmagma.magmaapp.core.presentation.navigation.builders.authGraph
@@ -13,7 +15,8 @@ fun NavGraph(
     screen: Screen,
     navHostController: NavHostController,
     snackbarHostState: SnackbarHostState,
-    snackbarCoroutine : CoroutineScope
+    snackbarCoroutine: CoroutineScope,
+    isAppInDarkMode: MutableState<Boolean>
 ) {
 
     NavHost(
@@ -21,6 +24,6 @@ fun NavGraph(
         startDestination = screen,
     ) {
         authGraph(navHostController, snackbarHostState, snackbarCoroutine)
-        mainGraph(navHostController, snackbarHostState, snackbarCoroutine)
+        mainGraph(navHostController, snackbarHostState, snackbarCoroutine, isAppInDarkMode)
     }
 }

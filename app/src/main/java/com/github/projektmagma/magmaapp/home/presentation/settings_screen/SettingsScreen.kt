@@ -20,6 +20,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -42,6 +44,7 @@ fun SettingsScreen(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
     snackbarCoroutine: CoroutineScope,
+    isAppInDarkMode: MutableState<Boolean>,
     viewModel: SettingsViewModel = koinViewModel()
 ) {
 
@@ -106,7 +109,10 @@ fun SettingsScreen(
                 Text("Dark mode")
                 Switch(
                     checked = viewModel.darkModeSwitch,
-                    onCheckedChange = { viewModel.darkModeSwitch = it }
+                    onCheckedChange = {
+                        viewModel.darkModeSwitch = it
+                        isAppInDarkMode.value = it
+                    }
                 )
             }
             Row(

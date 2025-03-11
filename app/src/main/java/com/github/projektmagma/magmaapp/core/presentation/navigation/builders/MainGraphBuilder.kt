@@ -1,6 +1,8 @@
 package com.github.projektmagma.magmaapp.core.presentation.navigation.builders
 
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -15,7 +17,8 @@ import kotlinx.coroutines.CoroutineScope
 fun NavGraphBuilder.mainGraph(
     navHostController: NavHostController,
     snackbarHostState: SnackbarHostState,
-    snackbarCoroutine: CoroutineScope
+    snackbarCoroutine: CoroutineScope,
+    isAppInDarkMode: MutableState<Boolean>
 ) {
     navigation<Screen.MainGraph>(
         startDestination = Screen.HomeScreen
@@ -25,12 +28,12 @@ fun NavGraphBuilder.mainGraph(
         }
 
         composable<Screen.SettingsScreen> {
-            SettingsScreen(navHostController, snackbarHostState, snackbarCoroutine)
+            SettingsScreen(navHostController, snackbarHostState, snackbarCoroutine, isAppInDarkMode)
         }
 
         composable<Screen.NotebookEditScreen> { backStackEntry ->
             val notebookId = backStackEntry.toRoute<Screen.NotebookEditScreen>().id
-            NotebookEditScreen(navHostController, snackbarHostState,snackbarCoroutine, notebookId)
+            NotebookEditScreen(navHostController, snackbarHostState, snackbarCoroutine, notebookId)
         }
     }
 }

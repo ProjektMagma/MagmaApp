@@ -20,12 +20,11 @@ class MainViewModel(
 
     private val _startDestination = MutableStateFlow<Screen?>(null)
     val startDestination = _startDestination.asStateFlow()
-    private val _isAppInDarkMode = MutableStateFlow<Boolean>(false)
-    val isAppInDarkMode = _isAppInDarkMode.asStateFlow()
+    val isAppInDarkMode = mutableStateOf(false)
 
     init {
         viewModelScope.launch {
-            _isAppInDarkMode.value = getAppThemeUseCase.execute()
+            isAppInDarkMode.value = getAppThemeUseCase.execute()
             if (!getAutoLogInUserUseCase.execute()) {
                 _startDestination.value = Screen.AuthGraph
                 logoutUseCase.execute()
@@ -34,4 +33,5 @@ class MainViewModel(
             }
         }
     }
+
 }
