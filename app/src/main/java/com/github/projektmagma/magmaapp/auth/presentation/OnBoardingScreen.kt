@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -30,6 +32,8 @@ fun OnBoardingScreen(
     navHostController: NavHostController
 ) {
     Scaffold { innerPadding ->
+        val configuration = LocalConfiguration.current
+        val screenHeight = configuration.screenHeightDp.dp
         Column(
             modifier = Modifier
                 .padding(bottom = innerPadding.calculateBottomPadding())
@@ -56,7 +60,7 @@ fun OnBoardingScreen(
                 Image(
                     modifier = Modifier
                         .padding(32.dp)
-                        .clip(MaterialTheme.shapes.large),
+                        .clip(MaterialTheme.shapes.large).size(screenHeight / 3.5f),
                     painter = painterResource(id = R.drawable.logo),
                     contentDescription = stringResource(id = R.string.app_name)
                 )

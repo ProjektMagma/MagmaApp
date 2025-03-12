@@ -31,6 +31,14 @@ class SettingsViewModel(
         }
     }
 
+    fun getAppTheme() : Boolean {
+        val theme = mutableStateOf(false)
+        viewModelScope.launch {
+            theme.value = getAppThemeUseCase.execute()
+        }
+        return theme.value
+    }
+
     fun saveSettings() {
         viewModelScope.launch {
             setAutoLogInUserUseCase.execute(autoLogInCheckbox)

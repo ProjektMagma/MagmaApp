@@ -63,6 +63,7 @@ fun SettingsScreen(
                 IconButton(
                     onClick = {
                         navController.navigateUp()
+                        isAppInDarkMode.value = viewModel.getAppTheme()
                     }
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
