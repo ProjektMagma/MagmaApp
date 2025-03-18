@@ -11,9 +11,11 @@ import com.github.projektmagma.magmaapp.core.domain.repository.SettingsRepositor
 import com.github.projektmagma.magmaapp.core.domain.use_case.GetAppThemeUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.GetAutoLogInUserUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.GetCurrentUserUseCase
+import com.github.projektmagma.magmaapp.core.domain.use_case.GetUserNameUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.LogoutUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.SetAppThemeUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.SetAutoLogInUserUseCase
+import com.github.projektmagma.magmaapp.core.domain.use_case.SetUserNameUseCase
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import org.koin.dsl.module
@@ -28,12 +30,14 @@ val authModule = module {
     single { LogoutUseCase(get()) }
     single { GetCurrentUserUseCase(get()) }
 
-    single<SettingsRepository> { SettingsRepositoryImpl(get()) }
+    single<SettingsRepository> { SettingsRepositoryImpl(get(), get()) }
 
     single { GetAutoLogInUserUseCase(get()) }
     single { SetAutoLogInUserUseCase(get()) }
     single { GetAppThemeUseCase(get()) }
     single { SetAppThemeUseCase(get()) }
+    single { GetUserNameUseCase(get()) }
+    single { SetUserNameUseCase(get()) }
 
     single {
         PreferenceDataStoreFactory.create(

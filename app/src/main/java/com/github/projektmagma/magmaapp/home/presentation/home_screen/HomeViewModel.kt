@@ -1,10 +1,12 @@
 package com.github.projektmagma.magmaapp.home.presentation.home_screen
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.projektmagma.magmaapp.core.domain.use_case.GetCurrentUserUseCase
+import com.github.projektmagma.magmaapp.core.domain.use_case.GetUserNameUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.LogoutUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.SetAutoLogInUserUseCase
 import com.github.projektmagma.magmaapp.core.util.Result
@@ -24,7 +26,8 @@ class HomeViewModel(
     private val getNotebooksUseCase: GetNotebooksUseCase,
     private val addNotebookUseCase: AddNotebookUseCase,
     private val removeNotebookUseCase: RemoveNotebookUseCase,
-    private val setAutoLogInUserUseCase: SetAutoLogInUserUseCase
+    private val setAutoLogInUserUseCase: SetAutoLogInUserUseCase,
+    private val getUserNameUseCase: GetUserNameUseCase
 ) : ViewModel() {
 
     private val _user = MutableStateFlow<FirebaseUser?>(null)
@@ -32,6 +35,8 @@ class HomeViewModel(
 
     private val _notebooks = MutableStateFlow<SnapshotStateList<Notebook>>(mutableStateListOf())
     val notebooks = _notebooks.asStateFlow()
+
+    val displayName = mutableStateOf("")
 
     fun logout() {
         viewModelScope.launch {
@@ -44,6 +49,7 @@ class HomeViewModel(
         viewModelScope.launch {
             _user.value = getCurrentUserUseCase.execute()
             _notebooks.value = getNotebooksUseCase.execute()
+            displayName.value = getUserNameUseCase.execute()
         }
     }
 

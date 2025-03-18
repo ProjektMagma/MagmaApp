@@ -52,6 +52,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.core.splashscreen)
+    implementation(libs.richeditor.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

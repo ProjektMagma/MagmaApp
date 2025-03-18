@@ -49,6 +49,7 @@ fun HomeScreen(
     val user by homeViewModel.user.collectAsStateWithLifecycle()
     val notebooks by homeViewModel.notebooks.collectAsStateWithLifecycle()
     val deleteMode = remember { mutableStateOf(false) }
+    val displayName by remember { homeViewModel.displayName }
 
     LaunchedEffect(true) {
         if (user == null) {
@@ -84,7 +85,7 @@ fun HomeScreen(
             Row(modifier = Modifier.padding(top = 24.dp)) {
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = "Hello, ${user?.email}!",
+                    text = "Hello, ${displayName}!",
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Center
                 )

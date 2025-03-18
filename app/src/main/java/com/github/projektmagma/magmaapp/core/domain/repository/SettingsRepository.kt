@@ -5,4 +5,6 @@ interface SettingsRepository {
     suspend fun getUserLogin(): Boolean
     suspend fun setAppTheme(darkMode: Boolean)
     suspend fun getAppTheme(): Boolean
+    suspend fun setUserName(userName: String)
+    suspend fun getUserName(): String
 }

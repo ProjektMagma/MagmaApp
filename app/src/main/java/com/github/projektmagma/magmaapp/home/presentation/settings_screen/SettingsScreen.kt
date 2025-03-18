@@ -19,9 +19,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -30,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.home.presentation.settings_screen.components.SettingRow
@@ -99,6 +98,14 @@ fun SettingsScreen(
             }
         }) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
+            SettingRow {
+                Text("Display name")
+                TextField(
+                    value = viewModel.displayNameTextbox,
+                    onValueChange = { viewModel.displayNameTextbox = it.trim().take(25) },
+                    label = { Text("Max 25 characters, spaces disallowed (requires restart)") }
+                )
+            }
             SettingRow {
                 Text("Stay logged in")
                 Checkbox(
