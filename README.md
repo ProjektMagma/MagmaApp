@@ -58,8 +58,8 @@ notatki są bezpieczne i zawsze dostępne.
 Dalszy rozwój naszej aplikacji widzimy w kilku kluczowych obszarach. Jednym z pomysłów jest
 integracja z systemami dziennika elektronicznego, takimi jak Vulcan czy Librus, co umożliwiłoby
 użytkownikom łatwiejsze zarządzanie notatkami związanymi z edukacją i szkolnymi obowiązkami.
-Innym kierunkiem rozwoju jest przekształcenie aplikacji w system zwinnego zarządzania projektami (
-agile), podobny do GitHub Projects, Jira czy Trello. Chcemy jednak, aby nasza aplikacja była
+Innym kierunkiem rozwoju jest przekształcenie aplikacji w system zwinnego zarządzania projektami 
+(agile), podobny do GitHub Projects, Jira czy Trello. Chcemy jednak, aby nasza aplikacja była
 bardziej przystępna dla zwykłego użytkownika, który nie jest zaznajomiony z technologią. Dzięki temu
 moglibyśmy zaoferować narzędzie do zarządzania projektami, które jest intuicyjne i łatwe w użyciu, a
 jednocześnie skuteczne w organizacji pracy i współpracy zespołowej.
@@ -110,7 +110,7 @@ zająć wysokiego miejsca w tym konkursie, traktujemy to jako proces nauki, któ
 naszego rozwoju. W końcu chodzi nie tylko o osiągnięcie celu, ale o drogę, którą do niego
 przebywamy.
 <br>
-_Cytując materiał promocyjny_Reszta wyjdzie w trakcie._
+Cytując materiał promocyjny _Reszta wyjdzie w trakcie._
 
 ## Napisz, co wyróżnia Wasz pomysł lub jego realizacja np. wybór innowacyjnej technologii.
 
