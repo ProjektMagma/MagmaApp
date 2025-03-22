@@ -8,10 +8,10 @@ import java.util.Date
 import java.util.Locale
 
 data class Note(
-    val id: String,
-    val title: MutableState<String>,
-    val content: MutableState<String>,
-    val date: String
+    val id: String = "",
+    val title: MutableState<String> = mutableStateOf(""),
+    val content: MutableState<String> = mutableStateOf(""),
+    val date: String = ""
 )
 
 fun NoteDto.toDomain(): Note {

@@ -4,5 +4,5 @@ val appModule = listOf(
     authModule,
     notebookModule,
     validationModule,
-    viewmodelModule
+    viewModelModule
 )

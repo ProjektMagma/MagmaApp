@@ -27,7 +27,12 @@ sealed class Screen {
     data object SettingsScreen : Screen()
 
     @Serializable
-    data class NotebookEditScreen(
+    data class NoteSelectorScreen(
+        val id: String
+    ) : Screen()
+    
+    @Serializable
+    data class NoteEditorScreen(
         val id: String
     ) : Screen()
 }

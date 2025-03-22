@@ -106,7 +106,7 @@ fun HomeScreen(
                         snackbarCoroutine.launch {
                             snackbarHostState.showSnackbar("${context.getString(R.string.notebook_selection_info)} ${notebook.title.value}")
                         }
-                        navController.navigate(Screen.NotebookEditScreen(notebooks[index].id))
+                        navController.navigate(Screen.NoteSelectorScreen(notebooks[index].id))
                     },
                     deleteMode = deleteMode,
                     onNotebookDelete = {
