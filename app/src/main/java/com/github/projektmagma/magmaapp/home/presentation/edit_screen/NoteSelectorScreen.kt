@@ -10,18 +10,23 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
@@ -42,6 +47,7 @@ fun NoteSelectorScreen(
 ) {
     val notebook by viewModel.notebook.collectAsStateWithLifecycle()
     val notes by viewModel.notes.collectAsStateWithLifecycle()
+    var titleEditMode by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.getNotebookById(id)
@@ -52,10 +58,9 @@ fun NoteSelectorScreen(
         topBar = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.Absolute.SpaceBetween
             ) {
                 IconButton(
-                    modifier = HomeModifiers.notebookEditScreenButtonWidth,
                     onClick = {
                         viewModel.updateNotebook(
                             notebook
@@ -70,13 +75,27 @@ fun NoteSelectorScreen(
                         contentDescription = "Back"
                     )
                 }
-                // TODO: Tutaj zmiana Text na TextField po naciśnięciu
-                TextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = notebook.title.value,
-                    onValueChange = { notebook.title.value = it }
-                )
+                if (titleEditMode) {
+                    TextField(
+                        value = notebook.title.value,
+                        onValueChange = { notebook.title.value = it.take(20) },
+                        textStyle = MaterialTheme.typography.titleMedium,
+                    )
+                } else {
+                    Text(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        text = notebook.title.value,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                IconButton(
+                    onClick = { titleEditMode = !titleEditMode }
+                ) {
+                    Icon(
+                        imageVector = if (titleEditMode) Icons.Filled.Check else Icons.Filled.Edit,
+                        contentDescription = "EditTitle"
+                    )
+                }
             }
         }
     ) { innerPadding ->

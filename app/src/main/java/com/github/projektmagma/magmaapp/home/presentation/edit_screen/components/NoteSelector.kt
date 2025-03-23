@@ -64,16 +64,17 @@ fun NoteSelector(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // TODO: Przenieść to do NoteTextEditor.kt
             if (renameMode) {
                 TextField(
                     value = note.title.value,
                     onValueChange = { note.title.value = it },
-                    textStyle = MaterialTheme.typography.titleMedium
+                    textStyle = MaterialTheme.typography.headlineSmall
                 )
             } else {
                 Text(
                     text = "- ${note.title.value}",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.headlineSmall
                 )
             }
             Surface(
