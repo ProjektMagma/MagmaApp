@@ -28,6 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
+import com.github.projektmagma.magmaapp.core.presentation.ErrorIndicator
+import com.github.projektmagma.magmaapp.core.presentation.LoadingIndicator
+import com.github.projektmagma.magmaapp.core.presentation.UIState
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
 import com.github.projektmagma.magmaapp.home.presentation.HomeModifiers
@@ -50,6 +53,7 @@ fun HomeScreen(
     val notebooks by homeViewModel.notebooks.collectAsStateWithLifecycle()
     val deleteMode = remember { mutableStateOf(false) }
     val displayName by remember { homeViewModel.displayName }
+    val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         if (user == null) {
@@ -62,78 +66,89 @@ fun HomeScreen(
         }
     }
 
-    Scaffold(
-        topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.Start
-            ) {
-                IconButton(
-                    onClick = {
-                        navController.navigate(Screen.SettingsScreen)
+    when (uiState) {
+        UIState.Loading -> {
+            LoadingIndicator()
+        }
+
+        UIState.Error -> {
+            ErrorIndicator { /* TODO system ponownej próby */}
+        }
+
+        UIState.Success ->
+            Scaffold(
+                topBar = {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        IconButton(
+                            onClick = {
+                                navController.navigate(Screen.SettingsScreen)
+                            }
+                        ) {
+                            Icon(
+                                modifier = HomeModifiers.iconBigSize,
+                                imageVector = Icons.Filled.AccountCircle,
+                                contentDescription = null
+                            )
+                        }
                     }
+                    Row(modifier = Modifier.padding(top = 24.dp)) {
+                        Text(
+                            modifier = Modifier.weight(1f),
+                            text = "Hello, ${displayName}!",
+                            style = MaterialTheme.typography.titleMedium,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            ) { innerPadding ->
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .then(Modifier.padding(horizontal = 32.dp))
+                        .fillMaxSize()
                 ) {
-                    Icon(
-                        modifier = HomeModifiers.iconBigSize,
-                        imageVector = Icons.Filled.AccountCircle,
-                        contentDescription = null
-                    )
+                    itemsIndexed(notebooks) { index, notebook ->
+                        NotebookSelector(
+                            notebook = notebook,
+                            onClick = {
+                                snackbarHostState.currentSnackbarData?.dismiss()
+                                snackbarCoroutine.launch {
+                                    snackbarHostState.showSnackbar("${context.getString(R.string.notebook_selection_info)} ${notebook.title.value}")
+                                }
+                                navController.navigate(Screen.NoteSelectorScreen(notebooks[index].id))
+                            },
+                            deleteMode = deleteMode,
+                            onNotebookDelete = {
+                                snackbarHostState.currentSnackbarData?.dismiss()
+                                snackbarCoroutine.launch {
+                                    snackbarHostState.showSnackbar("Note was removed")
+                                }
+                                homeViewModel.removeNotebook(notebook)
+                            }
+                        )
+                    }
+                    item {
+                        NewNotebookSelector(
+                            onClick = {
+                                snackbarHostState.currentSnackbarData?.dismiss()
+                                snackbarCoroutine.launch {
+                                    snackbarHostState.showSnackbar(context.getString(R.string.new_notebook_creation_info))
+                                }
+                                homeViewModel.addNotebook(
+                                    NotebookDto(
+                                        title = context.getString(R.string.notebook_default_name),
+                                    )
+                                )
+                                keyboardController?.hide()
+                            }
+                        )
+                    }
                 }
             }
-            Row(modifier = Modifier.padding(top = 24.dp)) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = "Hello, ${displayName}!",
-                    style = MaterialTheme.typography.titleMedium,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-    ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
-                .then(Modifier.padding(horizontal = 32.dp))
-                .fillMaxSize()
-        ) {
-            itemsIndexed(notebooks) { index, notebook ->
-                NotebookSelector(
-                    notebook = notebook,
-                    onClick = {
-                        snackbarHostState.currentSnackbarData?.dismiss()
-                        snackbarCoroutine.launch {
-                            snackbarHostState.showSnackbar("${context.getString(R.string.notebook_selection_info)} ${notebook.title.value}")
-                        }
-                        navController.navigate(Screen.NoteSelectorScreen(notebooks[index].id))
-                    },
-                    deleteMode = deleteMode,
-                    onNotebookDelete = {
-                        snackbarHostState.currentSnackbarData?.dismiss()
-                        snackbarCoroutine.launch {
-                            snackbarHostState.showSnackbar("Note was removed")
-                        }
-                        homeViewModel.removeNotebook(notebook)
-                    }
-                )
-            }
-            item {
-                NewNotebookSelector(
-                    onClick = {
-                        snackbarHostState.currentSnackbarData?.dismiss()
-                        snackbarCoroutine.launch {
-                            snackbarHostState.showSnackbar(context.getString(R.string.new_notebook_creation_info))
-                        }
-                        homeViewModel.addNotebook(
-                            NotebookDto(
-                                title = context.getString(R.string.notebook_default_name),
-                            )
-                        )
-                        keyboardController?.hide()
-                    }
-                )
-            }
-        }
     }
 }

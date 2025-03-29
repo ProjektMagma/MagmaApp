@@ -9,6 +9,7 @@ import com.github.projektmagma.magmaapp.core.domain.use_case.GetCurrentUserUseCa
 import com.github.projektmagma.magmaapp.core.domain.use_case.GetUserNameUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.LogoutUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.SetAutoLogInUserUseCase
+import com.github.projektmagma.magmaapp.core.presentation.UIState
 import com.github.projektmagma.magmaapp.core.util.Result
 import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
@@ -38,18 +39,30 @@ class HomeViewModel(
 
     val displayName = mutableStateOf("")
 
+    private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
+    val uiState = _uiState.asStateFlow()
+
+
+    init {
+        viewModelScope.launch {
+            _uiState.value = UIState.Loading
+            _user.value = getCurrentUserUseCase.execute()
+            _notebooks.value = getNotebooksUseCase.execute()
+            displayName.value = getUserNameUseCase.execute()
+        }.invokeOnCompletion {
+            if (user.value == null && notebooks.value.isEmpty()) {
+                _uiState.value = UIState.Error
+            } else {
+                _uiState.value = UIState.Success
+            }
+        }
+    }
+
+
     fun logout() {
         viewModelScope.launch {
             logoutUseCase.execute()
             setAutoLogInUserUseCase.execute(false)
-        }
-    }
-
-    init {
-        viewModelScope.launch {
-            _user.value = getCurrentUserUseCase.execute()
-            _notebooks.value = getNotebooksUseCase.execute()
-            displayName.value = getUserNameUseCase.execute()
         }
     }
 
