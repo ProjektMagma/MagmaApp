@@ -30,8 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
-import com.github.projektmagma.magmaapp.home.domain.model.Note
-import com.github.projektmagma.magmaapp.home.presentation.HomeModifiers
+import com.github.projektmagma.magmaapp.home.data.model.NoteDto
 import com.github.projektmagma.magmaapp.home.presentation.edit_screen.components.NewNoteSelector
 import com.github.projektmagma.magmaapp.home.presentation.edit_screen.components.NoteSelector
 import kotlinx.coroutines.CoroutineScope
@@ -50,7 +49,7 @@ fun NoteSelectorScreen(
     var titleEditMode by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.getNotebookById(id)
+        viewModel.selectNotebookById(id)
     }
 
     Scaffold(
@@ -110,7 +109,6 @@ fun NoteSelectorScreen(
                     note,
                     onClick = {
                         navController.navigate(Screen.NoteEditorScreen(note.id))
-                        viewModel.setCurrentNote(note)
                     },
                     deleteMode = deleteMode,
                     onNoteDelete = {
@@ -121,11 +119,11 @@ fun NoteSelectorScreen(
             item {
                 NewNoteSelector {
                     viewModel.addNote(
-                        Note(
+                        NoteDto(
                             id = "",
-                            title = mutableStateOf("Title"),
-                            content = mutableStateOf("Content"),
-                            date = "2021-10-10"
+                            title = "New note",
+                            content = "",
+                            timestamp = System.currentTimeMillis()
                         )
                     )
                 }

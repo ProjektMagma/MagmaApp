@@ -9,8 +9,8 @@ import com.github.projektmagma.magmaapp.home.data.model.toDto
 import com.github.projektmagma.magmaapp.home.data.safeFirebaseCall
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 import com.github.projektmagma.magmaapp.home.domain.model.toDomain
+import com.github.projektmagma.magmaapp.home.domain.repository.DataStorage
 import com.github.projektmagma.magmaapp.home.domain.repository.NotebookRepository
-import com.github.projektmagma.magmaapp.home.domain.repository.NotebookStorage
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -21,13 +21,13 @@ import kotlin.coroutines.suspendCoroutine
 
 class NotebookRepositoryImpl(
     private val database: DatabaseReference,
-    private val notebookStorage: NotebookStorage
+    private val dataStorage: DataStorage
 ) : NotebookRepository {
     override suspend fun addNotebook(notebook: NotebookDto): Result<Notebook, Error> {
         return safeFirebaseCall {
             val key = database.push().key ?: ""
             val notebookWithId = notebook.copy(id = key)
-            notebookStorage.addNotebook(notebookWithId.toDomain())
+            dataStorage.addNotebook(notebookWithId.toDomain())
             database.child(key).setValue(notebookWithId).await()
 
             notebookWithId.toDomain()
@@ -45,7 +45,7 @@ class NotebookRepositoryImpl(
                             tempNotebooks.add(notebook.toDomain())
                         }
                         if (tempNotebooks.size == snapshot.children.count()) {
-                            notebookStorage.addNotebooks(tempNotebooks)
+                            dataStorage.addNotebooks(tempNotebooks)
                             continuation.resume(tempNotebooks)
                         }
                     }
@@ -64,18 +64,22 @@ class NotebookRepositoryImpl(
     ): Result<Unit, Error> {
         return safeFirebaseCall {
             database.child(notebook.id).setValue(notebook.toDto()).await()
-            notebookStorage.updateNotebook(notebook)
+            dataStorage.updateNotebook(notebook)
         }
     }
 
     override fun getNotebookById(id: String): Notebook {
-        return notebookStorage.getNotebookById(id)
+        return dataStorage.getNotebookById(id)
     }
 
     override suspend fun removeNotebook(notebook: Notebook): Result<Unit, Error> {
         return safeFirebaseCall {
             database.child(notebook.id).removeValue().await()
-            notebookStorage.removeNotebook(notebook)
+            dataStorage.removeNotebook(notebook)
         }
     }
+
+    // DO WYBIERANIA NOTEBOOKA POTRZEBNE ABY BYŁY MOŻLIWE MODYFIKACJE NOTE
+    override fun selectNotebookById(id: String) = dataStorage.selectNotebookById(id)
+
 }

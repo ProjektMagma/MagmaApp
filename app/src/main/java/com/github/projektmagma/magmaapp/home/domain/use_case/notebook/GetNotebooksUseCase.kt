@@ -1,4 +1,4 @@
-package com.github.projektmagma.magmaapp.home.domain.use_case
+package com.github.projektmagma.magmaapp.home.domain.use_case.notebook
 
 import com.github.projektmagma.magmaapp.home.domain.repository.NotebookRepository
 

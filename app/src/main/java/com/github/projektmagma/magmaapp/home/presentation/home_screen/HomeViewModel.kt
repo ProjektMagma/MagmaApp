@@ -13,9 +13,9 @@ import com.github.projektmagma.magmaapp.core.presentation.UIState
 import com.github.projektmagma.magmaapp.core.util.Result
 import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
-import com.github.projektmagma.magmaapp.home.domain.use_case.AddNotebookUseCase
-import com.github.projektmagma.magmaapp.home.domain.use_case.GetNotebooksUseCase
-import com.github.projektmagma.magmaapp.home.domain.use_case.RemoveNotebookUseCase
+import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.AddNotebookUseCase
+import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.GetNotebooksUseCase
+import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.RemoveNotebookUseCase
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
