@@ -6,7 +6,7 @@ import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 interface DataStorage {
     // Można to potem rozdzielić na różne storage
     // (Znane wcześniej jako NotebookStorage)
-    
+
     // Notebook
     fun addNotebook(notebook: Notebook)
     fun addNotebooks(notebooks: List<Notebook>)
@@ -15,7 +15,8 @@ interface DataStorage {
     fun getNotebookById(id: String): Notebook
     fun removeNotebook(notebook: Notebook)
     fun selectNotebookById(id: String)
-    
+    fun getSelectedNotebook(): Notebook
+
     // Note
     fun addNote(note: Note)
     fun addNotes(notes: List<Note>)

@@ -25,11 +25,12 @@ class NoteRepositoryImpl(
     private val dataStorage: DataStorage
 ) : NoteRepository {
 
-    // TODO: COŚ TU NIE DZIAŁA
+    // TODO: DZIAŁA ALE MUSI BYĆ REFACTORING BO ŹLE TO WYGLĄDA
 
     override suspend fun addNote(note: NoteDto): Result<Note, Error> {
         return safeFirebaseCall {
-            val noteDatabaseNode = database.child("notes")
+            val noteDatabaseNode =
+                database.child(dataStorage.getSelectedNotebook().id).child("notes")
             val key = noteDatabaseNode.push().key ?: ""
             val noteWithId = note.copy(id = key)
             dataStorage.addNote(noteWithId.toDomain())
@@ -41,7 +42,8 @@ class NoteRepositoryImpl(
 
     override suspend fun getAllNotes(): SnapshotStateList<Note> {
         return suspendCoroutine { continuation ->
-            val noteDatabaseNode = database.child("notes")
+            val noteDatabaseNode =
+                database.child(dataStorage.getSelectedNotebook().id).child("notes")
             val tempNotes = mutableStateListOf<Note>()
             noteDatabaseNode.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -66,7 +68,8 @@ class NoteRepositoryImpl(
 
     override suspend fun updateNote(note: Note): Result<Unit, Error> {
         return safeFirebaseCall {
-            val noteDatabaseNode = database.child("notes")
+            val noteDatabaseNode =
+                database.child(dataStorage.getSelectedNotebook().id).child("notes")
             noteDatabaseNode.child(note.id).setValue(note.toDto()).await()
             dataStorage.updateNote(note)
         }
@@ -79,7 +82,8 @@ class NoteRepositoryImpl(
 
     override suspend fun removeNote(note: Note): Result<Unit, Error> {
         return safeFirebaseCall {
-            val noteDatabaseNode = database.child("notes")
+            val noteDatabaseNode =
+                database.child(dataStorage.getSelectedNotebook().id).child("notes")
             noteDatabaseNode.child(note.id).removeValue().await()
             dataStorage.removeNote(note)
         }

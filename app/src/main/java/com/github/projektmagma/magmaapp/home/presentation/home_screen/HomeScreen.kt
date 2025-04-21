@@ -47,6 +47,8 @@ fun HomeScreen(
     snackbarCoroutine: CoroutineScope,
     homeViewModel: HomeViewModel = koinViewModel()
 ) {
+    // TODO: TŁUMACZENIE
+
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val user by homeViewModel.user.collectAsStateWithLifecycle()
@@ -72,7 +74,7 @@ fun HomeScreen(
         }
 
         UIState.Error -> {
-            ErrorIndicator { /* TODO system ponownej próby */}
+            ErrorIndicator { /* TODO system ponownej próby */ }
         }
 
         UIState.Success ->
@@ -126,7 +128,7 @@ fun HomeScreen(
                             onNotebookDelete = {
                                 snackbarHostState.currentSnackbarData?.dismiss()
                                 snackbarCoroutine.launch {
-                                    snackbarHostState.showSnackbar("Note was removed")
+                                    snackbarHostState.showSnackbar("Notebook was removed")
                                 }
                                 homeViewModel.removeNotebook(notebook)
                             }

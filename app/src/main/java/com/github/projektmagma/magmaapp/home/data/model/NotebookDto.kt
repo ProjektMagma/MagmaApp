@@ -5,13 +5,18 @@ import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 data class NotebookDto(
     val id: String = "",
     val title: String = "",
-    val notes: MutableList<NoteDto> = mutableListOf()
+    val notes: MutableMap<String, NoteDto> = hashMapOf<String, NoteDto>()
 )
 
 fun Notebook.toDto(): NotebookDto {
+    val tmpMap = hashMapOf<String, NoteDto>()
+    notes.forEach { note ->
+        tmpMap[note.id] = note.toDto()
+    }
+
     return NotebookDto(
         id = id,
         title = title.value,
-        notes = notes.map { it.toDto() }.toMutableList()
+        notes = tmpMap
     )
 }

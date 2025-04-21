@@ -47,6 +47,7 @@ class HomeViewModel(
         viewModelScope.launch {
             _uiState.value = UIState.Loading
             _user.value = getCurrentUserUseCase.execute()
+            if (_user.value == null) logout()
             _notebooks.value = getNotebooksUseCase.execute()
             displayName.value = getUserNameUseCase.execute()
         }.invokeOnCompletion {
