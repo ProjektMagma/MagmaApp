@@ -37,6 +37,7 @@ fun NoteSelector(
     note: Note,
     onClick: () -> Unit,
     deleteMode: MutableState<Boolean>,
+    onTitleChange: (String) -> Unit,
     onNoteDelete: () -> Unit
 ) {
     var renameMode by remember { mutableStateOf(false) }
@@ -84,6 +85,9 @@ fun NoteSelector(
                             onNoteDelete()
                         } else {
                             renameMode = !renameMode
+                            if (!renameMode) {
+                                onTitleChange(note.title.value)
+                            }
                         }
                     },
                     onLongClick = { deleteMode.value = !deleteMode.value }
@@ -117,6 +121,7 @@ fun NoteSelectorPreview() {
         ),
         onClick = {},
         deleteMode = remember { mutableStateOf(false) },
-        onNoteDelete = {}
+        onNoteDelete = {},
+        onTitleChange = {}
     )
 }

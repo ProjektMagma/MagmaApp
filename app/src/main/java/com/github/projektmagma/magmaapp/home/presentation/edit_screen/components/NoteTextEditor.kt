@@ -26,26 +26,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import com.github.projektmagma.magmaapp.home.domain.model.Note
+import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichTextEditor
 
 @Composable
-fun NoteTextEditor(note: Note) {
+fun NoteTextEditor(note: Note, richTextState: RichTextState) {
 
-    val richTextState = rememberRichTextState()
     var showTextColorSelector = remember { mutableStateOf(false) }
     var textSelectedColor = remember { mutableStateOf(Color.White) }
     var showBackColorSelector = remember { mutableStateOf(false) }
     var backSelectedColor = remember { mutableStateOf(Color.Unspecified) }
 
     LaunchedEffect(true) {
-        richTextState.setText(note.content.value)
+        richTextState.setHtml(note.content.value)
     }
 
     LaunchedEffect(textSelectedColor.value) {
         richTextState.toggleSpanStyle(SpanStyle(color = textSelectedColor.value))
     }
-    
+
     LaunchedEffect(backSelectedColor.value) {
         richTextState.toggleSpanStyle(SpanStyle(background = backSelectedColor.value))
     }

@@ -12,6 +12,7 @@ import com.github.projektmagma.magmaapp.home.domain.use_case.note.AddNoteUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.GetNoteByIdUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.GetNotesUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.RemoveNoteUseCase
+import com.github.projektmagma.magmaapp.home.domain.use_case.note.UpdateNoteUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.GetNotebookByIdUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.SelectNotebookByIdUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.UpdateNotebookUseCase
@@ -26,7 +27,8 @@ class NotesViewModel(
     private val getNotesUseCase: GetNotesUseCase,
     private val addNoteUseCase: AddNoteUseCase,
     private val removeNoteUseCase: RemoveNoteUseCase,
-    private val getNoteByIdUseCase: GetNoteByIdUseCase
+    private val getNoteByIdUseCase: GetNoteByIdUseCase,
+    private val updateNoteUseCase: UpdateNoteUseCase
 ) : ViewModel() {
 
     private val _notebook = MutableStateFlow(Notebook())
@@ -79,5 +81,12 @@ class NotesViewModel(
 
     fun getNoteById(id: String): Note {
         return getNoteByIdUseCase.execute(id)
+    }
+
+
+    fun updateNote(note: Note) {
+        viewModelScope.launch {
+            updateNoteUseCase.execute(note)
+        }
     }
 }

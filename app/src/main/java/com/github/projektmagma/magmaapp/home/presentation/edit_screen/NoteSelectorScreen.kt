@@ -61,6 +61,7 @@ fun NoteSelectorScreen(
             ) {
                 IconButton(
                     onClick = {
+                        viewModel.updateNotebook(notebook)
                         navController.navigate(Screen.HomeScreen) {
                             popUpTo<Screen.HomeScreen> { inclusive = true }
                         }
@@ -110,6 +111,9 @@ fun NoteSelectorScreen(
                     deleteMode = deleteMode,
                     onNoteDelete = {
                         viewModel.removeNote(note)
+                    },
+                    onTitleChange = {
+                        viewModel.updateNote(note)
                     }
                 )
             }

@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.home.presentation.HomeModifiers
 import com.github.projektmagma.magmaapp.home.presentation.edit_screen.components.NoteTextEditor
+import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.compose.koinViewModel
 
@@ -34,7 +35,7 @@ fun NoteEditorScreen(
 ) {
 
     val note = remember { viewModel.getNoteById(id) }
-
+    val richTextState = rememberRichTextState()
 
 
     Scaffold(
@@ -48,6 +49,8 @@ fun NoteEditorScreen(
                 IconButton(
                     modifier = HomeModifiers.notebookEditScreenButtonWidth,
                     onClick = {
+                        note.content.value = richTextState.toHtml()
+                        viewModel.updateNote(note)
                         navController.popBackStack()
                     }
                 ) {
@@ -67,7 +70,7 @@ fun NoteEditorScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            NoteTextEditor(note)
+            NoteTextEditor(note, richTextState)
         }
     }
 }
