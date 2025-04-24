@@ -96,7 +96,6 @@ fun NoteSelectorScreen(
             }
         }
     ) { innerPadding ->
-        val deleteMode = remember { mutableStateOf(false) }
         LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
@@ -107,13 +106,6 @@ fun NoteSelectorScreen(
                     note,
                     onClick = {
                         navController.navigate(Screen.NoteEditorScreen(note.id))
-                    },
-                    deleteMode = deleteMode,
-                    onNoteDelete = {
-                        viewModel.removeNote(note)
-                    },
-                    onTitleChange = {
-                        viewModel.updateNote(note)
                     }
                 )
             }

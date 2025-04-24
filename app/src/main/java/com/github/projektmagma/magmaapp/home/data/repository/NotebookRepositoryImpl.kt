@@ -34,6 +34,7 @@ class NotebookRepositoryImpl(
         }
     }
 
+    // TODO: Działa w nieskończoność jeżeli w bazie nie ma żadnych zeszytów (NIESKOŃCZONY EKRAN ŁADOWANIA)
     override suspend fun getAllNotebooks(): SnapshotStateList<Notebook> {
         return suspendCoroutine { continuation ->
             val tempNotebooks = mutableStateListOf<Notebook>()
