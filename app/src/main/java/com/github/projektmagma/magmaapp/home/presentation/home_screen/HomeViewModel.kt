@@ -1,6 +1,5 @@
 package com.github.projektmagma.magmaapp.home.presentation.home_screen
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -45,15 +44,19 @@ class HomeViewModel(
 
 
     init {
-        // TODO: To nie działa, jak nie masz zeszytów to się w nieskończoność ładujesz (zobacz w HomeScreen i NotebookRepositoryImpl)
         viewModelScope.launch {
             _uiState.value = UIState.Loading
             _user.value = getCurrentUserUseCase.execute()
-            Log.d("HomeViewModel", "getCurrentUser ended")
-            _notebooks.value = getNotebooksUseCase.execute()
-            Log.d("HomeViewModel", "getNotebooks ended")
+            when (val result = getNotebooksUseCase.execute()){
+                is Result.Success -> {
+                    _notebooks.value = result.data
+                }
+                is Result.Error -> {
+                    _uiState.value = UIState.Error
+                }
+            }
+            
             displayName.value = getUserNameUseCase.execute()
-            Log.d("HomeViewModel", "getUserName ended")
             launch {
                 if (_user.value == null) logout()
                 if (user.value == null && notebooks.value.isEmpty()) {
@@ -61,7 +64,6 @@ class HomeViewModel(
                 } else {
                     _uiState.value = UIState.Success
                 }
-                Log.d("HomeViewModel", "uiState ended")
             }
         }
     }

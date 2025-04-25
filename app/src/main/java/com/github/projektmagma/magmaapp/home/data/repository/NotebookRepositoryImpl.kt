@@ -11,13 +11,8 @@ import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 import com.github.projektmagma.magmaapp.home.domain.model.toDomain
 import com.github.projektmagma.magmaapp.home.domain.repository.DataStorage
 import com.github.projektmagma.magmaapp.home.domain.repository.NotebookRepository
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.tasks.await
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class NotebookRepositoryImpl(
     private val database: DatabaseReference,
@@ -33,29 +28,18 @@ class NotebookRepositoryImpl(
             notebookWithId.toDomain()
         }
     }
-
-    // TODO: Działa w nieskończoność jeżeli w bazie nie ma żadnych zeszytów (NIESKOŃCZONY EKRAN ŁADOWANIA)
-    override suspend fun getAllNotebooks(): SnapshotStateList<Notebook> {
-        return suspendCoroutine { continuation ->
-            val tempNotebooks = mutableStateListOf<Notebook>()
-            database.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for (notebookSnapshot in snapshot.children) {
-                        val notebook = notebookSnapshot.getValue(NotebookDto::class.java)
-                        if (notebook != null) {
-                            tempNotebooks.add(notebook.toDomain())
-                        }
-                        if (tempNotebooks.size == snapshot.children.count()) {
-                            dataStorage.addNotebooks(tempNotebooks)
-                            continuation.resume(tempNotebooks)
-                        }
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    continuation.resume(mutableStateListOf())
-                }
-            })
+    
+    override suspend fun getAllNotebooks(): Result<SnapshotStateList<Notebook>, Error> {
+        return safeFirebaseCall {
+            val snapshot = database.get().await()
+            val list = snapshot.children.mapNotNull {
+                it.getValue(NotebookDto::class.java)?.toDomain()
+            }
+            dataStorage.addNotebooks(list)
+            
+            mutableStateListOf<Notebook>().apply {
+                addAll(list)
+            }
         }
     }
 

@@ -8,7 +8,7 @@ import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 
 interface NotebookRepository {
     suspend fun addNotebook(notebook: NotebookDto): Result<Notebook, Error>
-    suspend fun getAllNotebooks(): SnapshotStateList<Notebook>
+    suspend fun getAllNotebooks(): Result<SnapshotStateList<Notebook>, Error>
     suspend fun updateNotebook(notebook: Notebook): Result<Unit, Error>
     fun getNotebookById(id: String): Notebook
     suspend fun removeNotebook(notebook: Notebook): Result<Unit, Error>
