@@ -3,12 +3,11 @@ package com.github.projektmagma.magmaapp.home.data.repository
 import com.github.projektmagma.magmaapp.home.domain.model.Note
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 import com.github.projektmagma.magmaapp.home.domain.repository.DataStorage
-import kotlinx.coroutines.flow.MutableStateFlow
 
 class DataStorageImpl : DataStorage {
-
+    
     private val _notebookStorage = mutableListOf<Notebook>()
-    private val _selectedNotebook = MutableStateFlow<Notebook?>(null)
+    private var selectedNotebookIndex: Int = -1
 
     override fun addNotebook(notebook: Notebook) {
         _notebookStorage.add(notebook)
@@ -34,36 +33,38 @@ class DataStorageImpl : DataStorage {
         _notebookStorage.remove(notebook)
     }
 
-    // DO WYBIERANIA NOTEBOOKA POTRZEBNE ABY BYŁY MOŻLIWE MODYFIKACJE NOTE
-    override fun selectNotebookById(id: String) {
-        _selectedNotebook.value = getNotebookById(id)
+    // DO WYBIERANIA NOTEBOOKA POTRZEBNE ABY BYŁY MOŻLIWE MODYFIKACJE NOTE - nie farmazon
+    override fun selectNotebookId(id: String) {
+        selectedNotebookIndex = _notebookStorage.indexOfFirst { it.id == id }
     }
 
-    override fun getSelectedNotebook(): Notebook = _selectedNotebook.value ?: Notebook()
+    override fun getSelectedNotebook(): Notebook {
+        return _notebookStorage[selectedNotebookIndex]
+    }
 
     override fun addNote(note: Note) {
-        _selectedNotebook.value?.notes?.add(note)
+        _notebookStorage[selectedNotebookIndex].notes.add(note)
     }
 
     override fun addNotes(notes: List<Note>) {
-        _selectedNotebook.value?.notes?.addAll(notes)
+        _notebookStorage[selectedNotebookIndex].notes.addAll(notes)
     }
 
     override fun getNotes(): List<Note> {
-        return _selectedNotebook.value?.notes ?: emptyList()
+        return _notebookStorage[selectedNotebookIndex].notes
     }
 
     override fun updateNote(note: Note) {
-        val index = _selectedNotebook.value?.notes?.indexOfFirst { it.id == note.id } ?: return
-        _selectedNotebook.value?.notes[index] = note
+        val index = _notebookStorage[selectedNotebookIndex].notes.indexOfFirst { it.id == note.id }
+        _notebookStorage[selectedNotebookIndex].notes[index] = note
     }
 
     override fun getNoteById(id: String): Note {
-        val index = _selectedNotebook.value?.notes?.indexOfFirst { it.id == id } ?: return Note()
-        return _selectedNotebook.value?.notes[index] ?: Note()
+        val index = _notebookStorage[selectedNotebookIndex].notes.indexOfFirst { it.id == id }
+        return _notebookStorage[selectedNotebookIndex].notes[index]
     }
 
     override fun removeNote(note: Note) {
-        _selectedNotebook.value?.notes?.remove(note)
+        _notebookStorage[selectedNotebookIndex].notes.remove(note)
     }
 }

@@ -81,6 +81,6 @@ class NotebookRepositoryImpl(
     }
 
     // DO WYBIERANIA NOTEBOOKA POTRZEBNE ABY BYŁY MOŻLIWE MODYFIKACJE NOTE
-    override fun selectNotebookById(id: String) = dataStorage.selectNotebookById(id)
+    override fun selectNotebookById(id: String) = dataStorage.selectNotebookId(id)
 
 }

@@ -39,8 +39,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun NoteSelectorScreen(
     navController: NavController,
-    snackbarHostState: SnackbarHostState,
-    snackbarCoroutine: CoroutineScope,
     id: String,
     viewModel: NotesViewModel = koinViewModel()
 ) {
@@ -49,7 +47,7 @@ fun NoteSelectorScreen(
     var titleEditMode by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.selectNotebookById(id)
+        viewModel.selectNotebookId(id)
     }
 
     Scaffold(

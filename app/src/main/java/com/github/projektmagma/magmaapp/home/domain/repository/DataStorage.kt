@@ -14,7 +14,7 @@ interface DataStorage {
     fun updateNotebook(notebook: Notebook)
     fun getNotebookById(id: String): Notebook
     fun removeNotebook(notebook: Notebook)
-    fun selectNotebookById(id: String)
+    fun selectNotebookId(id: String) 
     fun getSelectedNotebook(): Notebook
 
     // Note

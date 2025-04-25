@@ -29,8 +29,9 @@ class NoteRepositoryImpl(
 
     override suspend fun addNote(note: NoteDto): Result<Note, Error> {
         return safeFirebaseCall {
-            val noteDatabaseNode =
-                database.child(dataStorage.getSelectedNotebook().id).child("notes")
+            val noteDatabaseNode = database
+                .child(dataStorage.getSelectedNotebook().id)
+                .child("notes")
             val key = noteDatabaseNode.push().key ?: ""
             val noteWithId = note.copy(id = key)
             dataStorage.addNote(noteWithId.toDomain())
@@ -77,7 +78,6 @@ class NoteRepositoryImpl(
 
     override fun getNoteById(id: String): Note {
         return dataStorage.getNoteById(id)
-
     }
 
     override suspend fun removeNote(note: Note): Result<Unit, Error> {
