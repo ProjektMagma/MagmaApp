@@ -16,7 +16,9 @@ import com.github.projektmagma.magmaapp.home.domain.use_case.note.RemoveNoteUseC
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.UpdateNoteUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.GetNotebookByIdUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.UpdateNotebookUseCase
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -36,18 +38,31 @@ class NotesViewModel(
 
     private val _notes = MutableStateFlow<SnapshotStateList<Note>>(mutableStateListOf())
     val notes = _notes.asStateFlow()
+    
+    private val _errorFlow = MutableSharedFlow<Int>()
+    val errorFlow = _errorFlow.asSharedFlow()
 
     fun selectNotebookId(id: String) {
         selectNotebookIdUseCase.execute(id)
         viewModelScope.launch {
             _notebook.value = getNotebookByIdUseCase.execute(id)
-            _notes.value = getNotesUseCase.execute()
+            when (val result = getNotesUseCase.execute()) {
+                is Result.Success -> {
+                    _notes.value = result.data
+                }
+                is Result.Error -> {
+                    _errorFlow.emit(result.error.messageId)
+                }
+            }
         }
     }
 
     fun updateNotebook(notebook: Notebook) {
         viewModelScope.launch {
-            updateNotebookUseCase.execute(notebook)
+            val result = updateNotebookUseCase.execute(notebook)
+            if (result is Result.Error) {
+                _errorFlow.emit(result.error.messageId)
+            }   
         }
     }
 
@@ -59,7 +74,7 @@ class NotesViewModel(
                 }
 
                 is Result.Error -> {
-                    // TODO przyjdzie jeszcze to handlowac
+                    _errorFlow.emit(result.error.messageId)
                 }
             }
         }
@@ -67,13 +82,13 @@ class NotesViewModel(
 
     fun removeNote(note: Note) {
         viewModelScope.launch {
-            when (removeNoteUseCase.execute(note)) {
+            when (val result = removeNoteUseCase.execute(note)) {
                 is Result.Success -> {
                     _notes.value.remove(note)
                 }
 
                 is Result.Error -> {
-                    // TODO przyjdzie jeszcze to handlowac
+                    _errorFlow.emit(result.error.messageId)
                 }
             }
         }
@@ -86,10 +101,15 @@ class NotesViewModel(
 
     fun updateNote(note: Note) {
         viewModelScope.launch {
-            _notes.value.map { 
-                if (it.id == note.id) note else it
+            when (val result = updateNoteUseCase.execute(note)) {
+                is Result.Success -> {
+                    _notes.value.map { if (it.id == note.id) note else it }
+                    
+                }
+                is Result.Error -> {
+                    _errorFlow.emit(result.error.messageId)
+                }
             }
-            updateNoteUseCase.execute(note)
         }
     }
 }

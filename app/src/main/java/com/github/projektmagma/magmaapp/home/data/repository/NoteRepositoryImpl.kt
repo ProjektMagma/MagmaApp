@@ -41,37 +41,36 @@ class NoteRepositoryImpl(
         }
     }
 
-    override suspend fun getAllNotes(): SnapshotStateList<Note> {
-        return suspendCoroutine { continuation ->
-            val noteDatabaseNode =
-                database.child(dataStorage.getSelectedNotebook().id).child("notes")
-            val tempNotes = mutableStateListOf<Note>()
-            noteDatabaseNode.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for (noteSnapshot in snapshot.children) {
-                        val note = noteSnapshot.getValue(NoteDto::class.java)
-                        if (note != null) {
-                            tempNotes.add(note.toDomain())
-                        }
-                        if (tempNotes.size == snapshot.children.count()) {
-                            dataStorage.addNotes(tempNotes)
-                            continuation.resume(tempNotes)
-                        }
-                    }
-                }
+    override suspend fun getAllNotes(): Result<SnapshotStateList<Note>, Error> {
+        return safeFirebaseCall {
+            val noteDatabaseNode = database
+                .child(dataStorage.getSelectedNotebook().id)
+                .child("notes")
 
-                override fun onCancelled(error: DatabaseError) {
-                    continuation.resume(mutableStateListOf())
-                }
-            })
+            val snapshot = noteDatabaseNode.get().await()
+            val notes = snapshot.children.mapNotNull { 
+                it.getValue(NoteDto::class.java)?.toDomain()
+            }
+            
+            dataStorage.addNotes(notes)
+            mutableStateListOf<Note>().apply { 
+                addAll(notes)
+            }
         }
+        
+        
     }
 
     override suspend fun updateNote(note: Note): Result<Unit, Error> {
         return safeFirebaseCall {
-            val noteDatabaseNode =
-                database.child(dataStorage.getSelectedNotebook().id).child("notes")
-            noteDatabaseNode.child(note.id).setValue(note.toDto()).await()
+            val noteDatabaseNode = database
+                .child(dataStorage.getSelectedNotebook().id)
+                .child("notes")
+            
+            noteDatabaseNode
+                .child(note.id).
+                setValue(note.toDto()).await()
+            
             dataStorage.updateNote(note)
         }
     }
@@ -82,9 +81,14 @@ class NoteRepositoryImpl(
 
     override suspend fun removeNote(note: Note): Result<Unit, Error> {
         return safeFirebaseCall {
-            val noteDatabaseNode =
-                database.child(dataStorage.getSelectedNotebook().id).child("notes")
-            noteDatabaseNode.child(note.id).removeValue().await()
+            val noteDatabaseNode = database
+                .child(dataStorage.getSelectedNotebook().id)
+                .child("notes")
+            
+            noteDatabaseNode
+                .child(note.id)
+                .removeValue().await()
+            
             dataStorage.removeNote(note)
         }
     }

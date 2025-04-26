@@ -25,7 +25,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.presentation.ErrorIndicator
@@ -56,6 +61,7 @@ fun HomeScreen(
     val deleteMode = remember { mutableStateOf(false) }
     val displayName by remember { homeViewModel.displayName }
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(true) {
         if (user == null) {
@@ -63,6 +69,15 @@ fun HomeScreen(
             navController.navigate(Screen.AuthGraph) {
                 popUpTo(Screen.AuthGraph) {
                     inclusive = true
+                }
+            }
+        }
+
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
+            homeViewModel.errorFlow.collect { stringId ->
+                snackbarHostState.currentSnackbarData?.dismiss()
+                snackbarCoroutine.launch {
+                    snackbarHostState.showSnackbar(context.getString(stringId))
                 }
             }
         }

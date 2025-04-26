@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.home.presentation.settings_screen.components.SettingRow
@@ -49,6 +50,7 @@ fun SettingsScreen(
 
     var logoutTimesClicked by remember { mutableIntStateOf(0) }
     val clicksToLogout = 3
+    val appThemeState = viewModel.appThemeValue.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -62,7 +64,8 @@ fun SettingsScreen(
                 IconButton(
                     onClick = {
                         navController.navigateUp()
-                        isAppInDarkMode.value = viewModel.getAppTheme()
+                        viewModel.getAppTheme()
+                        isAppInDarkMode.value = appThemeState.value
                     }
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
