@@ -20,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,7 +28,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.home.presentation.edit_screen.components.NoteTextEditor
@@ -37,6 +42,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun NoteEditorScreen(
     navController: NavController,
+    snackbarHostState: SnackbarHostState,
     id: String,
     viewModel: NotesViewModel = koinViewModel()
 ) {
@@ -44,6 +50,20 @@ fun NoteEditorScreen(
     val note = remember { viewModel.getNoteById(id) }
     var showEditPopup by remember { mutableStateOf(false) }
     val richTextState = rememberRichTextState()
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.selectNotebookId(id)
+
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
+            viewModel.errorFlow.collect { stringId  ->
+                snackbarHostState.currentSnackbarData?.dismiss()
+                snackbarHostState.showSnackbar(context.getString(stringId))
+            }
+        }
+    }
 
     AnimatedVisibility(visible = showEditPopup) {
         Dialog(onDismissRequest = { showEditPopup = !showEditPopup }) {

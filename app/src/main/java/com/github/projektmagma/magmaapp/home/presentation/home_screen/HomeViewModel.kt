@@ -17,8 +17,12 @@ import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.AddNoteboo
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.GetNotebooksUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.RemoveNotebookUseCase
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -41,7 +45,9 @@ class HomeViewModel(
 
     private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
     val uiState = _uiState.asStateFlow()
-
+    
+    private val _errorFlow = MutableSharedFlow<Int>()
+    val errorFlow = _errorFlow.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -84,7 +90,7 @@ class HomeViewModel(
                 }
 
                 is Result.Error -> {
-                    // TODO przyjdzie jeszcze to handlowac
+                    
                 }
             }
         }
@@ -92,13 +98,13 @@ class HomeViewModel(
 
     fun removeNotebook(notebook: Notebook) {
         viewModelScope.launch {
-            when (removeNotebookUseCase.execute(notebook)) {
+            when (val result = removeNotebookUseCase.execute(notebook)) {
                 is Result.Success -> {
                     _notebooks.value.remove(notebook)
                 }
 
                 is Result.Error -> {
-                    // TODO przyjdzie jeszcze to handlowac
+                    _errorFlow.emit(result.error.messageId)
                 }
             }
         }
