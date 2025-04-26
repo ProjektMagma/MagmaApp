@@ -1,5 +1,6 @@
 package com.github.projektmagma.magmaapp.auth.presentation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,13 +28,15 @@ import androidx.navigation.NavHostController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun OnBoardingScreen(
     navHostController: NavHostController
 ) {
     Scaffold { innerPadding ->
         val configuration = LocalConfiguration.current
-        val screenHeight = configuration.screenHeightDp.dp
+        val screenHeight = configuration.screenHeightDp.dp // Nie zmieniać bo to nie działa tak jak Android Studio mówi
+        
         Column(
             modifier = Modifier
                 .padding(bottom = innerPadding.calculateBottomPadding())

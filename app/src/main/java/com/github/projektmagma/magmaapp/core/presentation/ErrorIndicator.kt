@@ -11,21 +11,27 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.projektmagma.magmaapp.R
 
 @Composable
 fun ErrorIndicator(
-    errorMessage: String = "An error occurred...",
+    errorMessage: String = "",
     onButtonClick: () -> Unit
 ) {
+    var mess: String = errorMessage
+    if (mess.isBlank()) mess =
+        stringResource(R.string.error_indicator_default_message)
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = errorMessage,
+            text = mess,
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -34,7 +40,7 @@ fun ErrorIndicator(
             onClick = onButtonClick
         ) {
             Text(
-                text = "Retry",
+                text = stringResource(R.string.error_indicator_retry_button),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onPrimary
             )

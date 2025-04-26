@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -101,7 +102,7 @@ fun HomeScreen(
                     Row(modifier = Modifier.padding(top = 24.dp)) {
                         Text(
                             modifier = Modifier.weight(1f),
-                            text = "Hello, ${displayName}!",
+                            text = "${stringResource(R.string.greeting)}, ${displayName}!",
                             style = MaterialTheme.typography.titleMedium,
                             textAlign = TextAlign.Center
                         )
@@ -128,7 +129,7 @@ fun HomeScreen(
                             onNotebookDelete = {
                                 snackbarHostState.currentSnackbarData?.dismiss()
                                 snackbarCoroutine.launch {
-                                    snackbarHostState.showSnackbar("Notebook was removed")
+                                    snackbarHostState.showSnackbar(context.getString(R.string.notebook_removal_info))
                                 }
                                 homeViewModel.removeNotebook(notebook)
                             }

@@ -3,9 +3,6 @@ package com.github.projektmagma.magmaapp.home.domain.model
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.github.projektmagma.magmaapp.home.data.model.NoteDto
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 data class Note(
     val id: String = "",
@@ -21,11 +18,4 @@ fun NoteDto.toDomain(): Note {
         content = mutableStateOf(content),
         date = timestamp.toUiDate()
     )
-}
-
-fun Long.toUiDate(): String {
-    val formatter = SimpleDateFormat("dd.MM.yyyy", Locale.ROOT)
-    val date = Date(this)
-
-    return formatter.format(date)
 }

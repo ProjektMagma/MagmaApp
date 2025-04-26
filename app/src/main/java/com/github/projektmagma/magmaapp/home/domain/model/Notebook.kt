@@ -9,7 +9,8 @@ import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
 data class Notebook(
     val id: String = "",
     var title: MutableState<String> = mutableStateOf(""),
-    val notes: SnapshotStateList<Note> = mutableStateListOf()
+    val notes: SnapshotStateList<Note> = mutableStateListOf(),
+    val date: String = ""
 )
 
 fun NotebookDto.toDomain(): Notebook {
@@ -21,6 +22,7 @@ fun NotebookDto.toDomain(): Notebook {
     return Notebook(
         id = id,
         title = mutableStateOf(title),
-        notes = tmpList
+        notes = tmpList,
+        date = timestamp.toUiDate()
     )
 }

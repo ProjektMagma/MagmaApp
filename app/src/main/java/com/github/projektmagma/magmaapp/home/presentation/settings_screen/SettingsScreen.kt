@@ -28,9 +28,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.home.presentation.settings_screen.components.SettingRow
 import kotlinx.coroutines.CoroutineScope
@@ -49,6 +52,7 @@ fun SettingsScreen(
 
     var logoutTimesClicked by remember { mutableIntStateOf(0) }
     val clicksToLogout = 3
+    val context = LocalContext.current
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -70,7 +74,7 @@ fun SettingsScreen(
             }
             Row(modifier = Modifier.padding(top = 24.dp)) {
                 Text(
-                    "Settings", modifier = Modifier.fillMaxWidth(),
+                    stringResource(R.string.settings), modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleMedium
                 )
@@ -89,32 +93,32 @@ fun SettingsScreen(
                         viewModel.saveSettings()
                         navController.popBackStack()
                         snackbarCoroutine.launch {
-                            snackbarHostState.showSnackbar("Settings saved!")
+                            snackbarHostState.showSnackbar(context.getString(R.string.settings_saved_info))
                         }
                     }
                 ) {
-                    Text("Save Settings")
+                    Text(stringResource(R.string.settings_save_button))
                 }
             }
         }) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             SettingRow {
-                Text("Display name")
+                Text(stringResource(R.string.display_name_label))
                 TextField(
                     value = viewModel.displayNameTextbox,
                     onValueChange = { viewModel.displayNameTextbox = it.trim().take(25) },
-                    label = { Text("Max 25 characters, spaces disallowed (requires restart)") }
+                    label = { Text(stringResource(R.string.display_name_limit_info)) }
                 )
             }
             SettingRow {
-                Text("Stay logged in")
+                Text(stringResource(R.string.stay_logged_in_label))
                 Checkbox(
                     checked = viewModel.autoLogInCheckbox,
                     onCheckedChange = { viewModel.autoLogInCheckbox = it }
                 )
             }
             SettingRow {
-                Text("Dark mode")
+                Text(stringResource(R.string.app_theme_switch_label))
                 Switch(
                     checked = viewModel.darkModeSwitch,
                     onCheckedChange = {
@@ -139,13 +143,13 @@ fun SettingsScreen(
                             }
                         } else {
                             snackbarCoroutine.launch {
-                                snackbarHostState.showSnackbar("Click ${clicksToLogout - logoutTimesClicked} more times to logout")
+                                snackbarHostState.showSnackbar("${context.getString(R.string.clicks_left_to_logout)} ${clicksToLogout - logoutTimesClicked}")
                             }
                             logoutTimesClicked++
                         }
                     }
                 ) {
-                    Text("Logout")
+                    Text(stringResource(R.string.logout_button))
                 }
             }
         }

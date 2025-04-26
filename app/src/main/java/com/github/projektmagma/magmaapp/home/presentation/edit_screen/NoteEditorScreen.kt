@@ -1,6 +1,7 @@
 package com.github.projektmagma.magmaapp.home.presentation.edit_screen
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -26,18 +26,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
+import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.home.presentation.edit_screen.components.NoteTextEditor
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
-import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NoteEditorScreen(
     navController: NavController,
-    snackbarHostState: SnackbarHostState,
-    snackbarCoroutine: CoroutineScope,
     id: String,
     viewModel: NotesViewModel = koinViewModel()
 ) {
@@ -49,19 +48,21 @@ fun NoteEditorScreen(
     AnimatedVisibility(visible = showEditPopup) {
         Dialog(onDismissRequest = { showEditPopup = !showEditPopup }) {
             Column(
+                modifier = Modifier.background(MaterialTheme.colorScheme.background),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 TextField(
                     value = note.title.value,
-                    onValueChange = { note.title.value = it },
+                    onValueChange = { note.title.value = it.take(20) },
+                    singleLine = true,
                     textStyle = MaterialTheme.typography.headlineSmall
                 )
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Save")
+                    Text(stringResource(R.string.note_rename_label))
                     IconButton(
                         onClick = {
                             showEditPopup = !showEditPopup
@@ -73,7 +74,7 @@ fun NoteEditorScreen(
                             contentDescription = "Rename note"
                         )
                     }
-                    Text("Delete")
+                    Text(stringResource(R.string.note_delete_label))
                     IconButton(
                         onClick = {
                             viewModel.removeNote(note)

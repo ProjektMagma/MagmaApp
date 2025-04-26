@@ -73,7 +73,7 @@ fun NotebookSelector(
                             tint = Color.Red
                         )
                         Text(
-                            text = "Delete Notebook",
+                            text = stringResource(R.string.notebook_deletion_label),
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Red
                         )
@@ -110,7 +110,7 @@ fun NotebookSelector(
             Text(
                 modifier = HomeModifiers.notebookSelectorTextPadding,
                 text = "${stringResource(id = R.string.notebook_creation_date)} " +
-                        "TempString",
+                        notebook.date,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSecondary,
                 textAlign = TextAlign.Start
