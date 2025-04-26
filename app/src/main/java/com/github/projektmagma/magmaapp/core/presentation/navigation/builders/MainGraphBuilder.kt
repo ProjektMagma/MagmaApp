@@ -38,7 +38,7 @@ fun NavGraphBuilder.mainGraph(
 
         composable<Screen.NoteEditorScreen> { backStackEntry ->
             val noteId = backStackEntry.toRoute<Screen.NoteEditorScreen>().id
-            NoteEditorScreen(navHostController, noteId)
+            NoteEditorScreen(navHostController, snackbarHostState, noteId)
         }
     }
 }

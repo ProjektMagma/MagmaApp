@@ -55,7 +55,7 @@
     <string name="settings_saved_info">Settings saved!</string>
     <string name="settings_save_button">Save settings</string>
     <string name="display_name_label">Display name</string>
-    <string name="display_name_limit_info">\"Max 25 characters, spaces disallowed (requires restart)\"</string>
+    <string name="display_name_limit_info">Max 25 characters, spaces disallowed (requires restart)</string>
     <string name="stay_logged_in_label">Stay logged in</string>
     <string name="app_theme_switch_label">Dark mode</string>
     <string name="clicks_left_to_logout">Clicks left to log out:</string>
