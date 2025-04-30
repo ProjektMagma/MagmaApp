@@ -12,6 +12,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -23,6 +24,7 @@ fun ColorPicker(
     icon: ImageVector,
     color: MutableState<Color>,
     showColorPicker: MutableState<Boolean>,
+    appTheme: State<Boolean>
 ) {
     IconButton(
         onClick = {
@@ -32,7 +34,10 @@ fun ColorPicker(
         Icon(
             icon,
             contentDescription = "Color",
-            tint = if (color.value == Color.Unspecified) Color.White else color.value
+            tint =
+                if (color.value != Color.Unspecified) color.value
+                else if (appTheme.value) Color.White
+                else Color.Black
         )
     }
     AnimatedVisibility(visible = showColorPicker.value) {
@@ -44,13 +49,13 @@ fun ColorPicker(
             ) {
                 Row {
                     IconButton(onClick = {
-                        color.value = Color.Unspecified
+                        color.value = if (appTheme.value) Color.White else Color.Black
                         showColorPicker.value = false
                     }) {
                         Icon(
                             Icons.Filled.ChangeCircle,
                             contentDescription = "Color",
-                            tint = Color.White
+                            tint = if (appTheme.value) Color.White else Color.Black
                         )
                     }
                     IconButton(

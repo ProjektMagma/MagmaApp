@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
@@ -51,15 +52,14 @@ fun NoteEditorScreen(
     val note = remember { viewModel.getNoteById(id) }
     var showEditPopup by remember { mutableStateOf(false) }
     val richTextState = rememberRichTextState()
-
+    val appTheme = viewModel.appTheme.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.selectNotebookId(id)
-
-        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
-            viewModel.errorFlow.collect { stringId  ->
+        viewModel.getAppTheme()
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.errorFlow.collect { stringId ->
                 snackbarHostState.currentSnackbarData?.dismiss()
                 snackbarHostState.showSnackbar(context.getString(stringId))
             }
@@ -152,7 +152,7 @@ fun NoteEditorScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            NoteTextEditor(note, richTextState)
+            NoteTextEditor(note, richTextState, appTheme)
         }
     }
 }

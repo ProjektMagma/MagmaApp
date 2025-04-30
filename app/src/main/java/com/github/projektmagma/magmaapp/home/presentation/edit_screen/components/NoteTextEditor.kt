@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.FormatItalic
 import androidx.compose.material.icons.filled.FormatUnderlined
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -31,7 +32,7 @@ import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichTextEditor
 
 @Composable
-fun NoteTextEditor(note: Note, richTextState: RichTextState) {
+fun NoteTextEditor(note: Note, richTextState: RichTextState, appTheme: State<Boolean>) {
 
     var showTextColorSelector = remember { mutableStateOf(false) }
     var textSelectedColor = remember { mutableStateOf(Color.White) }
@@ -39,6 +40,7 @@ fun NoteTextEditor(note: Note, richTextState: RichTextState) {
     var backSelectedColor = remember { mutableStateOf(Color.Unspecified) }
 
     LaunchedEffect(true) {
+        textSelectedColor.value = if (appTheme.value) Color.Black else Color.White
         richTextState.setHtml(note.content.value)
     }
 
@@ -63,8 +65,8 @@ fun NoteTextEditor(note: Note, richTextState: RichTextState) {
                 richTextState.toggleSpanStyle(SpanStyle(textDecoration = TextDecoration.Underline))
             }
 
-            ColorPicker(Icons.Filled.FormatColorText, textSelectedColor, showTextColorSelector)
-            ColorPicker(Icons.Filled.FormatColorFill, backSelectedColor, showBackColorSelector)
+            ColorPicker(Icons.Filled.FormatColorText, textSelectedColor, showTextColorSelector, appTheme)
+            ColorPicker(Icons.Filled.FormatColorFill, backSelectedColor, showBackColorSelector, appTheme)
 
             StyleChangeButton(Icons.AutoMirrored.Filled.FormatAlignLeft, "AlignLeft") {
                 richTextState.toggleParagraphStyle(ParagraphStyle(textAlign = TextAlign.Start))

@@ -57,8 +57,8 @@ fun NoteSelectorScreen(
     LaunchedEffect(Unit) {
         viewModel.selectNotebookId(id)
 
-        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
-            viewModel.errorFlow.collect { stringId  ->
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.errorFlow.collect { stringId ->
                 snackbarHostState.currentSnackbarData?.dismiss()
                 snackbarHostState.showSnackbar(context.getString(stringId))
             }

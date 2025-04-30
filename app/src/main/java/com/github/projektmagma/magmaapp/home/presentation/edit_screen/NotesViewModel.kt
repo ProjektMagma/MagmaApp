@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.projektmagma.magmaapp.core.domain.use_case.GetAppThemeUseCase
 import com.github.projektmagma.magmaapp.core.util.Result
 import com.github.projektmagma.magmaapp.home.data.model.NoteDto
 import com.github.projektmagma.magmaapp.home.domain.model.Note
@@ -30,7 +31,8 @@ class NotesViewModel(
     private val removeNoteUseCase: RemoveNoteUseCase,
     private val getNoteByIdUseCase: GetNoteByIdUseCase,
     private val updateNoteUseCase: UpdateNoteUseCase,
-    private val selectNotebookIdUseCase: SelectNotebookIdUseCase
+    private val selectNotebookIdUseCase: SelectNotebookIdUseCase,
+    private val getAppThemeUseCase: GetAppThemeUseCase
 ) : ViewModel() {
 
     private val _notebook = MutableStateFlow(Notebook())
@@ -38,9 +40,12 @@ class NotesViewModel(
 
     private val _notes = MutableStateFlow<SnapshotStateList<Note>>(mutableStateListOf())
     val notes = _notes.asStateFlow()
-    
+
     private val _errorFlow = MutableSharedFlow<Int>()
     val errorFlow = _errorFlow.asSharedFlow()
+
+    private val _appTheme = MutableStateFlow(false)
+    val appTheme = _appTheme.asStateFlow()
 
     fun selectNotebookId(id: String) {
         selectNotebookIdUseCase.execute(id)
@@ -50,6 +55,7 @@ class NotesViewModel(
                 is Result.Success -> {
                     _notes.value = result.data
                 }
+
                 is Result.Error -> {
                     _errorFlow.emit(result.error.messageId)
                 }
@@ -62,7 +68,7 @@ class NotesViewModel(
             val result = updateNotebookUseCase.execute(notebook)
             if (result is Result.Error) {
                 _errorFlow.emit(result.error.messageId)
-            }   
+            }
         }
     }
 
@@ -104,12 +110,19 @@ class NotesViewModel(
             when (val result = updateNoteUseCase.execute(note)) {
                 is Result.Success -> {
                     _notes.value.map { if (it.id == note.id) note else it }
-                    
+
                 }
+
                 is Result.Error -> {
                     _errorFlow.emit(result.error.messageId)
                 }
             }
+        }
+    }
+
+    fun getAppTheme() {
+        viewModelScope.launch {
+            _appTheme.value = getAppThemeUseCase.execute()
         }
     }
 }
