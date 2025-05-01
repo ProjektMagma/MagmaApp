@@ -6,12 +6,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,7 +23,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -39,6 +36,7 @@ import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.home.data.model.NoteDto
 import com.github.projektmagma.magmaapp.home.presentation.edit_screen.components.NewNoteSelector
 import com.github.projektmagma.magmaapp.home.presentation.edit_screen.components.NoteSelector
+import com.github.projektmagma.magmaapp.home.presentation.shared.components.PopupWindow
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -49,7 +47,7 @@ fun NoteSelectorScreen(
 ) {
     val notebook by viewModel.notebook.collectAsStateWithLifecycle()
     val notes by viewModel.notes.collectAsStateWithLifecycle()
-    var titleEditMode by remember { mutableStateOf(false) }
+    var showEditPopup = remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
@@ -63,6 +61,24 @@ fun NoteSelectorScreen(
                 snackbarHostState.showSnackbar(context.getString(stringId))
             }
         }
+    }
+
+    PopupWindow(
+        showEditPopup,
+        onRename = {
+            showEditPopup.value = !showEditPopup.value
+            viewModel.updateNotebook(notebook)
+        },
+        onDelete = {
+            viewModel.removeNotebook(notebook)
+            navController.popBackStack()
+        }) {
+        TextField(
+            value = notebook.title.value,
+            onValueChange = { notebook.title.value = it.take(20) },
+            singleLine = true,
+            textStyle = MaterialTheme.typography.headlineSmall
+        )
     }
 
     Scaffold(
@@ -85,28 +101,18 @@ fun NoteSelectorScreen(
                         contentDescription = "Back"
                     )
                 }
-                if (titleEditMode) {
-                    TextField(
-                        modifier = Modifier
-                            .width(256.dp)
-                            .padding(bottom = 4.dp),
-                        value = notebook.title.value,
-                        onValueChange = { notebook.title.value = it.take(20) },
-                        singleLine = true,
-                        textStyle = MaterialTheme.typography.bodyLarge,
-                    )
-                } else {
-                    Text(
-                        modifier = Modifier.padding(vertical = 16.dp),
-                        text = notebook.title.value,
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
+
+                Text(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    text = notebook.title.value,
+                    style = MaterialTheme.typography.titleMedium
+                )
+
                 IconButton(
-                    onClick = { titleEditMode = !titleEditMode }
+                    onClick = { showEditPopup.value = !showEditPopup.value }
                 ) {
                     Icon(
-                        imageVector = if (titleEditMode) Icons.Filled.Check else Icons.Filled.Edit,
+                        imageVector = Icons.Filled.Edit,
                         contentDescription = "EditTitle"
                     )
                 }
@@ -138,3 +144,4 @@ fun NoteSelectorScreen(
         }
     }
 }
+

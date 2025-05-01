@@ -9,13 +9,14 @@ import com.github.projektmagma.magmaapp.core.util.Result
 import com.github.projektmagma.magmaapp.home.data.model.NoteDto
 import com.github.projektmagma.magmaapp.home.domain.model.Note
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
-import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.SelectNotebookIdUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.AddNoteUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.GetNoteByIdUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.GetNotesUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.RemoveNoteUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.UpdateNoteUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.GetNotebookByIdUseCase
+import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.RemoveNotebookUseCase
+import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.SelectNotebookIdUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.UpdateNotebookUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +27,7 @@ import kotlinx.coroutines.launch
 class NotesViewModel(
     private val updateNotebookUseCase: UpdateNotebookUseCase,
     private val getNotebookByIdUseCase: GetNotebookByIdUseCase,
+    private val removeNotebookUseCase: RemoveNotebookUseCase,
     private val getNotesUseCase: GetNotesUseCase,
     private val addNoteUseCase: AddNoteUseCase,
     private val removeNoteUseCase: RemoveNoteUseCase,
@@ -34,6 +36,7 @@ class NotesViewModel(
     private val selectNotebookIdUseCase: SelectNotebookIdUseCase,
     private val getAppThemeUseCase: GetAppThemeUseCase
 ) : ViewModel() {
+
 
     private val _notebook = MutableStateFlow(Notebook())
     val notebook = _notebook.asStateFlow()
@@ -69,6 +72,12 @@ class NotesViewModel(
             if (result is Result.Error) {
                 _errorFlow.emit(result.error.messageId)
             }
+        }
+    }
+
+    fun removeNotebook(notebook: Notebook) {
+        viewModelScope.launch {
+            removeNotebookUseCase.execute(notebook)
         }
     }
 

@@ -10,7 +10,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,9 +37,9 @@ class MainActivity : ComponentActivity() {
             val navHostController = rememberNavController()
             val snackbarHostState = remember { SnackbarHostState() }
             val snackbarCoroutine = rememberCoroutineScope()
-            val mainViewModel = koinViewModel<MainViewModel>()
-            val startDestination by mainViewModel.startDestination.collectAsStateWithLifecycle()
-            val isAppInDarkMode = remember { mainViewModel.isAppInDarkMode }
+            val viewModel = koinViewModel<MainViewModel>()
+            val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
+            val isAppInDarkMode = remember { viewModel.isAppInDarkMode }
 
             MagmaAppTheme(isAppInDarkMode.value) {
 

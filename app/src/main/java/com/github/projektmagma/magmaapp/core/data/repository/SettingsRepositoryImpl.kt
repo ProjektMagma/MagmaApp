@@ -1,5 +1,6 @@
 package com.github.projektmagma.magmaapp.core.data.repository
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -13,6 +14,8 @@ class SettingsRepositoryImpl(
     private val auth: FirebaseAuth,
     private val dataStore: DataStore<Preferences>
 ) : SettingsRepository {
+
+    private val localDisplayName = mutableStateOf(auth.currentUser?.displayName ?: "")
 
     private companion object {
         val STAY_LOGIN = booleanPreferencesKey("stay_login")
@@ -40,16 +43,21 @@ class SettingsRepositoryImpl(
     }
 
     override suspend fun setUserName(userName: String) {
-        if (userName.isBlank()) return
+        if (userName.isBlank()) {
+            localDisplayName.value = auth.currentUser!!.email!!
+            return
+        }
 
         auth.currentUser!!.updateProfile(
             UserProfileChangeRequest.Builder()
                 .setDisplayName(userName)
                 .build()
         )
+
+        localDisplayName.value = userName
     }
 
     override suspend fun getUserName(): String {
-        return if (auth.currentUser!!.displayName!!.isNotBlank()) auth.currentUser!!.displayName!! else auth.currentUser!!.email!!
+        return localDisplayName.value 
     }
 }

@@ -49,7 +49,7 @@ fun ColorPicker(
             ) {
                 Row {
                     IconButton(onClick = {
-                        color.value = if (appTheme.value) Color.White else Color.Black
+                        color.value = Color.Unspecified
                         showColorPicker.value = false
                     }) {
                         Icon(

@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -18,8 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -27,11 +26,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.presentation.ErrorIndicator
@@ -51,22 +48,23 @@ fun HomeScreen(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
     snackbarCoroutine: CoroutineScope,
-    homeViewModel: HomeViewModel = koinViewModel()
+    viewModel: HomeViewModel = koinViewModel()
 ) {
     // TODO: TŁUMACZENIE
 
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val user by homeViewModel.user.collectAsStateWithLifecycle()
-    val notebooks by homeViewModel.notebooks.collectAsStateWithLifecycle()
-    val deleteMode = remember { mutableStateOf(false) }
-    val displayName by remember { homeViewModel.displayName }
-    val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
+    val user by viewModel.user.collectAsStateWithLifecycle()
+    val notebooks by viewModel.notebooks.collectAsStateWithLifecycle()
+    val displayName by viewModel.displayName.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(true) {
+        viewModel.refreshNotebookList()
+        viewModel.refreshDisplayName()
         if (user == null) {
-            homeViewModel.logout()
+            viewModel.logout()
             navController.navigate(Screen.AuthGraph) {
                 popUpTo(Screen.AuthGraph) {
                     inclusive = true
@@ -74,8 +72,8 @@ fun HomeScreen(
             }
         }
 
-        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
-            homeViewModel.errorFlow.collect { stringId ->
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.errorFlow.collect { stringId ->
                 snackbarHostState.currentSnackbarData?.dismiss()
                 snackbarCoroutine.launch {
                     snackbarHostState.showSnackbar(context.getString(stringId))
@@ -109,12 +107,19 @@ fun HomeScreen(
                         ) {
                             Icon(
                                 modifier = HomeModifiers.iconBigSize,
-                                imageVector = Icons.Filled.AccountCircle,
+                                imageVector = Icons.Filled.Settings,
                                 contentDescription = null
                             )
                         }
                     }
-                    Row(modifier = Modifier.padding(top = 24.dp)) {
+                    Row(
+                        modifier = Modifier.padding(
+                            top = 24.dp,
+                            bottom = 0.dp,
+                            start = 64.dp,
+                            end = 64.dp
+                        )
+                    ) {
                         Text(
                             modifier = Modifier.weight(1f),
                             text = "${stringResource(R.string.greeting)}, ${displayName}!",
@@ -139,14 +144,6 @@ fun HomeScreen(
                                     snackbarHostState.showSnackbar("${context.getString(R.string.notebook_selection_info)} ${notebook.title.value}")
                                 }
                                 navController.navigate(Screen.NoteSelectorScreen(notebooks[index].id))
-                            },
-                            deleteMode = deleteMode,
-                            onNotebookDelete = {
-                                snackbarHostState.currentSnackbarData?.dismiss()
-                                snackbarCoroutine.launch {
-                                    snackbarHostState.showSnackbar(context.getString(R.string.notebook_removal_info))
-                                }
-                                homeViewModel.removeNotebook(notebook)
                             }
                         )
                     }
@@ -157,7 +154,7 @@ fun HomeScreen(
                                 snackbarCoroutine.launch {
                                     snackbarHostState.showSnackbar(context.getString(R.string.new_notebook_creation_info))
                                 }
-                                homeViewModel.addNotebook(
+                                viewModel.addNotebook(
                                     NotebookDto(
                                         title = context.getString(R.string.notebook_default_name),
                                     )

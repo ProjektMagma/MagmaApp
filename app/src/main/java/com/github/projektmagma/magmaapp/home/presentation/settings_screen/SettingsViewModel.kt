@@ -12,8 +12,6 @@ import com.github.projektmagma.magmaapp.core.domain.use_case.LogoutUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.SetAppThemeUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.SetAutoLogInUserUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.SetUserNameUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
@@ -30,22 +28,12 @@ class SettingsViewModel(
     var autoLogInCheckbox by mutableStateOf(false)
     var darkModeSwitch by mutableStateOf(false)
     var displayNameTextbox by mutableStateOf("")
-    
-    private val _appThemeValue = MutableStateFlow(false)
-    val appThemeValue = _appThemeValue.asStateFlow()
-    
 
     init {
         viewModelScope.launch {
             displayNameTextbox = getUserNameUseCase.execute()
             autoLogInCheckbox = getAutoLogInUserUseCase.execute()
             darkModeSwitch = getAppThemeUseCase.execute()
-        }
-    }
-
-    fun getAppTheme() {
-        viewModelScope.launch {
-            _appThemeValue.value = getAppThemeUseCase.execute()
         }
     }
 

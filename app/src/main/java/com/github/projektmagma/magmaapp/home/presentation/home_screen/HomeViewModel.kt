@@ -15,14 +15,11 @@ import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.AddNotebookUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.GetNotebooksUseCase
-import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.RemoveNotebookUseCase
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -30,7 +27,6 @@ class HomeViewModel(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getNotebooksUseCase: GetNotebooksUseCase,
     private val addNotebookUseCase: AddNotebookUseCase,
-    private val removeNotebookUseCase: RemoveNotebookUseCase,
     private val setAutoLogInUserUseCase: SetAutoLogInUserUseCase,
     private val getUserNameUseCase: GetUserNameUseCase
 ) : ViewModel() {
@@ -41,11 +37,12 @@ class HomeViewModel(
     private val _notebooks = MutableStateFlow<SnapshotStateList<Notebook>>(mutableStateListOf())
     val notebooks = _notebooks.asStateFlow()
 
-    val displayName = mutableStateOf("")
+    private val _displayName = MutableStateFlow<String>("")
+    val displayName = _displayName.asStateFlow()
 
     private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
     val uiState = _uiState.asStateFlow()
-    
+
     private val _errorFlow = MutableSharedFlow<Int>()
     val errorFlow = _errorFlow.asSharedFlow()
 
@@ -53,16 +50,6 @@ class HomeViewModel(
         viewModelScope.launch {
             _uiState.value = UIState.Loading
             _user.value = getCurrentUserUseCase.execute()
-            when (val result = getNotebooksUseCase.execute()){
-                is Result.Success -> {
-                    _notebooks.value = result.data
-                }
-                is Result.Error -> {
-                    _uiState.value = UIState.Error
-                }
-            }
-            
-            displayName.value = getUserNameUseCase.execute()
             launch {
                 if (_user.value == null) logout()
                 if (user.value == null && notebooks.value.isEmpty()) {
@@ -71,6 +58,7 @@ class HomeViewModel(
                     _uiState.value = UIState.Success
                 }
             }
+
         }
     }
 
@@ -82,6 +70,26 @@ class HomeViewModel(
         }
     }
 
+    fun refreshNotebookList() {
+        viewModelScope.launch {
+            when (val result = getNotebooksUseCase.execute()) {
+                is Result.Success -> {
+                    _notebooks.value = result.data
+                }
+
+                is Result.Error -> {
+                    _uiState.value = UIState.Error
+                }
+            }
+        }
+    }
+    
+    fun refreshDisplayName() {
+        viewModelScope.launch {
+            _displayName.value = getUserNameUseCase.execute()
+        }
+    }
+
     fun addNotebook(notebook: NotebookDto) {
         viewModelScope.launch {
             when (val result = addNotebookUseCase.execute(notebook)) {
@@ -90,21 +98,7 @@ class HomeViewModel(
                 }
 
                 is Result.Error -> {
-                    
-                }
-            }
-        }
-    }
 
-    fun removeNotebook(notebook: Notebook) {
-        viewModelScope.launch {
-            when (val result = removeNotebookUseCase.execute(notebook)) {
-                is Result.Success -> {
-                    _notebooks.value.remove(notebook)
-                }
-
-                is Result.Error -> {
-                    _errorFlow.emit(result.error.messageId)
                 }
             }
         }
