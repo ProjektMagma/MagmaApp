@@ -29,8 +29,8 @@ fun NewNoteSelector(onClick: () -> Unit) {
             .drawBehind {
                 drawLine(
                     color = Color.Gray,
-                    start = Offset(0f, size.height),
-                    end = Offset(size.width, size.height),
+                    start = Offset(0f, 0f),
+                    end = Offset(size.width, 0f),
                     strokeWidth = 1.dp.toPx()
                 )
             }
@@ -49,7 +49,7 @@ fun NewNoteSelector(onClick: () -> Unit) {
     }
 }
 
-@Preview
+@Preview(name = "NewNoteSelector", showBackground = true)
 @Composable
 fun NewNoteSelectorPreview() {
     NewNoteSelector(onClick = {})

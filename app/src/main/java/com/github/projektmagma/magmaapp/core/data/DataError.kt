@@ -5,6 +5,7 @@ import com.github.projektmagma.magmaapp.core.util.Error
 
 sealed interface DataError : Error {
     enum class NetworkError(override val messageId: Int) : DataError {
+        TIMEOUT(R.string.error_timeout),
         EMAIL_TAKEN(R.string.error_email_taken),
         SERVER_ERROR(R.string.error_server_error),
         NETWORK_ERROR(R.string.error_network_error),

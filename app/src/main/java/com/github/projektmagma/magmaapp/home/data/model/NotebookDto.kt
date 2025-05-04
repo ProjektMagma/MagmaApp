@@ -6,7 +6,8 @@ data class NotebookDto(
     val id: String = "",
     val title: String = "",
     val notes: MutableMap<String, NoteDto> = hashMapOf<String, NoteDto>(),
-    val timestamp: Long = System.currentTimeMillis()
+    val createdAt: Long = 0L,
+    val lastModified: Long = 0L,
 )
 
 fun Notebook.toDto(): NotebookDto {
@@ -18,6 +19,8 @@ fun Notebook.toDto(): NotebookDto {
     return NotebookDto(
         id = id,
         title = title.value,
-        notes = tmpMap
+        notes = tmpMap,
+        createdAt = createdAt.longValue,
+        lastModified = lastModified.longValue,
     )
 }

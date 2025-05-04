@@ -1,7 +1,6 @@
 package com.github.projektmagma.magmaapp.home.presentation.home_screen
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -46,22 +45,16 @@ class HomeViewModel(
     private val _errorFlow = MutableSharedFlow<Int>()
     val errorFlow = _errorFlow.asSharedFlow()
 
-    init {
+
+    fun tryFetchAllData() {
+        _uiState.value = UIState.Loading
         viewModelScope.launch {
-            _uiState.value = UIState.Loading
-            _user.value = getCurrentUserUseCase.execute()
-            launch {
-                if (_user.value == null) logout()
-                if (user.value == null && notebooks.value.isEmpty()) {
-                    _uiState.value = UIState.Error
-                } else {
-                    _uiState.value = UIState.Success
-                }
-            }
-
+            getFirebaseUser()
+            refreshDisplayName()
+            refreshNotebookList()
         }
-    }
 
+    }
 
     fun logout() {
         viewModelScope.launch {
@@ -70,11 +63,18 @@ class HomeViewModel(
         }
     }
 
+    fun getFirebaseUser() {
+        viewModelScope.launch {
+            _user.value = getCurrentUserUseCase.execute()
+        }
+    }
+
     fun refreshNotebookList() {
         viewModelScope.launch {
             when (val result = getNotebooksUseCase.execute()) {
                 is Result.Success -> {
                     _notebooks.value = result.data
+                    _uiState.value = UIState.Success
                 }
 
                 is Result.Error -> {
@@ -83,7 +83,7 @@ class HomeViewModel(
             }
         }
     }
-    
+
     fun refreshDisplayName() {
         viewModelScope.launch {
             _displayName.value = getUserNameUseCase.execute()
@@ -98,7 +98,7 @@ class HomeViewModel(
                 }
 
                 is Result.Error -> {
-
+                    _uiState.value = UIState.Error
                 }
             }
         }

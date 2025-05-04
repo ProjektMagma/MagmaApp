@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
+import com.github.projektmagma.magmaapp.home.domain.model.toUiDate
 import com.github.projektmagma.magmaapp.home.presentation.HomeModifiers
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -34,7 +32,8 @@ fun NotebookSelector(
     onClick: () -> Unit
 ) {
     val notebookTitle by notebook.title
-    val notes = notebook.notes
+    val notes = notebook.notes.sortedBy { it.createdAt }
+
 
     Box(
         modifier = HomeModifiers.notebookButtonBox
@@ -81,12 +80,21 @@ fun NotebookSelector(
             }
             Text(
                 modifier = HomeModifiers.notebookSelectorTextPadding,
-                text = "${stringResource(id = R.string.notebook_last_modification_date)} " +
-                        notebook.date,
+                text = "${stringResource(id = R.string.notebook_creation_date)} " +
+                        notebook.createdAt.longValue.toUiDate(),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSecondary,
                 textAlign = TextAlign.Start
             )
+            Text(
+                modifier = HomeModifiers.notebookSelectorTextPadding,
+                text = "${stringResource(id = R.string.notebook_last_modification_date)} " +
+                        notebook.lastModified.longValue.toUiDate(),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSecondary,
+                textAlign = TextAlign.Start
+            )
+            
         }
     }
 }

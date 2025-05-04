@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -52,25 +51,15 @@ fun HomeScreen(
 ) {
     // TODO: TŁUMACZENIE
 
-    val context = LocalContext.current
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val user by viewModel.user.collectAsStateWithLifecycle()
     val notebooks by viewModel.notebooks.collectAsStateWithLifecycle()
     val displayName by viewModel.displayName.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val keyboardController = LocalSoftwareKeyboardController.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
 
     LaunchedEffect(true) {
-        viewModel.refreshNotebookList()
-        viewModel.refreshDisplayName()
-        if (user == null) {
-            viewModel.logout()
-            navController.navigate(Screen.AuthGraph) {
-                popUpTo(Screen.AuthGraph) {
-                    inclusive = true
-                }
-            }
-        }
+        viewModel.tryFetchAllData()
 
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.errorFlow.collect { stringId ->
@@ -88,7 +77,9 @@ fun HomeScreen(
         }
 
         UIState.Error -> {
-            ErrorIndicator { /* TODO system ponownej próby */ }
+            ErrorIndicator(stringResource(R.string.error_timeout)) {
+                viewModel.tryFetchAllData()
+            }
         }
 
         UIState.Success ->
@@ -157,6 +148,8 @@ fun HomeScreen(
                                 viewModel.addNotebook(
                                     NotebookDto(
                                         title = context.getString(R.string.notebook_default_name),
+                                        createdAt = System.currentTimeMillis(),
+                                        lastModified = System.currentTimeMillis()
                                     )
                                 )
                                 keyboardController?.hide()

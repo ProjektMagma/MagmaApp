@@ -8,7 +8,7 @@ data class Note(
     val id: String = "",
     val title: MutableState<String> = mutableStateOf(""),
     val content: MutableState<String> = mutableStateOf(""),
-    val date: String = ""
+    val createdAt: Long = 0L,
 )
 
 fun NoteDto.toDomain(): Note {
@@ -16,6 +16,6 @@ fun NoteDto.toDomain(): Note {
         id = id,
         title = mutableStateOf(title),
         content = mutableStateOf(content),
-        date = timestamp.toUiDate()
+        createdAt = createdAt
     )
 }

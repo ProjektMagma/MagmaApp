@@ -33,8 +33,8 @@ fun NoteSelector(
             .drawBehind {
                 drawLine(
                     color = Color.Gray,
-                    start = Offset(0f, size.height),
-                    end = Offset(size.width, size.height),
+                    start = Offset(0f, 0f),
+                    end = Offset(size.width, 0f),
                     strokeWidth = 1.dp.toPx()
                 )
             }
@@ -66,7 +66,7 @@ fun NoteSelectorPreview() {
             id = "1234",
             title = remember { mutableStateOf("Title") },
             content = remember { mutableStateOf("Content") },
-            date = "2021-10-10"
+            createdAt = 1634160000000L,
         ),
         onClick = {}
     )

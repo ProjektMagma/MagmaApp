@@ -60,4 +60,6 @@
     <string name="app_theme_switch_label">Dark mode</string>
     <string name="clicks_left_to_logout">Clicks left to log out:</string>
     <string name="change_button">Change</string>
+    <string name="error_timeout">Connection timeout</string>
+    <string name="notebook_creation_date">Created at:</string>
 </resources>

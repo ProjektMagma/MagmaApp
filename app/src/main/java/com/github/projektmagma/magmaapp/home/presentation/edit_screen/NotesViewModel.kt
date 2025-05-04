@@ -1,10 +1,12 @@
 package com.github.projektmagma.magmaapp.home.presentation.edit_screen
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.projektmagma.magmaapp.core.domain.use_case.GetAppThemeUseCase
+import com.github.projektmagma.magmaapp.core.presentation.UIState
 import com.github.projektmagma.magmaapp.core.util.Result
 import com.github.projektmagma.magmaapp.home.data.model.NoteDto
 import com.github.projektmagma.magmaapp.home.domain.model.Note
@@ -23,6 +25,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 class NotesViewModel(
     private val updateNotebookUseCase: UpdateNotebookUseCase,
@@ -50,17 +53,31 @@ class NotesViewModel(
     private val _appTheme = MutableStateFlow(false)
     val appTheme = _appTheme.asStateFlow()
 
+    private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
+    val uiState = _uiState.asStateFlow()
+
+
     fun selectNotebookId(id: String) {
+        _uiState.value = UIState.Loading
         selectNotebookIdUseCase.execute(id)
         viewModelScope.launch {
             _notebook.value = getNotebookByIdUseCase.execute(id)
-            when (val result = getNotesUseCase.execute()) {
+            when (val result = withTimeoutOrNull(5000) { getNotesUseCase.execute() }) {
                 is Result.Success -> {
                     _notes.value = result.data
+                    _uiState.value = UIState.Success
                 }
 
                 is Result.Error -> {
                     _errorFlow.emit(result.error.messageId)
+                    _uiState.value = UIState.Error
+                    Log.d("NotesViewModel", "Error: ${result.error.messageId}")
+                }
+
+                null -> {
+                    //TODO: Tymczasowe obejście systemu. Idk ale tutaj safeFirebaseCall nie działa (patrz getNotesUseCase)
+                    _uiState.value = UIState.Error
+
                 }
             }
         }

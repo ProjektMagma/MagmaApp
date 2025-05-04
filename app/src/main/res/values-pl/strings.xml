@@ -59,4 +59,6 @@
     <string name="app_theme_switch_label">Ciemny motyw</string>
     <string name="clicks_left_to_logout">Wciśnięć do wylogowania:</string>
     <string name="change_button">Zmień</string>
+    <string name="error_timeout">Odrzucenie połączenia</string>
+    <string name="notebook_creation_date">Stworzono:</string>
 </resources>

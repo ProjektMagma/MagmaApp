@@ -1,6 +1,8 @@
 package com.github.projektmagma.magmaapp.home.domain.model
 
+import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -10,7 +12,8 @@ data class Notebook(
     val id: String = "",
     var title: MutableState<String> = mutableStateOf(""),
     val notes: SnapshotStateList<Note> = mutableStateListOf(),
-    val date: String = ""
+    val createdAt: MutableLongState = mutableLongStateOf(0L),
+    val lastModified: MutableLongState = mutableLongStateOf(0L),
 )
 
 fun NotebookDto.toDomain(): Notebook {
@@ -23,6 +26,7 @@ fun NotebookDto.toDomain(): Notebook {
         id = id,
         title = mutableStateOf(title),
         notes = tmpList,
-        date = timestamp.toUiDate()
+        lastModified = mutableLongStateOf(lastModified),
+        createdAt = mutableLongStateOf(createdAt),
     )
 }

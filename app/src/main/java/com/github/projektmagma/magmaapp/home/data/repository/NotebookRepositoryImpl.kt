@@ -28,7 +28,7 @@ class NotebookRepositoryImpl(
             notebookWithId.toDomain()
         }
     }
-    
+
     override suspend fun getAllNotebooks(): Result<SnapshotStateList<Notebook>, Error> {
         return safeFirebaseCall {
             val snapshot = database.get().await()
@@ -36,7 +36,7 @@ class NotebookRepositoryImpl(
                 it.getValue(NotebookDto::class.java)?.toDomain()
             }
             dataStorage.addNotebooks(list)
-            
+
             mutableStateListOf<Notebook>().apply {
                 addAll(list)
             }
@@ -48,6 +48,7 @@ class NotebookRepositoryImpl(
         notebook: Notebook,
     ): Result<Unit, Error> {
         return safeFirebaseCall {
+            notebook.lastModified.longValue = System.currentTimeMillis()
             database.child(notebook.id).setValue(notebook.toDto()).await()
             dataStorage.updateNotebook(notebook)
         }

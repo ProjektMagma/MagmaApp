@@ -25,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -32,6 +33,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
+import com.github.projektmagma.magmaapp.core.presentation.ErrorIndicator
+import com.github.projektmagma.magmaapp.core.presentation.LoadingIndicator
+import com.github.projektmagma.magmaapp.core.presentation.UIState
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
 import com.github.projektmagma.magmaapp.home.data.model.NoteDto
 import com.github.projektmagma.magmaapp.home.presentation.edit_screen.components.NewNoteSelector
@@ -47,6 +51,7 @@ fun NoteSelectorScreen(
 ) {
     val notebook by viewModel.notebook.collectAsStateWithLifecycle()
     val notes by viewModel.notes.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showEditPopup = remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -81,64 +86,79 @@ fun NoteSelectorScreen(
         )
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Absolute.SpaceBetween
-            ) {
-                IconButton(
-                    onClick = {
-                        viewModel.updateNotebook(notebook)
-                        navController.navigate(Screen.HomeScreen) {
-                            popUpTo<Screen.HomeScreen> { inclusive = true }
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
-                    )
-                }
+    when (uiState) {
+        UIState.Loading -> {
+            LoadingIndicator()
+        }
 
-                Text(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    text = notebook.title.value,
-                    style = MaterialTheme.typography.titleMedium
-                )
-
-                IconButton(
-                    onClick = { showEditPopup.value = !showEditPopup.value }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = "EditTitle"
-                    )
-                }
+        UIState.Error -> {
+            ErrorIndicator(stringResource(R.string.error_timeout)) {
+                viewModel.selectNotebookId(id)
             }
         }
-    ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxHeight()
-        ) {
-            items(notes) { note ->
-                NoteSelector(
-                    note,
-                    onClick = {
-                        navController.navigate(Screen.NoteEditorScreen(note.id))
-                    }
-                )
-            }
-            item {
-                NewNoteSelector {
-                    viewModel.addNote(
-                        NoteDto(
-                            title = context.getString(R.string.note_default_name),
+
+        UIState.Success -> {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                topBar = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Absolute.SpaceBetween
+                    ) {
+                        IconButton(
+                            onClick = {
+                                viewModel.updateNotebook(notebook)
+                                navController.navigate(Screen.HomeScreen) {
+                                    popUpTo<Screen.HomeScreen> { inclusive = true }
+                                }
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                        }
+
+                        Text(
+                            modifier = Modifier.padding(vertical = 16.dp),
+                            text = notebook.title.value,
+                            style = MaterialTheme.typography.titleMedium
                         )
-                    )
+
+                        IconButton(
+                            onClick = { showEditPopup.value = !showEditPopup.value }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Edit,
+                                contentDescription = "EditTitle"
+                            )
+                        }
+                    }
+                }
+            ) { innerPadding ->
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxHeight()
+                ) {
+                    items(notes) { note ->
+                        NoteSelector(
+                            note,
+                            onClick = {
+                                navController.navigate(Screen.NoteEditorScreen(note.id))
+                            }
+                        )
+                    }
+                    item {
+                        NewNoteSelector {
+                            viewModel.addNote(
+                                NoteDto(
+                                    title = context.getString(R.string.note_default_name),
+                                    createdAt = System.currentTimeMillis(),
+                                )
+                            )
+                        }
+                    }
                 }
             }
         }
