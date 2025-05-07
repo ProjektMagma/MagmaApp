@@ -15,7 +15,7 @@ class SettingsRepositoryImpl(
     private val dataStore: DataStore<Preferences>
 ) : SettingsRepository {
 
-    private val localDisplayName = mutableStateOf(auth.currentUser?.displayName ?: "")
+    private val localDisplayName = mutableStateOf("")
 
     private companion object {
         val STAY_LOGIN = booleanPreferencesKey("stay_login")
@@ -43,21 +43,27 @@ class SettingsRepositoryImpl(
     }
 
     override suspend fun setUserName(userName: String) {
-        if (userName.isBlank()) {
-            localDisplayName.value = auth.currentUser!!.email!!
+        if (auth.currentUser == null) {
+            localDisplayName.value = ""
             return
         }
 
+        if (userName.isBlank()) localDisplayName.value = auth.currentUser!!.email!!
+        else localDisplayName.value = userName
         auth.currentUser!!.updateProfile(
             UserProfileChangeRequest.Builder()
                 .setDisplayName(userName)
                 .build()
         )
 
-        localDisplayName.value = userName
+
     }
 
-    override suspend fun getUserName(): String {
-        return localDisplayName.value 
+    override fun getUserName(): String {
+        if (auth.currentUser == null)
+            localDisplayName.value = ""
+        else if (localDisplayName.value.isBlank())
+            localDisplayName.value = auth.currentUser!!.email!!
+        return localDisplayName.value
     }
 }

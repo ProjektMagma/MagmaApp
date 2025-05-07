@@ -2,6 +2,7 @@ package com.github.projektmagma.magmaapp.home.data.repository
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.github.projektmagma.magmaapp.core.domain.use_case.SetUserNameUseCase
 import com.github.projektmagma.magmaapp.core.util.Error
 import com.github.projektmagma.magmaapp.core.util.Result
 import com.github.projektmagma.magmaapp.home.data.model.NoteDto
@@ -48,17 +49,17 @@ class NoteRepositoryImpl(
                 .child("notes")
 
             val snapshot = noteDatabaseNode.get().await()
-            val notes = snapshot.children.mapNotNull { 
+            val notes = snapshot.children.mapNotNull {
                 it.getValue(NoteDto::class.java)?.toDomain()
             }
-            
+
             dataStorage.addNotes(notes)
-            mutableStateListOf<Note>().apply { 
+            mutableStateListOf<Note>().apply {
                 addAll(notes)
             }
         }
-        
-        
+
+
     }
 
     override suspend fun updateNote(note: Note): Result<Unit, Error> {
@@ -66,11 +67,10 @@ class NoteRepositoryImpl(
             val noteDatabaseNode = database
                 .child(dataStorage.getSelectedNotebook().id)
                 .child("notes")
-            
+
             noteDatabaseNode
-                .child(note.id).
-                setValue(note.toDto()).await()
-            
+                .child(note.id).setValue(note.toDto()).await()
+
             dataStorage.updateNote(note)
         }
     }
@@ -84,11 +84,11 @@ class NoteRepositoryImpl(
             val noteDatabaseNode = database
                 .child(dataStorage.getSelectedNotebook().id)
                 .child("notes")
-            
+
             noteDatabaseNode
                 .child(note.id)
                 .removeValue().await()
-            
+
             dataStorage.removeNote(note)
         }
     }

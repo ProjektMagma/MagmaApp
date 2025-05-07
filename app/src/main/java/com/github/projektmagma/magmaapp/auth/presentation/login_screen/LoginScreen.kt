@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +34,6 @@ import com.github.projektmagma.magmaapp.auth.presentation.common.PasswordField
 import com.github.projektmagma.magmaapp.auth.presentation.common.RegistrationType
 import com.github.projektmagma.magmaapp.auth.presentation.model.RegistrationFormEvent
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
-import kotlinx.coroutines.AbstractCoroutine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -90,7 +89,6 @@ fun LoginScreen(
                 onValueChange = { viewModel.onEvent(RegistrationFormEvent.EmailChanged(it)) },
                 isError = state.emailError != null
             )
-            ErrorText(state = state)
             PasswordField(
                 modifier = AuthModifiers.textFieldsModifier,
                 passwordVisible = passwordVisible,
@@ -99,6 +97,9 @@ fun LoginScreen(
                 passwordStateString = state.password,
                 onValueChange = { viewModel.onEvent(RegistrationFormEvent.PasswordChanged(it)) }
             )
+
+            ErrorText(state)
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {

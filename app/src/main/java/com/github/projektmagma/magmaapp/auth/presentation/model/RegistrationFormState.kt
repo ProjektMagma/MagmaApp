@@ -11,4 +11,5 @@ data class RegistrationFormState(
     val passwordError: PasswordError? = null,
     val repeatedPassword: String = "",
     val repeatedPasswordError: RepeatedPasswordError? = null,
+    val hasError: Boolean = false,
 )

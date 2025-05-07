@@ -11,13 +11,13 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun SettingRow(content: @Composable () -> Unit) {
+fun SettingRow(hasOneChild: Boolean = false, content: @Composable () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = if (hasOneChild) Arrangement.Center else Arrangement.SpaceBetween
     ) {
         content()
     }

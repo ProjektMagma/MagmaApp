@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -35,8 +37,10 @@ fun OnBoardingScreen(
 ) {
     Scaffold { innerPadding ->
         val configuration = LocalConfiguration.current
-        val screenHeight = configuration.screenHeightDp.dp // Nie zmieniać bo to nie działa tak jak Android Studio mówi
-        
+        val context = LocalContext.current
+        val screenHeight =
+            configuration.screenHeightDp.dp // Nie zmieniać bo to nie działa tak jak Android Studio mówi
+
         Column(
             modifier = Modifier
                 .padding(bottom = innerPadding.calculateBottomPadding())
@@ -63,7 +67,8 @@ fun OnBoardingScreen(
                 Image(
                     modifier = Modifier
                         .padding(32.dp)
-                        .clip(MaterialTheme.shapes.large).size(screenHeight / 3.5f),
+                        .clip(MaterialTheme.shapes.large)
+                        .size(screenHeight / 3.5f),
                     painter = painterResource(id = R.drawable.logo),
                     contentDescription = stringResource(id = R.string.app_name)
                 )
@@ -87,15 +92,20 @@ fun OnBoardingScreen(
                 }
             }
 
-            Text(
+
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                text = stringResource(id = R.string.report_bug),
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.outline,
-                textAlign = TextAlign.Center,
-            )
+                    .fillMaxWidth().padding(top = 32.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    "Copyright (c) 2025 Projekt Magma",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
     }
 }

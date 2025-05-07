@@ -5,5 +5,5 @@ import com.github.projektmagma.magmaapp.core.domain.repository.SettingsRepositor
 class GetUserNameUseCase(
     private val settingsRepository: SettingsRepository
 ) {
-    suspend fun execute() = settingsRepository.getUserName()
+    fun execute() = settingsRepository.getUserName()
 }

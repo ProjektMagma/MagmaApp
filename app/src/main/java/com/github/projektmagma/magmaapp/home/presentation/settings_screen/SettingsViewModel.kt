@@ -16,13 +16,13 @@ import kotlinx.coroutines.launch
 
 
 class SettingsViewModel(
-    val setAutoLogInUserUseCase: SetAutoLogInUserUseCase,
-    val getAutoLogInUserUseCase: GetAutoLogInUserUseCase,
-    val setAppThemeUseCase: SetAppThemeUseCase,
-    val getAppThemeUseCase: GetAppThemeUseCase,
-    val setUserNameUseCase: SetUserNameUseCase,
-    val getUserNameUseCase: GetUserNameUseCase,
-    val logoutUseCase: LogoutUseCase
+    private val setAutoLogInUserUseCase: SetAutoLogInUserUseCase,
+    private val getAutoLogInUserUseCase: GetAutoLogInUserUseCase,
+    private val setAppThemeUseCase: SetAppThemeUseCase,
+    private val getAppThemeUseCase: GetAppThemeUseCase,
+    private val setUserNameUseCase: SetUserNameUseCase,
+    private val getUserNameUseCase: GetUserNameUseCase,
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     var autoLogInCheckbox by mutableStateOf(false)
@@ -42,6 +42,13 @@ class SettingsViewModel(
             setAutoLogInUserUseCase.execute(autoLogInCheckbox)
             setAppThemeUseCase.execute(darkModeSwitch)
             setUserNameUseCase.execute(displayNameTextbox)
+        }
+    }
+    
+    fun resetDisplayNameTextbox() {
+        viewModelScope.launch {
+            setUserNameUseCase.execute("")
+            displayNameTextbox = getUserNameUseCase.execute()
         }
     }
 

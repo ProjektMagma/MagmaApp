@@ -48,11 +48,9 @@ class HomeViewModel(
 
     fun tryFetchAllData() {
         _uiState.value = UIState.Loading
-        viewModelScope.launch {
-            getFirebaseUser()
-            refreshDisplayName()
-            refreshNotebookList()
-        }
+        getFirebaseUser()
+        refreshDisplayName()
+        refreshNotebookList()
 
     }
 
@@ -85,9 +83,7 @@ class HomeViewModel(
     }
 
     fun refreshDisplayName() {
-        viewModelScope.launch {
-            _displayName.value = getUserNameUseCase.execute()
-        }
+        _displayName.value = getUserNameUseCase.execute()
     }
 
     fun addNotebook(notebook: NotebookDto) {

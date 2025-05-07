@@ -1,5 +1,7 @@
 package com.github.projektmagma.magmaapp.home.presentation.settings_screen
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -59,7 +61,7 @@ fun SettingsScreen(
         },
         onDelete = {
             showEditPopup.value = false
-            viewModel.displayNameTextbox = ""
+            viewModel.resetDisplayNameTextbox()
         }
     ) {
         TextField(
@@ -101,6 +103,19 @@ fun SettingsScreen(
                 ) {
                     Text(stringResource(R.string.settings_save_button))
                 }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        "Copyright (c) 2025 Projekt Magma",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        textAlign = TextAlign.Center,
+                    )
+                }
             }
         }) { innerPadding ->
 
@@ -131,10 +146,22 @@ fun SettingsScreen(
                     }
                 )
             }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
+            SettingRow(true) {
+                Button(
+                    onClick = {
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.Builder().scheme("https")
+                                .authority("github.com")
+                                .path("ProjektMagma/MagmaApp/issues")
+                                .build()
+                        ).also { context.startActivity(it) }
+                    }
+                ) {
+                    Text(stringResource(id = R.string.report_bug))
+                }
+            }
+            SettingRow(true) {
                 Button(
                     onClick = {
                         snackbarHostState.currentSnackbarData?.dismiss()

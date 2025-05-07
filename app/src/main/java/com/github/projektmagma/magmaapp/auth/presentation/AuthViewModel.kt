@@ -5,16 +5,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.projektmagma.magmaapp.core.domain.use_case.GetAutoLogInUserUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.LoginUserUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.RegisterUserUseCase
-import com.github.projektmagma.magmaapp.core.domain.use_case.SetAutoLogInUserUseCase
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateEmail
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidatePassword
 import com.github.projektmagma.magmaapp.auth.domain.use_case.ValidateRepeatedPassword
 import com.github.projektmagma.magmaapp.auth.presentation.common.RegistrationType
 import com.github.projektmagma.magmaapp.auth.presentation.model.RegistrationFormEvent
 import com.github.projektmagma.magmaapp.auth.presentation.model.RegistrationFormState
+import com.github.projektmagma.magmaapp.core.domain.use_case.SetAutoLogInUserUseCase
 import com.github.projektmagma.magmaapp.core.util.Result
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.channels.Channel
@@ -27,8 +26,7 @@ class AuthViewModel(
     private val validateEmail: ValidateEmail,
     private val validatePassword: ValidatePassword,
     private val validateRepeatedPassword: ValidateRepeatedPassword,
-    private val setAutoLogInUserUseCase: SetAutoLogInUserUseCase,
-    private val getAutoLogInUserUseCase: GetAutoLogInUserUseCase
+    private val setAutoLogInUserUseCase: SetAutoLogInUserUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(RegistrationFormState())
@@ -78,7 +76,8 @@ class AuthViewModel(
             state = state.copy(
                 emailError = if (emailResult is Result.Error) emailResult.error else null,
                 passwordError = if (passwordResult is Result.Error) passwordResult.error else null,
-                repeatedPasswordError = if (repeatedPasswordResult is Result.Error) repeatedPasswordResult.error else null
+                repeatedPasswordError = if (repeatedPasswordResult is Result.Error) repeatedPasswordResult.error else null,
+                hasError = true
             )
             return
         }

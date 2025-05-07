@@ -1,7 +1,8 @@
 package com.github.projektmagma.magmaapp.auth.data.repository
 
-import com.github.projektmagma.magmaapp.core.data.DataError
 import com.github.projektmagma.magmaapp.auth.domain.repository.UserRepository
+import com.github.projektmagma.magmaapp.core.data.DataError
+import com.github.projektmagma.magmaapp.core.domain.use_case.SetUserNameUseCase
 import com.github.projektmagma.magmaapp.core.util.Error
 import com.github.projektmagma.magmaapp.core.util.Result
 import com.google.firebase.auth.FirebaseAuth
@@ -11,7 +12,8 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
 
 class UserRepositoryImpl(
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val setUserNameUseCase: SetUserNameUseCase // Womp womp, szybkie fixy
 ) : UserRepository {
     override suspend fun login(email: String, password: String): Result<FirebaseUser, Error> {
         return try {
@@ -42,14 +44,14 @@ class UserRepositoryImpl(
             }
         } catch (e: FirebaseAuthUserCollisionException) {
             Result.Error(DataError.NetworkError.EMAIL_TAKEN)
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             Result.Error(DataError.NetworkError.UNKNOWN_ERROR)
         }
     }
 
     override suspend fun logout() {
         auth.signOut()
+        setUserNameUseCase.execute("")
     }
 
     override suspend fun getCurrentUser(): FirebaseUser? {

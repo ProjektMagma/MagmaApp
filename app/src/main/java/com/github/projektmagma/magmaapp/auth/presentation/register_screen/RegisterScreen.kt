@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,72 +67,71 @@ fun RegisterScreen(
         }
     }
 
-        Scaffold { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+    Scaffold { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(AuthModifiers.topSpacerModifier)
+            Text(
+                modifier = AuthModifiers.textPaddingModifier,
+                text = stringResource(id = R.string.register_banner),
+                textAlign = TextAlign.Center,
+                fontSize = 32.sp
+            )
+            EmailField(
+                email = state.email,
+                onValueChange = { authViewModel.onEvent(RegistrationFormEvent.EmailChanged(it)) },
+                isError = state.emailError != null
+            )
+            PasswordField(
+                modifier = AuthModifiers.textFieldsModifier,
+                passwordVisible = passwordVisible,
+                isError = state.passwordError != null,
+                showPasswordVisibilityIcon = true,
+                labelString = stringResource(id = R.string.password),
+                passwordStateString = state.password,
+                onValueChange = { authViewModel.onEvent(RegistrationFormEvent.PasswordChanged(it)) }
+            )
+            PasswordField(
+                modifier = AuthModifiers.textFieldsModifier,
+                passwordVisible = passwordVisible,
+                isError = state.repeatedPasswordError != null,
+                showPasswordVisibilityIcon = false,
+                labelString = stringResource(id = R.string.repeat_password),
+                passwordStateString = state.repeatedPassword,
+                onValueChange = {
+                    authViewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(it))
+                }
+            )
+            ErrorText(state)
+            Button(
+                modifier = AuthModifiers.buttonsModifier,
+                onClick = {
+                    authViewModel.onEvent(RegistrationFormEvent.Submit(RegistrationType.REGISTER))
+                    keyboardController?.hide()
+                }
             ) {
-                Spacer(AuthModifiers.topSpacerModifier)
                 Text(
                     modifier = AuthModifiers.textPaddingModifier,
-                    text = stringResource(id = R.string.register_banner),
-                    textAlign = TextAlign.Center,
-                    fontSize = 32.sp
+                    text = stringResource(id = R.string.register),
                 )
-                EmailField(
-                    email = state.email,
-                    onValueChange = { authViewModel.onEvent(RegistrationFormEvent.EmailChanged(it)) },
-                    isError = state.emailError != null
-                )
-                ErrorText(state = state)
-                PasswordField(
-                    modifier = AuthModifiers.textFieldsModifier,
-                    passwordVisible = passwordVisible,
-                    isError = state.passwordError != null,
-                    showPasswordVisibilityIcon = true,
-                    labelString = stringResource(id = R.string.password),
-                    passwordStateString = state.password,
-                    onValueChange = { authViewModel.onEvent(RegistrationFormEvent.PasswordChanged(it)) }
-                )
-                ErrorText(state = state)
-                PasswordField(
-                    modifier = AuthModifiers.textFieldsModifier,
-                    passwordVisible = passwordVisible,
-                    isError = state.repeatedPasswordError != null,
-                    showPasswordVisibilityIcon = false,
-                    labelString = stringResource(id = R.string.repeat_password),
-                    passwordStateString = state.repeatedPassword,
-                    onValueChange = {
-                        authViewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(it)) }
-                )
-                ErrorText(state = state)
-                Button(
-                    modifier = AuthModifiers.buttonsModifier,
-                    onClick = {
-                        authViewModel.onEvent(RegistrationFormEvent.Submit(RegistrationType.REGISTER))
-                        keyboardController?.hide()
-                    }
-                ) {
-                    Text(
-                        modifier = AuthModifiers.textPaddingModifier,
-                        text = stringResource(id = R.string.register),
-                    )
+            }
+            Button(
+                modifier = AuthModifiers.buttonsModifier,
+                onClick = {
+                    keyboardController?.hide()
+                    navHostController.navigate(Screen.LoginScreen)
                 }
-                Button(
-                    modifier = AuthModifiers.buttonsModifier,
-                    onClick = {
-                        keyboardController?.hide()
-                        navHostController.navigate(Screen.LoginScreen)
-                    }
-                ) {
-                    Text(
-                        modifier = AuthModifiers.textPaddingModifier,
-                        text = stringResource(id = R.string.login_redirect_button),
-                        textAlign = TextAlign.Center
-                    )
-                }
+            ) {
+                Text(
+                    modifier = AuthModifiers.textPaddingModifier,
+                    text = stringResource(id = R.string.login_redirect_button),
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
+}
