@@ -107,7 +107,6 @@ fun NoteSelectorScreen(
                     ) {
                         IconButton(
                             onClick = {
-                                viewModel.updateNotebook(notebook)
                                 navController.navigate(Screen.HomeScreen) {
                                     popUpTo<Screen.HomeScreen> { inclusive = true }
                                 }

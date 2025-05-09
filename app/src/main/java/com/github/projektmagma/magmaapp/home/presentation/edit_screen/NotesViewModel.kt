@@ -85,6 +85,10 @@ class NotesViewModel(
 
     fun updateNotebook(notebook: Notebook) {
         viewModelScope.launch {
+            _notebook.value.notes.let {
+                it.clear()
+                it.addAll(_notes.value)
+            }
             val result = updateNotebookUseCase.execute(notebook)
             if (result is Result.Error) {
                 _errorFlow.emit(result.error.messageId)
