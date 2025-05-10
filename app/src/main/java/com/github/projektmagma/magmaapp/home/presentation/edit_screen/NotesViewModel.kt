@@ -16,6 +16,7 @@ import com.github.projektmagma.magmaapp.home.domain.use_case.note.GetNoteByIdUse
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.GetNotesUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.RemoveNoteUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.UpdateNoteUseCase
+import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.UpdateModDateNotebookUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.GetNotebookByIdUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.RemoveNotebookUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.SelectNotebookIdUseCase
@@ -31,6 +32,7 @@ class NotesViewModel(
     private val updateNotebookUseCase: UpdateNotebookUseCase,
     private val getNotebookByIdUseCase: GetNotebookByIdUseCase,
     private val removeNotebookUseCase: RemoveNotebookUseCase,
+    private val updateModDateNotebookUseCase: UpdateModDateNotebookUseCase,
     private val getNotesUseCase: GetNotesUseCase,
     private val addNoteUseCase: AddNoteUseCase,
     private val removeNoteUseCase: RemoveNoteUseCase,
@@ -83,28 +85,38 @@ class NotesViewModel(
         }
     }
 
-    fun updateNotebook(notebook: Notebook) {
+    fun updateNotebook() {
         viewModelScope.launch {
             _notebook.value.notes.let {
                 it.clear()
                 it.addAll(_notes.value)
             }
-            val result = updateNotebookUseCase.execute(notebook)
+            val result = updateNotebookUseCase.execute(_notebook.value)
             if (result is Result.Error) {
                 _errorFlow.emit(result.error.messageId)
             }
         }
     }
 
-    fun removeNotebook(notebook: Notebook) {
+    fun removeNotebook() {
         viewModelScope.launch {
-            removeNotebookUseCase.execute(notebook)
+            removeNotebookUseCase.execute(_notebook.value)
         }
     }
 
-    fun addNote(note: NoteDto) {
+    fun changeModDateNotebook() {
         viewModelScope.launch {
-            when (val result = addNoteUseCase.execute(note)) {
+            updateModDateNotebookUseCase.execute(_notebook.value)
+        }
+    }
+
+    fun addNote(title: String) {
+        viewModelScope.launch {
+            when (val result = addNoteUseCase.execute(
+                NoteDto(
+                title = title,
+                createdAt = System.currentTimeMillis(),
+            ))) {
                 is Result.Success -> {
                     _notes.value.add(result.data)
                 }

@@ -3,7 +3,9 @@ package com.github.projektmagma.magmaapp.auth.presentation.register_screen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -20,11 +22,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.auth.presentation.AuthViewModel
-import com.github.projektmagma.magmaapp.auth.presentation.common.AuthModifiers
 import com.github.projektmagma.magmaapp.auth.presentation.common.EmailField
 import com.github.projektmagma.magmaapp.auth.presentation.common.ErrorText
 import com.github.projektmagma.magmaapp.auth.presentation.common.PasswordField
@@ -74,9 +76,9 @@ fun RegisterScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(AuthModifiers.topSpacerModifier)
+            Spacer(Modifier.padding(32.dp))
             Text(
-                modifier = AuthModifiers.textPaddingModifier,
+                modifier = Modifier.padding(4.dp),
                 text = stringResource(id = R.string.register_banner),
                 textAlign = TextAlign.Center,
                 fontSize = 32.sp
@@ -87,7 +89,9 @@ fun RegisterScreen(
                 isError = state.emailError != null
             )
             PasswordField(
-                modifier = AuthModifiers.textFieldsModifier,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp),
                 passwordVisible = passwordVisible,
                 isError = state.passwordError != null,
                 showPasswordVisibilityIcon = true,
@@ -96,7 +100,9 @@ fun RegisterScreen(
                 onValueChange = { authViewModel.onEvent(RegistrationFormEvent.PasswordChanged(it)) }
             )
             PasswordField(
-                modifier = AuthModifiers.textFieldsModifier,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp),
                 passwordVisible = passwordVisible,
                 isError = state.repeatedPasswordError != null,
                 showPasswordVisibilityIcon = false,
@@ -108,26 +114,30 @@ fun RegisterScreen(
             )
             ErrorText(state)
             Button(
-                modifier = AuthModifiers.buttonsModifier,
+                modifier = Modifier
+                    .width(200.dp)
+                    .padding(4.dp),
                 onClick = {
                     authViewModel.onEvent(RegistrationFormEvent.Submit(RegistrationType.REGISTER))
                     keyboardController?.hide()
                 }
             ) {
                 Text(
-                    modifier = AuthModifiers.textPaddingModifier,
+                    modifier = Modifier.padding(4.dp),
                     text = stringResource(id = R.string.register),
                 )
             }
             Button(
-                modifier = AuthModifiers.buttonsModifier,
+                modifier = Modifier
+                    .width(200.dp)
+                    .padding(4.dp),
                 onClick = {
                     keyboardController?.hide()
                     navHostController.navigate(Screen.LoginScreen)
                 }
             ) {
                 Text(
-                    modifier = AuthModifiers.textPaddingModifier,
+                    modifier = Modifier.padding(4.dp),
                     text = stringResource(id = R.string.login_redirect_button),
                     textAlign = TextAlign.Center
                 )

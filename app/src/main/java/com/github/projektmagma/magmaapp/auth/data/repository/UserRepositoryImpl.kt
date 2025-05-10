@@ -5,11 +5,14 @@ import com.github.projektmagma.magmaapp.core.data.DataError
 import com.github.projektmagma.magmaapp.core.domain.use_case.SetUserNameUseCase
 import com.github.projektmagma.magmaapp.core.util.Error
 import com.github.projektmagma.magmaapp.core.util.Result
+import com.github.projektmagma.magmaapp.di.dataModule
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
+import org.koin.core.context.loadKoinModules
+import org.koin.core.context.unloadKoinModules
 
 class UserRepositoryImpl(
     private val auth: FirebaseAuth,
@@ -50,7 +53,9 @@ class UserRepositoryImpl(
     }
 
     override suspend fun logout() {
+        unloadKoinModules(dataModule)
         auth.signOut()
+        loadKoinModules(dataModule)
         setUserNameUseCase.execute("")
     }
 

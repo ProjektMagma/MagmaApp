@@ -10,7 +10,7 @@ import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
 
 data class Notebook(
     val id: String = "",
-    var title: MutableState<String> = mutableStateOf(""),
+    val title: MutableState<String> = mutableStateOf(""),
     val notes: SnapshotStateList<Note> = mutableStateListOf(),
     val createdAt: MutableLongState = mutableLongStateOf(0L),
     val lastModified: MutableLongState = mutableLongStateOf(0L),

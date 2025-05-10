@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.home.domain.model.Notebook
 import com.github.projektmagma.magmaapp.home.domain.model.toUiDate
-import com.github.projektmagma.magmaapp.home.presentation.HomeModifiers
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -36,7 +36,10 @@ fun NotebookSelector(
 
 
     Box(
-        modifier = HomeModifiers.notebookButtonBox
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(0.dp, 16.dp)
             .shadow(
                 elevation = 4.dp,
                 shape = MaterialTheme.shapes.large,
@@ -73,13 +76,13 @@ fun NotebookSelector(
             notes.forEach { note ->
                 val noteTitle by note.title
                 Text(
-                    modifier = HomeModifiers.notebookSelectorTextPadding,
+                    modifier = Modifier.padding(32.dp, 0.dp),
                     text = "- $noteTitle",
                     color = MaterialTheme.colorScheme.onSecondary
                 )
             }
             Text(
-                modifier = HomeModifiers.notebookSelectorTextPadding,
+                modifier = Modifier.padding(32.dp, 0.dp),
                 text = "${stringResource(id = R.string.notebook_creation_date)} " +
                         notebook.createdAt.longValue.toUiDate(),
                 style = MaterialTheme.typography.bodySmall,
@@ -87,7 +90,7 @@ fun NotebookSelector(
                 textAlign = TextAlign.Start
             )
             Text(
-                modifier = HomeModifiers.notebookSelectorTextPadding,
+                modifier = Modifier.padding(32.dp, 0.dp),
                 text = "${stringResource(id = R.string.notebook_last_modification_date)} " +
                         notebook.lastModified.longValue.toUiDate(),
                 style = MaterialTheme.typography.bodySmall,

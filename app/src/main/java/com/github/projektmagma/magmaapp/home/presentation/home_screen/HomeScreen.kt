@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -34,8 +35,6 @@ import com.github.projektmagma.magmaapp.core.presentation.ErrorIndicator
 import com.github.projektmagma.magmaapp.core.presentation.LoadingIndicator
 import com.github.projektmagma.magmaapp.core.presentation.UIState
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
-import com.github.projektmagma.magmaapp.home.data.model.NotebookDto
-import com.github.projektmagma.magmaapp.home.presentation.HomeModifiers
 import com.github.projektmagma.magmaapp.home.presentation.home_screen.components.NewNotebookSelector
 import com.github.projektmagma.magmaapp.home.presentation.home_screen.components.NotebookSelector
 import kotlinx.coroutines.CoroutineScope
@@ -97,7 +96,7 @@ fun HomeScreen(
                             }
                         ) {
                             Icon(
-                                modifier = HomeModifiers.iconBigSize,
+                                modifier = Modifier.size(128.dp),
                                 imageVector = Icons.Filled.Settings,
                                 contentDescription = null
                             )
@@ -145,13 +144,7 @@ fun HomeScreen(
                                 snackbarCoroutine.launch {
                                     snackbarHostState.showSnackbar(context.getString(R.string.new_notebook_creation_info))
                                 }
-                                viewModel.addNotebook(
-                                    NotebookDto(
-                                        title = context.getString(R.string.notebook_default_name),
-                                        createdAt = System.currentTimeMillis(),
-                                        lastModified = System.currentTimeMillis()
-                                    )
-                                )
+                                viewModel.addNewNotebook(context.getString(R.string.notebook_default_name))
                                 keyboardController?.hide()
                             }
                         )

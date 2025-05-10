@@ -9,7 +9,5 @@ import com.github.projektmagma.magmaapp.home.domain.repository.NoteRepository
 class AddNoteUseCase(
     private val noteRepository: NoteRepository,
 ) {
-    suspend fun execute(note: NoteDto): Result<Note, Error> {
-        return noteRepository.addNote(note)
-    }
+    suspend fun execute(note: NoteDto): Result<Note, Error> = noteRepository.addNote(note)
 }

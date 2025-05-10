@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -45,12 +46,16 @@ fun PopupWindow(
                 ) {
                     Box(
                         modifier = Modifier
-                            .padding(16.dp)
+                            .padding(8.dp)
+                            .clip(MaterialTheme.shapes.small)
                             .clickable {
-                               onRename()
-                            }
+                                onRename()
+                            }.background(MaterialTheme.colorScheme.onPrimary)
                     ) {
-                        Row {
+                        Row(
+                            modifier = Modifier
+                                .padding(8.dp)
+                        ) {
                             Text(stringResource(R.string.rename_label))
                             Icon(
                                 imageVector = Icons.Filled.Check,
@@ -60,12 +65,16 @@ fun PopupWindow(
                     }
                     Box(
                         modifier = Modifier
-                            .padding(16.dp)
+                            .padding(8.dp)
+                            .clip(MaterialTheme.shapes.small)
                             .clickable {
                                 onDelete()
-                            }
+                            }.background(MaterialTheme.colorScheme.errorContainer)
                     ) {
-                        Row {
+                        Row(
+                            modifier = Modifier
+                                .padding(8.dp)
+                        ) {
                             Text(stringResource(R.string.delete_label))
                             Icon(
                                 imageVector = Icons.Filled.DeleteOutline,

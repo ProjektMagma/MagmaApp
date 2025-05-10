@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
@@ -50,10 +51,14 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel()
 ) {
 
-    var logoutTimesClicked by remember { mutableIntStateOf(0) }
+    val displayName = viewModel.displayNameTextbox.collectAsStateWithLifecycle()
+    val autoLogIn = viewModel.autoLogInCheckbox.collectAsStateWithLifecycle()
+    val darkMode = viewModel.darkModeSwitch.collectAsStateWithLifecycle()
     val showEditPopup = remember { mutableStateOf(false) }
-    val clicksToLogout = 3
     val context = LocalContext.current
+    val clicksToLogout = 3
+    var logoutTimesClicked by remember { mutableIntStateOf(0) }
+
     PopupWindow(
         showEditPopup,
         onRename = {
@@ -65,8 +70,8 @@ fun SettingsScreen(
         }
     ) {
         TextField(
-            value = viewModel.displayNameTextbox,
-            onValueChange = { viewModel.displayNameTextbox = it.trim().take(25) },
+            value = displayName.value,
+            onValueChange = { viewModel.setDisplayNameTextbox(it.trim().take(25)) },
             label = { Text(stringResource(R.string.display_name_limit_info)) }
         )
 
@@ -132,16 +137,16 @@ fun SettingsScreen(
             SettingRow {
                 Text(stringResource(R.string.stay_logged_in_label))
                 Checkbox(
-                    checked = viewModel.autoLogInCheckbox,
-                    onCheckedChange = { viewModel.autoLogInCheckbox = it }
+                    checked = autoLogIn.value,
+                    onCheckedChange = { viewModel.setAutoLogInCheckbox(it) }
                 )
             }
             SettingRow {
                 Text(stringResource(R.string.app_theme_switch_label))
                 Switch(
-                    checked = viewModel.darkModeSwitch,
+                    checked = darkMode.value,
                     onCheckedChange = {
-                        viewModel.darkModeSwitch = it
+                        viewModel.setDarkModeSwitch(it)
                         isAppInDarkMode.value = it
                     }
                 )

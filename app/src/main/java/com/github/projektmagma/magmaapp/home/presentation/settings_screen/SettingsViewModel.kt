@@ -1,8 +1,5 @@
 package com.github.projektmagma.magmaapp.home.presentation.settings_screen
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.projektmagma.magmaapp.core.domain.use_case.GetAppThemeUseCase
@@ -12,6 +9,8 @@ import com.github.projektmagma.magmaapp.core.domain.use_case.LogoutUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.SetAppThemeUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.SetAutoLogInUserUseCase
 import com.github.projektmagma.magmaapp.core.domain.use_case.SetUserNameUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
@@ -25,30 +24,47 @@ class SettingsViewModel(
     private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
-    var autoLogInCheckbox by mutableStateOf(false)
-    var darkModeSwitch by mutableStateOf(false)
-    var displayNameTextbox by mutableStateOf("")
+    private val _autoLogInCheckbox = MutableStateFlow<Boolean>(false)
+    val autoLogInCheckbox = _autoLogInCheckbox.asStateFlow()
+
+    private val _darkModeSwitch = MutableStateFlow<Boolean>(false)
+    val darkModeSwitch = _darkModeSwitch.asStateFlow()
+
+    private val _displayNameTextbox = MutableStateFlow<String>("")
+    val displayNameTextbox = _displayNameTextbox.asStateFlow()
 
     init {
         viewModelScope.launch {
-            displayNameTextbox = getUserNameUseCase.execute()
-            autoLogInCheckbox = getAutoLogInUserUseCase.execute()
-            darkModeSwitch = getAppThemeUseCase.execute()
+            _displayNameTextbox.value = getUserNameUseCase.execute()
+            _autoLogInCheckbox.value = getAutoLogInUserUseCase.execute()
+            _darkModeSwitch.value = getAppThemeUseCase.execute()
         }
+    }
+
+    fun setDisplayNameTextbox(value: String) {
+        _displayNameTextbox.value = value
+    }
+
+    fun setAutoLogInCheckbox(value: Boolean) {
+        _autoLogInCheckbox.value = value
+    }
+
+    fun setDarkModeSwitch(value: Boolean) {
+        _darkModeSwitch.value = value
     }
 
     fun saveSettings() {
         viewModelScope.launch {
-            setAutoLogInUserUseCase.execute(autoLogInCheckbox)
-            setAppThemeUseCase.execute(darkModeSwitch)
-            setUserNameUseCase.execute(displayNameTextbox)
+            setAutoLogInUserUseCase.execute(_autoLogInCheckbox.value)
+            setAppThemeUseCase.execute(_darkModeSwitch.value)
+            setUserNameUseCase.execute(_displayNameTextbox.value)
         }
     }
-    
+
     fun resetDisplayNameTextbox() {
         viewModelScope.launch {
             setUserNameUseCase.execute("")
-            displayNameTextbox = getUserNameUseCase.execute()
+            _displayNameTextbox.value = getUserNameUseCase.execute()
         }
     }
 

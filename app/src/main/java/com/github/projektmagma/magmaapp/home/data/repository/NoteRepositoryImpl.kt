@@ -2,7 +2,6 @@ package com.github.projektmagma.magmaapp.home.data.repository
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.github.projektmagma.magmaapp.core.domain.use_case.SetUserNameUseCase
 import com.github.projektmagma.magmaapp.core.util.Error
 import com.github.projektmagma.magmaapp.core.util.Result
 import com.github.projektmagma.magmaapp.home.data.model.NoteDto
@@ -12,13 +11,8 @@ import com.github.projektmagma.magmaapp.home.domain.model.Note
 import com.github.projektmagma.magmaapp.home.domain.model.toDomain
 import com.github.projektmagma.magmaapp.home.domain.repository.DataStorage
 import com.github.projektmagma.magmaapp.home.domain.repository.NoteRepository
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.tasks.await
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 
 class NoteRepositoryImpl(

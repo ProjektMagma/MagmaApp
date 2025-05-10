@@ -37,7 +37,6 @@ import com.github.projektmagma.magmaapp.core.presentation.ErrorIndicator
 import com.github.projektmagma.magmaapp.core.presentation.LoadingIndicator
 import com.github.projektmagma.magmaapp.core.presentation.UIState
 import com.github.projektmagma.magmaapp.core.presentation.navigation.Screen
-import com.github.projektmagma.magmaapp.home.data.model.NoteDto
 import com.github.projektmagma.magmaapp.home.presentation.edit_screen.components.NewNoteSelector
 import com.github.projektmagma.magmaapp.home.presentation.edit_screen.components.NoteSelector
 import com.github.projektmagma.magmaapp.home.presentation.shared.components.PopupWindow
@@ -52,7 +51,7 @@ fun NoteSelectorScreen(
     val notebook by viewModel.notebook.collectAsStateWithLifecycle()
     val notes by viewModel.notes.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var showEditPopup = remember { mutableStateOf(false) }
+    val showEditPopup = remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
@@ -72,10 +71,10 @@ fun NoteSelectorScreen(
         showEditPopup,
         onRename = {
             showEditPopup.value = !showEditPopup.value
-            viewModel.updateNotebook(notebook)
+            viewModel.updateNotebook()
         },
         onDelete = {
-            viewModel.removeNotebook(notebook)
+            viewModel.removeNotebook()
             navController.popBackStack()
         }) {
         TextField(
@@ -150,12 +149,8 @@ fun NoteSelectorScreen(
                     }
                     item {
                         NewNoteSelector {
-                            viewModel.addNote(
-                                NoteDto(
-                                    title = context.getString(R.string.note_default_name),
-                                    createdAt = System.currentTimeMillis(),
-                                )
-                            )
+                            viewModel.addNote(context.getString(R.string.note_default_name))
+                            viewModel.changeModDateNotebook()
                         }
                     }
                 }

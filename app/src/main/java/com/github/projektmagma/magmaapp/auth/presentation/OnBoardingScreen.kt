@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -37,7 +36,6 @@ fun OnBoardingScreen(
 ) {
     Scaffold { innerPadding ->
         val configuration = LocalConfiguration.current
-        val context = LocalContext.current
         val screenHeight =
             configuration.screenHeightDp.dp // Nie zmieniać bo to nie działa tak jak Android Studio mówi
 
@@ -95,7 +93,8 @@ fun OnBoardingScreen(
 
             Row(
                 modifier = Modifier
-                    .fillMaxWidth().padding(top = 32.dp),
+                    .fillMaxWidth()
+                    .padding(top = 32.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
             ) {

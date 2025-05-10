@@ -12,5 +12,6 @@ interface NotebookRepository {
     suspend fun updateNotebook(notebook: Notebook): Result<Unit, Error>
     fun getNotebookById(id: String): Notebook
     suspend fun removeNotebook(notebook: Notebook): Result<Unit, Error>
+    suspend fun updateModDateNotebook(notebook: Notebook): Result<Unit, Error>
     fun selectNotebookById(id: String)
 }

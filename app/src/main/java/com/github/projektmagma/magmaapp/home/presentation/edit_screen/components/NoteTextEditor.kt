@@ -43,16 +43,16 @@ import com.mohamedrejeb.richeditor.ui.material3.RichTextEditor
 @Composable
 fun NoteTextEditor(note: Note, richTextState: RichTextState, appTheme: State<Boolean>) {
 
-    var showTextColorSelector = remember { mutableStateOf(false) }
-    var textSelectedColor = remember { mutableStateOf(Color.Unspecified) }
+    val textSelectedColor = remember { mutableStateOf(Color.Unspecified) }
+    val backSelectedColor = remember { mutableStateOf(Color.Unspecified) }
+    val showTextColorSelector = remember { mutableStateOf(false) }
+    val showBackColorSelector = remember { mutableStateOf(false) }
+    val baseFontSize = remember { mutableStateOf(16.sp) }
     var lastTextSpan by remember { mutableStateOf(SpanStyle()) }
-    var showBackColorSelector = remember { mutableStateOf(false) }
-    var backSelectedColor = remember { mutableStateOf(Color.Unspecified) }
     var lastBackSpan by remember { mutableStateOf(SpanStyle()) }
-    var baseFontSize = remember { mutableStateOf(16.sp) }
-
     val textSizeChange = 5
-    
+
+
     LaunchedEffect(true) {
         richTextState.setHtml(note.content.value)
         richTextState.addSpanStyle(

@@ -1,7 +1,6 @@
 package com.github.projektmagma.magmaapp.app
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.projektmagma.magmaapp.core.domain.use_case.GetAppThemeUseCase
@@ -20,7 +19,7 @@ class MainViewModel(
 
     private val _startDestination = MutableStateFlow<Screen?>(null)
     val startDestination = _startDestination.asStateFlow()
-    val isAppInDarkMode = mutableStateOf(false)
+    val isAppInDarkMode = mutableStateOf(true)
 
     init {
         viewModelScope.launch {

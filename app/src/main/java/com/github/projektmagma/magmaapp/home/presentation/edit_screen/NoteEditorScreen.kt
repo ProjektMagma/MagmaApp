@@ -42,7 +42,7 @@ fun NoteEditorScreen(
 ) {
 
     val note = remember { viewModel.getNoteById(id) }
-    var showEditPopup = remember { mutableStateOf(false) }
+    val showEditPopup = remember { mutableStateOf(false) }
     val richTextState = rememberRichTextState()
     val appTheme = viewModel.appTheme.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -63,9 +63,11 @@ fun NoteEditorScreen(
         onRename = {
             showEditPopup.value = !showEditPopup.value
             viewModel.updateNote(note)
+            viewModel.changeModDateNotebook()
         },
         onDelete = {
             viewModel.removeNote(note)
+            viewModel.changeModDateNotebook()
             navController.popBackStack()
         }
     ) {

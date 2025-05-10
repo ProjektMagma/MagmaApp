@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Scaffold
@@ -27,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.github.projektmagma.magmaapp.R
 import com.github.projektmagma.magmaapp.auth.presentation.AuthViewModel
-import com.github.projektmagma.magmaapp.auth.presentation.common.AuthModifiers
 import com.github.projektmagma.magmaapp.auth.presentation.common.EmailField
 import com.github.projektmagma.magmaapp.auth.presentation.common.ErrorText
 import com.github.projektmagma.magmaapp.auth.presentation.common.PasswordField
@@ -46,10 +47,10 @@ fun LoginScreen(
     viewModel: AuthViewModel = koinViewModel()
 ) {
     val passwordVisible = viewModel.passwordVisible
-    var clicked by viewModel.clicked
     val state = viewModel.state
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    var clicked by viewModel.clicked
 
     LaunchedEffect(viewModel.validationEvent) {
         var message by mutableStateOf(context.getString(R.string.error_unknown))
@@ -77,9 +78,9 @@ fun LoginScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = AuthModifiers.topSpacerModifier)
+            Spacer(modifier = Modifier.padding(32.dp))
             Text(
-                modifier = AuthModifiers.textPaddingModifier,
+                modifier = Modifier.padding(4.dp),
                 text = stringResource(id = R.string.login_banner),
                 textAlign = TextAlign.Center,
                 fontSize = 32.sp
@@ -90,7 +91,9 @@ fun LoginScreen(
                 isError = state.emailError != null
             )
             PasswordField(
-                modifier = AuthModifiers.textFieldsModifier,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp),
                 passwordVisible = passwordVisible,
                 showPasswordVisibilityIcon = true,
                 labelString = stringResource(id = R.string.password),
@@ -104,7 +107,7 @@ fun LoginScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Checkbox(
-                    modifier = AuthModifiers.textPaddingModifier,
+                    modifier = Modifier.padding(4.dp),
                     checked = clicked,
                     onCheckedChange = { clicked = !clicked }
                 )
@@ -113,7 +116,9 @@ fun LoginScreen(
                 )
             }
             Button(
-                modifier = AuthModifiers.buttonsModifier,
+                modifier = Modifier
+                    .width(200.dp)
+                    .padding(4.dp),
                 onClick = {
                     viewModel.onEvent(RegistrationFormEvent.Submit(RegistrationType.LOGIN))
                     keyboardController?.hide()
@@ -124,14 +129,16 @@ fun LoginScreen(
                 )
             }
             Button(
-                modifier = AuthModifiers.buttonsModifier,
+                modifier = Modifier
+                    .width(200.dp)
+                    .padding(4.dp),
                 onClick = {
                     keyboardController?.hide()
                     navHostController.navigate(Screen.RegisterScreen)
                 }
             ) {
                 Text(
-                    modifier = AuthModifiers.textPaddingModifier,
+                    modifier = Modifier.padding(4.dp),
                     text = stringResource(id = R.string.register_redirect_button),
                     textAlign = TextAlign.Center
                 )

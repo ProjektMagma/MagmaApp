@@ -6,16 +6,17 @@ import com.github.projektmagma.magmaapp.home.data.repository.NotebookRepositoryI
 import com.github.projektmagma.magmaapp.home.domain.repository.DataStorage
 import com.github.projektmagma.magmaapp.home.domain.repository.NoteRepository
 import com.github.projektmagma.magmaapp.home.domain.repository.NotebookRepository
-import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.SelectNotebookIdUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.AddNoteUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.GetNoteByIdUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.GetNotesUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.RemoveNoteUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.note.UpdateNoteUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.AddNotebookUseCase
+import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.UpdateModDateNotebookUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.GetNotebookByIdUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.GetNotebooksUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.RemoveNotebookUseCase
+import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.SelectNotebookIdUseCase
 import com.github.projektmagma.magmaapp.home.domain.use_case.notebook.UpdateNotebookUseCase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ktx.database
@@ -34,6 +35,7 @@ val dataModule = module {
     single { GetNotebookByIdUseCase(get()) }
     single { UpdateNotebookUseCase(get()) }
     single { RemoveNotebookUseCase(get()) }
+    single { UpdateModDateNotebookUseCase(get()) }
 
     // Note
     single { AddNoteUseCase(get()) }

@@ -65,6 +65,15 @@ class NotebookRepositoryImpl(
         }
     }
 
+    override suspend fun updateModDateNotebook(notebook: Notebook): Result<Unit, Error> {
+        return safeFirebaseCall {
+            notebook.lastModified.longValue = System.currentTimeMillis()
+            database.child(notebook.id).child("lastModified")
+                .setValue(notebook.toDto().lastModified).await()
+            dataStorage.updateNotebook(notebook)
+        }
+    }
+
     // DO WYBIERANIA NOTEBOOKA POTRZEBNE ABY BYŁY MOŻLIWE MODYFIKACJE NOTE
     override fun selectNotebookById(id: String) = dataStorage.selectNotebookId(id)
 
